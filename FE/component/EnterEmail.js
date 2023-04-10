@@ -10,29 +10,28 @@ import {
     Image,
     View,
     Button,
+    TextInput
 } from 'react-native';
 
-import {
-    Colors,
-    DebugInstructions,
-    Header,
-    LearnMoreLinks,
-    ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-function MainPage(props){
+function EnterEmail(props){
     return(
         <View style={styles.container}>
             <View style={{flex: 2}}></View>
-            <Text style={styles.textBold}>안녕하세요.</Text>
-            <Text style={styles.text}>로그인 해주세요.</Text>
+            <Text style={styles.textBold}>이메일, 비밀번호</Text>
+            <Text style={styles.text}>입력해주세요.</Text>
             <View style={{flex: 2}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
-                <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('EnterEmail')}
-                }>
-                    <Text style={styles.buttonText}>시작하기</Text>
-                </TouchableOpacity>
+                <TextInput
+                    style={styles.textInput}
+                    //onChangeText={(text) => {this.setState({inputText: text})}}
+                    placeholder="이메일을 입력해주세요."
+                />
+                <TextInput
+                    style={styles.textInput}
+                    //onChangeText={(text) => {this.setState({inputText: text})}}
+                    placeholder="비밀번호를 입력해주세요."
+                    secureTextEntry={true}
+                />
             </View>
         </View>
     )
@@ -68,7 +67,16 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'white',
         fontSize: 20
+    },
+    textInput: {
+        marginTop: 20,
+        marginBottom: 10,
+        paddingHorizontal: 10,
+        height: 40,
+        //borderRadius: 10,
+        borderColor: 'gray',
+        borderWidth: 1
     }
 });
 
-export {MainPage}
+export {EnterEmail}
