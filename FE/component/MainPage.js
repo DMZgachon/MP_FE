@@ -29,7 +29,7 @@ function MainPage(props){
             <View style={{flex: 2}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('MainPage')}
+                    props.navigation.navigate('LoginPage')}
                 }>
                     <Text style={styles.buttonText}>시작하기</Text>
                 </TouchableOpacity>
