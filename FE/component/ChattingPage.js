@@ -1,4 +1,5 @@
 import React from 'react';
+import {Footer} from './footer'
 import {
     SafeAreaView,
     ScrollView,
@@ -27,12 +28,8 @@ function ChattingPage(props){
             <Text style={styles.textBold}>안녕하세요.</Text>
             <Text style={styles.text}>{props.route.params.data}</Text>
             <View style={{flex: 2}}></View>
-            <View style={{flexDirection: 'row', flex: 2}}>
-                <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('LoginPage')}
-                }>
-                    <Text style={styles.buttonText}>메인 페이지 돌아가기</Text>
-                </TouchableOpacity>
+            <View style={{flexDirection: 'row', flex: 4, width : '95%', justifyContent : 'center'}}>
+                <Footer navigation = {props.navigation}></Footer>
             </View>
         </View>
     )
@@ -42,12 +39,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: "white",
     },
     button:{
         width: "80%",
         borderRadius: 40,
-        height: "35%",
+        height: "25%",
         marginLeft: 10,
         justifyContent: 'center',
         backgroundColor: "#FF037C"

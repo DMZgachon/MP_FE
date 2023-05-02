@@ -26,7 +26,7 @@ function LoginPage(props){
 
             {/* 상단바 */}
             <View style ={styles.titlediv}>
-                <Text style ={styles.title}> My Bucket Category</Text>
+                <Text style ={styles.title}> My</Text>
             </View>
 
             {/* 편집 버튼*/}
