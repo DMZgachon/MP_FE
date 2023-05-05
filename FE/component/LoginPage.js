@@ -26,15 +26,22 @@ function LoginPage(props){
 
             {/* 상단바 */}
             <View style ={styles.titlediv}>
-                <Text style ={styles.title}> My</Text>
+                <Text style ={styles.title}> My BucketList App</Text>
+                <View style ={{width : '100%',flexDirection :'row', justifyContent : 'flex-end'}}>
+                    <TouchableOpacity style={styles.EditButton} onPress={()=>{
+                        props.navigation.navigate('MainPage')}
+                    }>
+                        <Text style ={{flexDirection :'row', justifyContent : 'flex-start'}}>로그아웃</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
 
             {/* 편집 버튼*/}
-            <View style ={{width : '100%'}}>
+            <View style ={{width : '100%',flexDirection :'row', justifyContent : 'flex-end'}}>
                 <TouchableOpacity style={styles.EditButton} onPress={()=>{
                     props.navigation.navigate('Edit')}
                 }>
-                    <Text style={styles.EditButton}>편집</Text>
+                    <Text style ={{flexDirection :'row', justifyContent : 'flex-start'}}>편집</Text>
                 </TouchableOpacity>
             </View>
 
@@ -121,8 +128,7 @@ function LoginPage(props){
                        <View style ={{width : '80%', height : '70%', backgroundColor : 'gray', borderRadius : 10}}>
                            <Text style ={{textAlign : 'center'}}>버킷 리스트 이름 설정하기</Text>
                            <TextInput placeholder="버킷리스트 이름"></TextInput>
-
-                           <Text style ={{textAlign : 'center'}}>버킷 리스트 이름 설정하기</Text>
+                           <Text style ={{textAlign : 'center'}}>버킷s 리스트 이름 설정하기</Text>
                            <TextInput placeholder="준비과정"></TextInput>
                            <TextInput placeholder="준비과정"></TextInput>
                            <TextInput placeholder="준비과정"></TextInput>
