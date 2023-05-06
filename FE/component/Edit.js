@@ -24,7 +24,7 @@ import {
 function Edit(props){
     return(
         <View style={styles.container}>
-            <Header data = {props.route.params.data}></Header>
+            <Header data = {props.data}></Header>
             <View style={{flex: 2}}></View>
             <Text style={styles.textBold}>안녕하세요.</Text>
             <Text style={styles.text}>편집 화면입니다..</Text>
