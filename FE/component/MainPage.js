@@ -31,7 +31,8 @@ function MainPage(props){
                 <TouchableOpacity style={styles.button} onPress={()=>{
                     props.navigation.navigate('LoginPage')}
                 }>
-                    <Text style={styles.buttonText}>시작하기</Text>
+                    <Text style={styles.buttonText}>
+                        시작하기</Text>
                 </TouchableOpacity>
             </View>
         </View>

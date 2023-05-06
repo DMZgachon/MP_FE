@@ -25,6 +25,7 @@ function LoginPage(props){
 
                 <TextInput
                     style={styles.them}
+                    secureTextEntry={true}
                     //onChangeText={(text) => {this.setState({inputText: text})}}
                     placeholder="Enter passward"
                 />
