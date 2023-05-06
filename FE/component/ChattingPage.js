@@ -1,5 +1,6 @@
 import React from 'react';
 import {Footer} from './footer'
+import {Header} from './Header'
 import {
     SafeAreaView,
     ScrollView,
@@ -16,7 +17,6 @@ import {
 import {
     Colors,
     DebugInstructions,
-    Header,
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
@@ -24,6 +24,7 @@ import {
 function ChattingPage(props){
     return(
         <View style={styles.container}>
+            <Header data = {props.route.params.data}></Header>
             <View style={{flex: 2}}></View>
             <Text style={styles.textBold}>안녕하세요.</Text>
             <Text style={styles.text}>{props.route.params.data}</Text>

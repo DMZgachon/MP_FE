@@ -15,24 +15,22 @@ import {
 import {
     Colors,
     DebugInstructions,
-    Header,
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {Footer} from "./footer";
+import {Header} from './Header'
 
 function SearchPage(props){
     return(
         <View style={styles.container}>
+            <Header data = {props.route.params.data}></Header>
             <View style={{flex: 2}}></View>
             <Text style={styles.textBold}>안녕하세요.</Text>
             <Text style={styles.text}>{props.route.params.data}</Text>
             <View style={{flex: 2}}></View>
-            <View style={{flexDirection: 'row', flex: 2}}>
-                <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('LoginPage')}
-                }>
-                    <Text style={styles.buttonText}>메인 화면 돌아가기</Text>
-                </TouchableOpacity>
+            <View style={{flexDirection: 'row', flex: 4, width : '95%', justifyContent : 'center'}}>
+                <Footer navigation = {props.navigation}></Footer>
             </View>
         </View>
     )

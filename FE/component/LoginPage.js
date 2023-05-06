@@ -2,6 +2,7 @@ import React, {Component, useState} from 'react';
 import {View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
     TouchableHighlight, Modal} from 'react-native';
 
+
 import {
     Colors,
     DebugInstructions,
@@ -48,12 +49,12 @@ function LoginPage(props){
             {/* Main에 카테고리 이미지 넣는 부분 */}
             <View style ={{ width : '100%', height : '60%'}}>
                 <ScrollView>
-                    {[1,2,3,4,5].map(() =>(
-                        <View style ={{flexDirection : 'row'}}>
+                    {[1,2,3,4,5].map((i) =>(
+                        <View style ={{flexDirection : 'row', marginTop : 2}}>
                             <Image
                                 source={require('../image/img.png')}
                                 style={{ width: '50%', height: 200, }}/>
-
+                            <View style ={{margin : 3}}></View>
                             <Image
                                 source={require('../image/img.png')}
                                 style={{ width: '50%', height: 200 }}
@@ -108,7 +109,7 @@ function LoginPage(props){
 
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
                     <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                        props.navigation.navigate('FriendPage' ,{data : 'Friend Page'})}
+                        props.navigation.navigate('FriendPage' ,{data : 'My Page'})}
                     }>
                         <Text style ={{fontSize : 35}}> 👤 </Text>
                     </TouchableOpacity>

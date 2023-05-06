@@ -30,12 +30,6 @@ function Footer(props){
                     </TouchableOpacity>
                 </View>
 
-                <View style ={{flex : 3, alignItems : 'center'}}>
-                    <TouchableHighlight onPress={{}}>
-                        <Text style ={{fontSize : 35}}> ➕ </Text>
-                    </TouchableHighlight>
-                </View>
-
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
                     <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
                         props.navigation.navigate('ChattingPage', {data : 'ChattingPage'})}
