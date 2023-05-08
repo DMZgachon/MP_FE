@@ -24,13 +24,16 @@ import {Header} from './Header'
 function FriendPage(props){
     return(
         <View style={styles.container}>
-            <Header data = {props.route.params.data}></Header>
-            <View style={{flex: 2}}></View>
-            <Text style={styles.textBold}>안녕하세요.</Text>
-            <Text style={styles.text}>{props.route.params.data}</Text>
-            <View style={{flex: 2}}></View>
-            <View style={{flexDirection: 'row', flex: 4, width : '95%', justifyContent : 'center'}}>
-                <Footer navigation = {props.navigation}></Footer>
+
+            <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+                <Header data = {props.route.params.data}></Header>
+            </View>
+
+
+            <View style={styles.bottomView}>
+                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
+                    <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
+                </View>
             </View>
         </View>
     )
@@ -39,34 +42,18 @@ function FriendPage(props){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        backgroundColor: "white",
-    },
-    button:{
-        width: "80%",
-        borderRadius: 40,
-        height: "35%",
-        marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#FF037C"
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
     },
-    textBold:{
-        width: "55%",
-        textAlign: "left",
-        fontWeight: 'bold',
-        fontSize: 32,
-        color: "black"
+    bottomView: {
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 50,
     },
-    text:{
-        width: "55%",
-        textAlign: "left",
-        fontSize: 32
-    },
-    buttonText:{
-        textAlign: 'center',
-        color: 'white',
-        fontSize: 20
-    }
 });
 
 export {FriendPage}

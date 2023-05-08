@@ -31,7 +31,7 @@ function Edit(props){
             <View style={{flex: 2}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('LoginPage')}
+                    props.navigation.navigate('LoginPage', {data : 'My Bucket App'})}
                 }>
                     <Text style={styles.buttonText}>메인 화면 돌아가기</Text>
                 </TouchableOpacity>
@@ -43,34 +43,18 @@ function Edit(props){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        backgroundColor: "white",
-    },
-    button:{
-        width: "80%",
-        borderRadius: 40,
-        height: "35%",
-        marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#FF037C"
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF',
     },
-    textBold:{
-        width: "55%",
-        textAlign: "left",
-        fontWeight: 'bold',
-        fontSize: 32,
-        color: "black"
+    bottomView: {
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 50,
     },
-    text:{
-        width: "55%",
-        textAlign: "left",
-        fontSize: 32
-    },
-    buttonText:{
-        textAlign: 'center',
-        color: 'white',
-        fontSize: 20
-    }
 });
 
 export {Edit}
