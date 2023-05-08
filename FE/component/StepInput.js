@@ -1,13 +1,20 @@
-import React from "react";
+import React, {useState} from "react";
 import {TouchableOpacity, Text, TextInput, StyleSheet, View} from "react-native";
 
 const StepInput = (props) => {
+
+    const onRegister = (i, text) => {
+        props.content[i] = text;
+        props.setContent([...props.content]);
+    }
     return(
         <View>
             {props.countList && props.countList.map((item, i) => {
                 return(
                     <View key={i}>
-                        <TextInput placeholder={"STEP 입력"} placeholderTextColor={'#BBB4B4'} style={styles.inputBox}></TextInput>
+                        <TextInput placeholder={"STEP 설정"} placeholderTextColor={'#BBB4B4'} style={styles.inputBox}
+                                   onChangeText={text => onRegister(i, text)}>
+                        </TextInput>
                     </View>
                 );
             })}

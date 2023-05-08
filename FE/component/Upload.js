@@ -1,5 +1,5 @@
 import React, {Component, useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, Pressable, Platform, PermissionsAndroid} from 'react-native';
 import StepInput from "./StepInput";
 import {
     Colors,
@@ -9,10 +9,39 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import { Calendar } from "react-native-calendars";
+import { format } from "date-fns";
+import { launchImageLibrary, launchCamera } from "react-native-image-picker";
 
+const imagePickerOption = {
+    mediaType: "photo",
+    maxWidth: 768,
+    maxHeight: 768,
+    includeBase64: Platform.OS === "android",
+};
 function Upload(props){
     const [countList, setCountList] = useState([1])
     const [calendar, setCalendar] = useState(false)
+    const [selectedDate, setSelectedDate] = useState(
+        format(new Date(), "yyyy-MM-dd"),
+    );
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState([]);
+    const [hashtagList, setHashtagList] = useState([]);
+    const [hashtag, setHashtag] = useState("");
+
+    const onPickImage = (res) => {
+        if (res.didCancel || !res) {
+            return;
+        }
+        console.log("PickImage", res);
+    }
+    const addImage = () => {
+        launchImageLibrary(imagePickerOption, onPickImage);
+    }
+    const onLaunchCamera = () => {
+        launchCamera(imagePickerOption, onPickImage);
+    };
+
     const onAddStep = () => {
         //alert('dd')
         let countArr = [...countList]
@@ -22,8 +51,28 @@ function Upload(props){
         // countArr[counter] = counter	// index 사용 시 윗줄 대신 사용
         setCountList(countArr)
     }
+    const onRemoveStep = () => {
+        let contentArr = [...content]
+        contentArr.pop()
+        setContent(contentArr)
+
+        console.log(content)
+
+        //alert('dd')
+        let countArr = [...countList]
+
+        countArr.pop()	// index 사용 X
+        // countArr[counter] = counter	// index 사용 시 윗줄 대신 사용
+        setCountList(countArr)
+    }
     const onCalendar = () => {
         setCalendar(!calendar)
+    }
+    const onRegister = () => {
+
+        let arr = hashtag.split("#").filter((word) => word !== "");
+        setHashtagList(arr)
+        console.log(hashtagList)
     }
 
     return(
@@ -36,13 +85,13 @@ function Upload(props){
                         source={require('./backButton.png')}/>
                 </TouchableOpacity>
                 <Text style={styles.title}>새 버킷리스트</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={onRegister}>
                     <Text style={styles.enterBtn}>등록</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={{flexDirection: "column", margin: "3%"}}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={addImage}>
                     <Image
                         style={
                             {width: 90, height: 90, marginLeft: 130}
@@ -50,14 +99,22 @@ function Upload(props){
                         source={require('./PlusImg.png')}/>
                 </TouchableOpacity>
                 <View>
-                    <TextInput placeholder={"버킷리스트 제목 입력"} placeholderTextColor={'#BBB4B4'} style={styles.inputBox}></TextInput>
-                    <StepInput countList={countList}/>
+                    <TextInput placeholder={"버킷리스트 제목 입력"} placeholderTextColor={'#BBB4B4'} style={styles.inputBox}
+                        onChangeText={text => setTitle(text)}></TextInput>
+                    <StepInput countList={countList} content={content} setContent={setContent}/>
 
                     <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                        <TouchableOpacity style={styles.plusBtn}
-                                          onPress={onAddStep}>
-                            <Text style={{textAlign: "center", fontSize: 16, color: "black"}}> 과정 추가  </Text>
-                        </TouchableOpacity>
+                        <View style={{flexDirection: "row"}}>
+                            <TouchableOpacity style={styles.plusBtn}
+                                              onPress={onAddStep}>
+                                <Text style={{textAlign: "center", fontSize: 16, color: "black"}}> 과정 추가  </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.plusBtn}
+                                              onPress={onRemoveStep}>
+                                <Text style={{textAlign: "center", fontSize: 16, color: "black"}}> 과정 삭제  </Text>
+                            </TouchableOpacity>
+                        </View>
 
                         <TouchableOpacity>
                             <Image
@@ -78,11 +135,14 @@ function Upload(props){
                             }
                             source={require('./date.png')}/>
                     </TouchableOpacity>
-                    <Text style={styles.textBox}>기한 설정</Text>
+                    <Text style={styles.textBox}>{selectedDate}</Text>
                 </View>
-                {calendar && <Calendar/>}
+                {calendar && <Calendar onDayPress={(day)=>{
+                    setSelectedDate(day.dateString)
+                }}/>}
                 <View>
-                    <TextInput placeholder={"#을 이용해 태그를 입력해보세요!(최대 10개)"} placeholderTextColor={'#BBB4B4'} style={styles.inputBox}></TextInput>
+                    <TextInput placeholder={"#을 이용해 태그를 입력해보세요!(최대 10개)"} placeholderTextColor={'#BBB4B4'} style={styles.inputBox}
+                        onChangeText={text => setHashtag(text)}></TextInput>
                 </View>
             </View>
             {/*<View style={{flex: 2}}></View>
@@ -154,7 +214,7 @@ const styles = StyleSheet.create({
     plusBtn:{
         padding: "1.5%",
         borderRadius: 10,
-        width: "25%",
+        width: "33%",
         height: "70%",
         backgroundColor: "#FACBCB",
         marginLeft: "3%"
