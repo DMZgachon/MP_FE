@@ -1,4 +1,6 @@
 import React from 'react';
+import {Footer} from '../Layout/footer'
+import {Header} from '../Layout/Header'
 import {
     SafeAreaView,
     ScrollView,
@@ -9,7 +11,7 @@ import {
     useColorScheme,
     Image,
     View,
-    Button,
+    Button, TouchableHighlight,
 } from 'react-native';
 
 import {
@@ -18,16 +20,15 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import {Footer} from "./Layout/footer";
-import {Header} from './Layout/Header'
 
-function CategoryPage(props){
+function ChattingPage(props){
     return(
         <View style={styles.container}>
 
             <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
-                <Header data = {props.route.params.data[1]}></Header>
+                <Header data = {props.route.params.data}></Header>
             </View>
+
 
 
             <View style={styles.bottomView}>
@@ -56,4 +57,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export {CategoryPage}
+export {ChattingPage}

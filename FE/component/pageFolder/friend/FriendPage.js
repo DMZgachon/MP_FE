@@ -18,10 +18,10 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import {Footer} from "./Layout/footer";
-import {Header} from './Layout/Header'
+import {Footer} from "../Layout/footer";
+import {Header} from '../Layout/Header'
 
-function SearchPage(props){
+function FriendPage(props){
     return(
         <View style={styles.container}>
 
@@ -56,4 +56,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export {SearchPage}
+export {FriendPage}

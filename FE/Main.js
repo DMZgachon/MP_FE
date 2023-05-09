@@ -5,10 +5,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'; // 
 import {MainPage} from './component/loginFolder/MainPage';
 import {HomePage} from './component/pageFolder/Home/HomePage';
 import {Edit} from './component/pageFolder/Home/Edit';
-import {SearchPage} from './component/pageFolder/SearchPage';
-import {ChattingPage} from './component/pageFolder/ChattingPage';
-import {FriendPage} from './component/pageFolder/FriendPage';
-import {CategoryPage} from './component/pageFolder/CategoryPage';
+import {SearchPage} from './component/pageFolder/search/SearchPage';
+import {ChattingPage} from './component/pageFolder/chatting/ChattingPage';
+import {FriendPage} from './component/pageFolder/friend/FriendPage';
+import {CategoryPage} from './component/pageFolder/category/CategoryPage';
 import {Upload} from './component/pageFolder/Home/Upload';
 import {Login} from './component/loginFolder/Login';
 import {Signup} from './component/signUpFolder/Signup';
