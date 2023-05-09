@@ -44,7 +44,7 @@ function Edit(props){
         <View style={styles.container}>
 
             <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
-                <Header></Header>
+                <Header data = '카테고리 삭제'></Header>
             </View>
 
             <View style ={{ width : '100%', height : '60%', alignItems : 'center', margin : 3}}>

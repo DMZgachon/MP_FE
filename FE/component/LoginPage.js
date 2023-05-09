@@ -68,6 +68,14 @@ function LoginPage(props){
                 </TouchableOpacity>
             </View>
 
+            <View style ={{position: 'absolute', top: 20, left: 350, right: 0 }}>
+                <TouchableOpacity style={styles.EditButton} onPress={()=>{
+                    props.navigation.navigate('MainPage')}
+                }>
+                    <Text style ={{flexDirection :'row', justifyContent : 'flex-start'}}>로그아웃</Text>
+                </TouchableOpacity>
+            </View>
+
 
 
             <View style ={{ width : '100%', height : '70%', alignItems : 'center', margin : 3}}>
