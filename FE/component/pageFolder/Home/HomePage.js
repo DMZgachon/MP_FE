@@ -157,6 +157,7 @@ function HomePage(props){
                 {/*        </View>*/}
                 {/*    </View>*/}
                 {/*</View>*/}
+                {/*이거 안됨*/}
                 <View>
                     <Upload navigation = {props.navigation}/>
                 </View>
