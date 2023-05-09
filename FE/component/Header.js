@@ -22,6 +22,7 @@ function Header(props){
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
+        height : '80%'
     },
     title : {
         fontSize : 25,

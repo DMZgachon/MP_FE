@@ -8,6 +8,7 @@ import {Edit} from './component/Edit'
 import {SearchPage} from './component/SearchPage'
 import {ChattingPage} from './component/ChattingPage'
 import {FriendPage} from './component/FriendPage'
+import {Category} from './component/Category'
 
 const Stack = createNativeStackNavigator(); // Stack Navigation함수를 Stack변수명으로 저장
 
@@ -21,6 +22,8 @@ const Main = () => {
                 <Stack.Screen name="SearchPage" component={SearchPage} />
                 <Stack.Screen name="ChattingPage" component={ChattingPage} />
                 <Stack.Screen name="FriendPage" component={FriendPage} />
+                <Stack.Screen name="Category" component={Category} />
+
             </Stack.Navigator>
         </NavigationContainer>
     );

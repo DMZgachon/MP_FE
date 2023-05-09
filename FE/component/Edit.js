@@ -1,18 +1,9 @@
-import React from 'react';
 import {Header} from './Header'
-
+import React, {Component, useState} from 'react';
 import {
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    useColorScheme,
-    Image,
-    View,
-    Button,
-} from 'react-native';
+    View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
+    TouchableHighlight, Modal, Button, Alert
+} from 'react-native'
 
 import {
     Colors,
@@ -20,21 +11,78 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {Footer} from "./footer";
 
 function Edit(props){
+    console.log('Edit Page : ', props.route.params.data)
+    const [images, changeImage] = useState(props.route.params.data)
+
+    const showAlert = (content, index) => {
+        Alert.alert(
+            content,
+            'Delete Sure?',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel'
+                },
+                {
+                    text: 'OK', onPress: () => {
+                        console.log(content)
+                        const filteredCategory = images.filter(item => item[1] !== content);
+                        changeImage(filteredCategory);
+                        console.log(content, '카테고리 삭제함')
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    };
+
     return(
         <View style={styles.container}>
-            <Header data = {props.data}></Header>
-            <View style={{flex: 2}}></View>
-            <Text style={styles.textBold}>안녕하세요.</Text>
-            <Text style={styles.text}>편집 화면입니다..</Text>
-            <View style={{flex: 2}}></View>
-            <View style={{flexDirection: 'row', flex: 2}}>
-                <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('LoginPage', {data : 'My Bucket App'})}
-                }>
-                    <Text style={styles.buttonText}>메인 화면 돌아가기</Text>
-                </TouchableOpacity>
+
+            <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+                <Header></Header>
+            </View>
+
+            <View style ={{ width : '100%', height : '60%', alignItems : 'center', margin : 3}}>
+                    <ScrollView>
+                        {
+                            images.map((content, i ) =>{
+                                console.log(content[1])
+                                return(
+                                    <View>
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                            {showAlert(content[1], i)}
+                                            } key={i}>
+
+                                            <Image
+                                                style={{
+                                                    width: 300,
+                                                    height: 220,
+                                                    borderColor: 'blue',
+                                                    marginBottom: 20 // 이미지 간격 조절
+                                                }}
+                                                source={{uri : content[0]}}
+                                            />
+                                        </TouchableOpacity>
+
+                                    </View>
+                                )
+                            })
+                        }
+                    </ScrollView>
+            </View>
+
+
+
+            <View style={styles.bottomView}>
+                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
+                    <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
+                </View>
             </View>
         </View>
     )

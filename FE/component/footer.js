@@ -33,13 +33,10 @@ function Footer(props){
         setIsModalVisible(false);
     };
 
-    console.log(props.data)
     useEffect(() =>{
        if(props.data == 'My BucketList App'){
            changePage(!ifMain)
-           console.log('in if')
        }else {
-           console.log('in else')
        }
     },[props.data])
 
@@ -47,6 +44,7 @@ function Footer(props){
     // 맞으면 + 아니면 이미지 로고
     return(
         <View style={styles.container}>
+            {   console.log(props.data) }
             <View style = {{width : '100%', height : '100%', flexDirection: 'row'}}>
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
                     <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
@@ -67,10 +65,9 @@ function Footer(props){
                 {
                     ifMain ?  <View style ={{flex : 1.5, alignItems : 'center'}}>
                         <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                            props.setIsModalVisible(true)
-                            props.navigation.navigate('addCategory',{data : 'addCategory Page'})}
+                            props.setIsModalVisible(true)}
                         }>
-                            <Text style ={{fontSize : 35}}> + </Text>
+                            <Text style ={{fontSize : 35}}> ➕ </Text>
                         </TouchableOpacity>
                     </View> : <View style ={{flex : 1.5, alignItems : 'center'}}>
                         <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
@@ -98,97 +95,6 @@ function Footer(props){
                     </TouchableOpacity>
                 </View>
             </View>
-
-            <Modal
-                animationType="slide"
-                transparent={false}
-                visible={isModalVisible}
-                onRequestClose={handleCloseModal}>
-                <View>
-                    <View style={{alignItems : 'center'}}>
-                        <View style ={{width : '100%', height : '20%'}}>
-                            <Text style ={{textAlign : 'center', fontSize : 30}}>새로운 버킷 리스트 추가하기</Text>
-                        </View>
-                        <View style ={{width : '80%', height : '70%', backgroundColor : 'gray', borderRadius : 10}}>
-                            <Text style ={{textAlign : 'center'}}>버킷 리스트 이름 설정하기</Text>
-                            <TextInput placeholder="버킷리스트 이름"></TextInput>
-                            <Text style ={{textAlign : 'center'}}>버킷s 리스트 이름 설정하기</Text>
-                            <TextInput placeholder="준비과정"></TextInput>
-                            <TextInput placeholder="준비과정"></TextInput>
-                            <TextInput placeholder="준비과정"></TextInput>
-                            <TextInput placeholder="준비과정"></TextInput>
-
-                        </View>
-                        <View>
-                            <TouchableHighlight onPress={handleCloseModal} underlayColor ="red"
-                                                style={{width : '13%'}}>
-                                <Text>돌아가기</Text>
-                            </TouchableHighlight>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-
-
-
-            <Modal
-                animationType="slide"
-                transparent={false}
-                visible={isModalVisible}
-                onRequestClose={handleCloseModal}>
-                <View>
-                    <View style={{alignItems : 'center'}}>
-                        <View style ={{width : '100%', height : '20%'}}>
-                            <Text style ={{textAlign : 'center', fontSize : 30}}>새로운 버킷 리스트 추가하기</Text>
-                        </View>
-                        <View style ={{width : '80%', height : '70%', backgroundColor : 'gray', borderRadius : 10}}>
-                            <Text style ={{textAlign : 'center'}}>버킷 리스트 이름 설정하기</Text>
-                            <TextInput placeholder="버킷리스트 이름"></TextInput>
-                            <Text style ={{textAlign : 'center'}}>버킷s 리스트 이름 설정하기</Text>
-                            <TextInput placeholder="준비과정"></TextInput>
-                            <TextInput placeholder="준비과정"></TextInput>
-                            <TextInput placeholder="준비과정"></TextInput>
-                            <TextInput placeholder="준비과정"></TextInput>
-
-                        </View>
-                        <View>
-                            <TouchableHighlight onPress={handleCloseModal} underlayColor ="red"
-                                                style={{width : '13%'}}>
-                                <Text>돌아가기</Text>
-                            </TouchableHighlight>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-
-
-            <Modal
-                animationType="slide"
-                transparent={false}
-                visible={isModalVisible}
-                onRequestClose={handleCloseModal2}>
-                <View>
-                    <View style={{alignItems : 'center'}}>
-                        <View style ={{width : '100%', height : '20%'}}>
-                            <Text style ={{textAlign : 'center', fontSize : 30}}>새로운 카테고리 추가하기</Text>
-                        </View>
-                        <View style ={{width : '80%', height : '70%', backgroundColor : 'gray', borderRadius : 10}}>
-                            <Text style ={{textAlign : 'center'}}>카테고리 이름</Text>
-                            <TextInput placeholder="카테고리 이름 설정"></TextInput>
-                            <Text style ={{textAlign : 'center'}}>이미지 첨부</Text>
-                            <TextInput placeholder="이미지 주소 첨부하기"></TextInput>
-
-
-                        </View>
-                        <View>
-                            <TouchableHighlight onPress={handleCloseModal2} underlayColor ="red"
-                                                style={{width : '13%'}}>
-                                <Text>돌아가기</Text>
-                            </TouchableHighlight>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
 
         </View>
     )
