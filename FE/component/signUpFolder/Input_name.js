@@ -9,32 +9,31 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
-function Input_phonenum(props){
+function Input_name(props){
     return(
         <View style={styles.container}>
             <View style={styles.navBox}>
                 <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                    props.navigation.navigate('Input_name')}
+                    props.navigation.navigate('Signup')}
                 }>
                     <Image style={styles.backImg}
-                           source={require('./backButton.png')}/>
+                           source={require('../img/backButton.png')}/>
                 </TouchableOpacity>
             </View>
             <View style={{flex: 2}}></View>
-            <Text style={styles.Title}>전화번호</Text>
+            <Text style={styles.Title}>이름</Text>
             <Text style={styles.text}>입력 해주세용</Text>
             <View style={{flex: 1}}></View>
 
             <TextInput
                 style={styles.textInput}
-                placeholder="전화번호를 입력해주세요."
+                placeholder="이름을 입력해주세요."
                 secureTextEntry={true}
             />
             <View style={{flex: 2}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('Input_code')}
+                    props.navigation.navigate('Input_phonenum')}
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>
@@ -42,6 +41,7 @@ function Input_phonenum(props){
         </View>
     )
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -100,12 +100,12 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 10,
         paddingHorizontal: 10,
-        height: 40,
         width: "65%",
+        height: 40,
         //borderRadius: 10,
         borderColor: 'black',
         borderWidth: 1
     }
 });
 
-export {Input_phonenum}
+export {Input_name}

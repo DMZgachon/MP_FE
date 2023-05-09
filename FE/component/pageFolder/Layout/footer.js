@@ -48,7 +48,7 @@ function Footer(props){
             <View style = {{width : '100%', height : '100%', flexDirection: 'row'}}>
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
                     <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                        props.navigation.navigate('LoginPage', {data : 'My BucketList App'})}
+                        props.navigation.navigate('HomePage', {data : 'My BucketList App'})}
                     }>
                         <Text style ={{fontSize : 35}}> 🏠 </Text>
                     </TouchableOpacity>

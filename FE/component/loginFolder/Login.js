@@ -24,7 +24,7 @@ function Login(props){
                         props.navigation.navigate('MainPage')}
                     }>
                         <Image style={styles.backImg}
-                               source={require('./backButton.png')}/>
+                               source={require('../img/backButton.png')}/>
                     </TouchableOpacity>
                 </View>
             <View style={{flex: 1}}></View>
@@ -65,7 +65,7 @@ function Login(props){
             </View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('Upload')}
+                    props.navigation.navigate('HomePage', {data : "My BucketList App"})}
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>

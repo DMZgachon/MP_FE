@@ -26,7 +26,7 @@ function Signup(props){
                     props.navigation.navigate('MainPage')}
                 }>
                     <Image style={styles.backImg}
-                           source={require('./backButton.png')}/>
+                           source={require('../img/backButton.png')}/>
                 </TouchableOpacity>
             </View>
             <View style={{flex: 1}}></View>
@@ -66,8 +66,8 @@ function Signup(props){
                 <Image
                     source={
                         showPassword
-                            ? require('./visible.png')
-                            : require('./invisible.png')
+                            ? require('../img/visible.png')
+                            : require('../img/invisible.png')
                     }
                     style={styles.E_image}
                     resizeMode="contain"

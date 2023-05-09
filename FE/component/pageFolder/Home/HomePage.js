@@ -3,8 +3,8 @@ import {
     View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
     TouchableHighlight, Modal, ImageBackground
 } from 'react-native';
-import {Header} from './Header'
-
+import {Header} from '../Layout/Header'
+import {Upload} from "./Upload";
 
 import {
     Colors,
@@ -12,7 +12,7 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import {Footer} from "./footer";
+import {Footer} from "../Layout/footer";
 import * as PropTypes from "prop-types";
 
 function ImageButton(props) {
@@ -20,7 +20,7 @@ function ImageButton(props) {
 }
 
 
-function LoginPage(props){
+function HomePage(props){
     //여기가 이제 + 버튼 관리하는 스테이트
     const [isModalVisible, setIsModalVisible] = useState(false);
     const handleOpenModal = () => {
@@ -134,28 +134,31 @@ function LoginPage(props){
                 transparent={false}
                 visible={isModalVisible}
                 onRequestClose={handleCloseModal}>
-                <View>
-                    <View style={{alignItems : 'center'}}>
-                        <View style ={{width : '100%', height : '20%'}}>
-                            <Text style ={{textAlign : 'center', fontSize : 30}}>새로운 버킷 리스트 추가하기</Text>
-                        </View>
-                        <View style ={{width : '80%', height : '70%', backgroundColor : 'gray', borderRadius : 10}}>
-                            <Text style ={{textAlign : 'center'}}>버킷 리스트 이름 설정하기</Text>
-                            <TextInput placeholder="버킷리스트 이름"></TextInput>
-                            <Text style ={{textAlign : 'center'}}>버킷s 리스트 이름 설정하기</Text>
-                            <TextInput placeholder="준비과정"></TextInput>
-                            <TextInput placeholder="준비과정"></TextInput>
-                            <TextInput placeholder="준비과정"></TextInput>
-                            <TextInput placeholder="준비과정"></TextInput>
+                {/*<View>*/}
+                {/*    <View style={{alignItems : 'center'}}>*/}
+                {/*        <View style ={{width : '100%', height : '20%'}}>*/}
+                {/*            <Text style ={{textAlign : 'center', fontSize : 30}}>새로운 버킷 리스트 추가하기</Text>*/}
+                {/*        </View>*/}
+                {/*        <View style ={{width : '80%', height : '70%', backgroundColor : 'gray', borderRadius : 10}}>*/}
+                {/*            <Text style ={{textAlign : 'center'}}>버킷 리스트 이름 설정하기</Text>*/}
+                {/*            <TextInput placeholder="버킷리스트 이름"></TextInput>*/}
+                {/*            <Text style ={{textAlign : 'center'}}>버킷s 리스트 이름 설정하기</Text>*/}
+                {/*            <TextInput placeholder="준비과정"></TextInput>*/}
+                {/*            <TextInput placeholder="준비과정"></TextInput>*/}
+                {/*            <TextInput placeholder="준비과정"></TextInput>*/}
+                {/*            <TextInput placeholder="준비과정"></TextInput>*/}
 
-                        </View>
-                        <View>
-                            <TouchableHighlight onPress={handleCloseModal} underlayColor ="red"
-                                                style={{width : '13%'}}>
-                                <Text>돌아가기</Text>
-                            </TouchableHighlight>
-                        </View>
-                    </View>
+                {/*        </View>*/}
+                {/*        <View>*/}
+                {/*            <TouchableHighlight onPress={handleCloseModal} underlayColor ="red"*/}
+                {/*                                style={{width : '13%'}}>*/}
+                {/*                <Text>돌아가기</Text>*/}
+                {/*            </TouchableHighlight>*/}
+                {/*        </View>*/}
+                {/*    </View>*/}
+                {/*</View>*/}
+                <View>
+                    <Upload navigation = {props.navigation}/>
                 </View>
             </Modal>
 
@@ -212,4 +215,4 @@ const styles = StyleSheet.create({
 
 });
 
-export {LoginPage}
+export {HomePage}

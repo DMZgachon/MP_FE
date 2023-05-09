@@ -18,7 +18,7 @@ function Input_code(props){
                     props.navigation.navigate('Input_phonenum')}
                 }>
                     <Image style={styles.backImg}
-                           source={require('./backButton.png')}/>
+                           source={require('../img/backButton.png')}/>
                 </TouchableOpacity>
             </View>
             <View style={{flex: 2}}></View>

@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import {TouchableOpacity, Text, TextInput, StyleSheet, View} from "react-native";
 
-const StepInput = (props) => {
-
+function StepInput(props) {
     const onRegister = (i, text) => {
         props.content[i] = text;
         props.setContent([...props.content]);
     }
+
     return(
         <View>
             {props.countList && props.countList.map((item, i) => {
@@ -32,6 +32,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         margin:"3%"
     }
-})
+});
 
-export default StepInput;
+export {StepInput};

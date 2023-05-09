@@ -82,7 +82,7 @@ function Upload(props){
                     props.navigation.navigate('MainPage')}
                 }>
                     <Image
-                        source={require('./backButton.png')}/>
+                        source={require('../../img/backButton.png')}/>
                 </TouchableOpacity>
                 <Text style={styles.title}>새 버킷리스트</Text>
                 <TouchableOpacity onPress={onRegister}>
@@ -96,7 +96,7 @@ function Upload(props){
                         style={
                             {width: 90, height: 90, marginLeft: 130}
                         }
-                        source={require('./PlusImg.png')}/>
+                        source={require('../../img/PlusImg.png')}/>
                 </TouchableOpacity>
                 <View>
                     <TextInput placeholder={"버킷리스트 제목 입력"} placeholderTextColor={'#BBB4B4'} style={styles.inputBox}
@@ -121,7 +121,7 @@ function Upload(props){
                                 style={
                                     {width: 20, height: 30}
                                 }
-                                source={require('./qm.png')}/>
+                                source={require('../../img/qm.png')}/>
                             <Text>help!</Text>
                         </TouchableOpacity>
                     </View>
@@ -133,7 +133,7 @@ function Upload(props){
                             style={
                                 {width: 35, height: 32}
                             }
-                            source={require('./date.png')}/>
+                            source={require('../../img/date.png')}/>
                     </TouchableOpacity>
                     <Text style={styles.textBox}>{selectedDate}</Text>
                 </View>
@@ -151,7 +151,7 @@ function Upload(props){
             <View style={{flex: 2}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('LoginPage')}
+                    props.navigation.navigate('HomePage')}
                 }>
                     <Text style={styles.buttonText}>시작하기</Text>
                 </TouchableOpacity>

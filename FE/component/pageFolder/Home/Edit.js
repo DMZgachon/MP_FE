@@ -1,4 +1,4 @@
-import {Header} from './Header'
+import {Header} from '../Layout/Header'
 import React, {Component, useState} from 'react';
 import {
     View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
@@ -11,7 +11,7 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import {Footer} from "./footer";
+import {Footer} from "../Layout/footer";
 
 function Edit(props){
     console.log('Edit Page : ', props.route.params.data)

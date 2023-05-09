@@ -18,15 +18,15 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import {Footer} from "./footer";
-import {Header} from './Header'
+import {Footer} from "./Layout/footer";
+import {Header} from './Layout/Header'
 
-function FriendPage(props){
+function CategoryPage(props){
     return(
         <View style={styles.container}>
 
             <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
-                <Header data = {props.route.params.data}></Header>
+                <Header data = {props.route.params.data[1]}></Header>
             </View>
 
 
@@ -56,4 +56,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export {FriendPage}
+export {CategoryPage}
