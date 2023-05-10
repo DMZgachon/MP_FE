@@ -11,8 +11,12 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import SwipeButton from 'rn-swipe-button';
+import instance from "../../api/axiosInstance";
+
+// 이제 Config.API_URL을 사용하여 API 요청을 수행할 수 있습니다.
 
 function Login(props){
+    const [phone, setPhone] = useState('01052672383');
     const handleSignup = () => {
         props.navigation.navigate('Signup');
     };
@@ -65,7 +69,23 @@ function Login(props){
             </View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('HomePage', {data : "My BucketList App"})}
+                    // props.navigation.navigate('HomePage', {data : "My BucketList App"})
+                        instance.get(`/api/auth/check/sendSMS`,
+                            {params: {to : phone}},
+                            {
+                                withCredentials : true
+                            }
+                            ).then((res)=>{
+                                console.log(res);
+                                if(res.data.data.success){
+                                    ToastAndroid.show("인증번호가 전송되었습니다.", ToastAndroid.SHORT);
+                                    props.navigation.navigate('HomePage', {data : "My BucketList App"});
+                                }else{
+                                    ToastAndroid.show("인증번호 전송에 실패했습니다.", ToastAndroid.SHORT);
+                                }
+                        })
+                            .catch((err)=>{console.log(err)});
+                    }
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>
