@@ -70,19 +70,13 @@ function Login(props){
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
                     // props.navigation.navigate('HomePage', {data : "My BucketList App"})
-                        instance.get(`/api/auth/check/sendSMS`,
-                            {params: {to : phone}},
+                        instance.get(`/api/profile`,
                             {
                                 withCredentials : true
                             }
                             ).then((res)=>{
-                                console.log(res);
-                                if(res.data.data.success){
-                                    ToastAndroid.show("인증번호가 전송되었습니다.", ToastAndroid.SHORT);
-                                    props.navigation.navigate('HomePage', {data : "My BucketList App"});
-                                }else{
-                                    ToastAndroid.show("인증번호 전송에 실패했습니다.", ToastAndroid.SHORT);
-                                }
+                            ToastAndroid.show("됐다", ToastAndroid.SHORT);
+                            props.navigation.navigate('HomePage', {data : "My BucketList App"});
                         })
                             .catch((err)=>{console.log(err)});
                     }
