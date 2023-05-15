@@ -15,7 +15,7 @@ function Completion(props){
         <View style={styles.container}>
             <View style={{flex: 2}}></View>
             <Text style={styles.Title}>회원가입 완료.</Text>
-            <Text style={styles.text}>당신의 꿈을 응원합니당</Text>
+            <Text style={styles.text}>당신의 꿈을 응원합니다</Text>
             <View style={{flex: 2}}></View>
 
             <View style={{flexDirection: 'row', flex: 2}}>

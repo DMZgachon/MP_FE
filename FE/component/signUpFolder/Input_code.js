@@ -43,7 +43,7 @@ function Input_code(props){
                         "phonenumber":phoneNum
                     }).then((res)=>{
                         console.log(res.data)
-                        props.navigation.navigate('Login');
+                        props.navigation.navigate('Completion');
                     })
                 }
                 else{
