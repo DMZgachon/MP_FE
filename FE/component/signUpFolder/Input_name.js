@@ -1,6 +1,8 @@
-import React from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
-    TouchableHighlight, Modal} from 'react-native';
+import React, {useState} from 'react';
+import {
+    View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
+    TouchableHighlight, Modal, Alert, ToastAndroid
+} from 'react-native';
 
 import {
     Colors,
@@ -9,7 +11,36 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+import { useLocation } from 'react-router-dom';
+
+import axios from 'axios'
+import instance from "../../api/axiosInstance";
+
 function Input_name(props){
+
+    const [name, setName] = useState('')
+    const [phoneNum, setPhoneNum] = useState(props.route.params.phoneNum)
+    const [password, setPassword] = useState(props.route.params.password)
+
+    const onEnterBtn = () => {
+        if (name == ''){
+            console.log('empty!')
+            Alert.alert('이름을 입력하세요!')
+        }
+        else{
+            //휴대폰으로 인증번호 보내기 작업
+            instance.get(`/api/auth/check/sendSMS`, {params: {to:phoneNum}},
+                {
+                    withCredentials : true
+                }
+            ).then((res)=>{
+                ToastAndroid.show("됐다", ToastAndroid.SHORT);
+                props.navigation.navigate('Input_code', {name:name, phoneNum:phoneNum, password:password});
+            })
+                .catch((err)=>{console.log(err)});
+        }
+    }
     return(
         <View style={styles.container}>
             <View style={styles.navBox}>
@@ -28,12 +59,11 @@ function Input_name(props){
             <TextInput
                 style={styles.textInput}
                 placeholder="이름을 입력해주세요."
-                secureTextEntry={true}
+                onChangeText={text => setName(text)}
             />
             <View style={{flex: 2}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
-                <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('Input_phonenum')}
+                <TouchableOpacity style={styles.button} onPress={()=>{onEnterBtn()}
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>

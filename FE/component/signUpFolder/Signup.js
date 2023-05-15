@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
 
 import {SafeAreaView, View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
-    Button, StatusBar, TouchableHighlight, Modal, ToastAndroid} from 'react-native';
+    Button, StatusBar, TouchableHighlight, Modal, ToastAndroid, Alert} from 'react-native';
+
+
+import { useNavigate } from 'react-router-dom';
 
 import {
     Colors,
@@ -16,8 +19,19 @@ function Signup(props){
     const handleSignup = () => {
         props.navigation.navigate('Login');
     };
-    const [password, setPassword] = useState('');
+    const [phoneNum, setPhoneNum] = useState('')
+    const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false);
+
+    const onEnterBtn = () => {
+        if (phoneNum == '' || password == ''){
+            console.log('empty')
+            Alert.alert('전화번호와 비밀번호를 모두 입력하세요!')
+        }
+        else{
+            props.navigation.navigate('Input_name', {phoneNum:phoneNum, password:password})
+        }
+    }
 
     return(
         <View style={styles.container}>
@@ -53,6 +67,7 @@ function Signup(props){
             <TextInput
                 style={styles.textInput}
                 placeholder="전화번호를 입력해주세요."
+                onChangeText={text => setPhoneNum(text)}
             />
             <View style={{flexDirection: "row"}}>
             <TextInput
@@ -76,8 +91,7 @@ function Signup(props){
             </View>
             <View style={{flex: 2}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
-                <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('Input_name')}
+                <TouchableOpacity style={styles.button} onPress={()=>{onEnterBtn()}
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>

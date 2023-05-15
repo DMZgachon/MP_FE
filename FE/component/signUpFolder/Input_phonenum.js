@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
     TouchableHighlight, Modal} from 'react-native';
 
@@ -11,6 +11,8 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 function Input_phonenum(props){
+    const [phoneNum, setPhoneNum] = useState('')
+
     return(
         <View style={styles.container}>
             <View style={styles.navBox}>
@@ -30,6 +32,7 @@ function Input_phonenum(props){
                 style={styles.textInput}
                 placeholder="전화번호를 입력해주세요."
                 secureTextEntry={true}
+                onChangeText={text => setPhoneNum(text)}
             />
             <View style={{flex: 2}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>

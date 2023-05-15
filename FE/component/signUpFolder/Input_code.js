@@ -1,6 +1,8 @@
-import React from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
-    TouchableHighlight, Modal} from 'react-native';
+import React, {useState} from 'react';
+import {
+    View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
+    TouchableHighlight, Modal, Alert, ToastAndroid
+} from 'react-native';
 
 import {
     Colors,
@@ -9,18 +11,61 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import axios from "axios";
+import instance from "../../api/axiosInstance";
 
 function Input_code(props){
+
+    const [name, setName] = useState(props.route.params.name)
+    const [phoneNum, setPhoneNum] = useState(props.route.params.phoneNum)
+    const [password, setPassword] = useState(props.route.params.password)
+    const [verifyNum, setVerifyNum] = useState('')
+
+    const onEnterBtn = () => {
+        if (verifyNum == ''){
+            console.log('empty!')
+            Alert.alert('인증번호를 입력하세요!')
+        }
+        else{
+            //휴대폰으로 인증번호 보내기 작업
+            instance.get(`/api/auth/check/verifySMS`, {params: {code:verifyNum, to:phoneNum}},
+                {
+                    withCredentials : true
+                }
+            ).then((res)=>{
+                console.log(res.data)
+                if(res.data.data.success == true){
+                    console.log('인증번호 일치, 회원가입 성공')
+
+                    instance.post('/api/auth/signup', {
+                        "name" : name,
+                        "password":password,
+                        "phonenumber":phoneNum
+                    }).then((res)=>{
+                        console.log(res.data)
+                        props.navigation.navigate('Login');
+                    })
+                }
+                else{
+                    console.log("인증번호 오류")
+                }
+                props.navigation.navigate('Input_code', {name:name, phoneNum:phoneNum, password:password});
+            })
+                .catch((err)=>{console.log(err)});
+        }
+    }
+
     return(
         <View style={styles.container}>
             <View style={styles.navBox}>
                 <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                    props.navigation.navigate('Input_phonenum')}
+                    props.navigation.navigate('Input_name')}
                 }>
                     <Image style={styles.backImg}
                            source={require('../img/backButton.png')}/>
                 </TouchableOpacity>
             </View>
+
             <View style={{flex: 2}}></View>
             <Text style={styles.Title}>인증번호</Text>
             <Text style={styles.text}>입력 해주세용</Text>
@@ -30,13 +75,14 @@ function Input_code(props){
                 style={styles.textInput}
                 placeholder="인증번호를 입력해주세요"
                 secureTextEntry={true}
+                onChangeText={text => setVerifyNum(text)}
             />
             <Text style={styles.buttonText2} >인증번호 재전송</Text>
             <View style={{flex: 2}}></View>
 
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('Completion')}
+                    onEnterBtn()}
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>
