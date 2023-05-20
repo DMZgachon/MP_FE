@@ -20,8 +20,69 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {Footer} from "../Layout/footer";
 import {Header} from '../Layout/Header'
+import {useFocusEffect} from "@react-navigation/native";
+import {instance} from "../../../api/axiosInstance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 function FriendPage(props){
+
+    const getAccess = async () => {
+        try {
+            const accessToken = await AsyncStorage.getItem('accessToken')
+            const refreshToken = await AsyncStorage.getItem('refreshToken')
+            console.log('IN getAccess method access : ', accessToken)
+            console.log('IN getAccess method access : ', refreshToken)
+
+            return { accessToken, refreshToken };
+        } catch (error) {
+            // handle the error
+            console.log(error);
+        }
+    }
+
+    const CancelToken = axios.CancelToken;
+    let cancel;
+
+    useFocusEffect(
+        React.useCallback(() => {
+            console.log('Screen was focused');
+
+            const getAndReissueTokens = async () => {
+                const { accessToken, refreshToken } = await getAccess();
+
+                // Cancel the previous request before making a new request
+                if (cancel !== undefined) cancel();
+
+                instance
+                    .post('/api/auth/reissue', {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    })
+                    .then(async (response) => {
+                        await AsyncStorage.setItem('accessToken', response.data.data.accessToken);
+                        await AsyncStorage.setItem('refreshToken', response.data.data.refreshToken);
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        if (axios.isCancel(error)) {
+                            console.log('Request canceled', error.message);
+                        } else {
+                            // handle the error
+                            console.log(error);
+                        }
+                    });
+            }
+            getAndReissueTokens().then(r => console.log('getAndReissueTokens'));
+
+            return () => {
+                console.log('Screen was unfocused');
+                if (cancel !== undefined) cancel();
+            };
+        }, [])
+    );
+
+
     return(
         <View style={styles.container}>
 
