@@ -16,10 +16,13 @@ import instance from "../../api/axiosInstance";
 // 이제 Config.API_URL을 사용하여 API 요청을 수행할 수 있습니다.
 
 function Login(props){
-    const [phone, setPhone] = useState('01052672383');
+
     const handleSignup = () => {
         props.navigation.navigate('Signup');
     };
+
+    const [phoneNum, setPhoneNum] = useState('')
+    const [password, setPassword] = useState('')
 
     return(
             <View style={styles.container}>
@@ -54,11 +57,13 @@ function Login(props){
             <TextInput
                 style={styles.textInput}
                 placeholder="전화번호를 입력해주세요."
+                onChangeText={text => setPhoneNum(text)}
             />
             <TextInput
                 style={styles.textInput}
                 placeholder="비밀번호를 입력해주세요."
                 secureTextEntry={true}
+                onChangeText={text => setPassword(text)}
             />
             <View style={{flex: 2}}>
                 <TouchableOpacity onPress={()=>{
@@ -70,13 +75,14 @@ function Login(props){
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
                     // props.navigation.navigate('HomePage', {data : "My BucketList App"})
-                        instance.get(`/api/profile`,
+                        instance.post(`/api/auth/login`,
                             {
-                                withCredentials : true
-                            }
-                            ).then((res)=>{
-                            ToastAndroid.show("됐다", ToastAndroid.SHORT);
-                            props.navigation.navigate('HomePage', {data : "My BucketList App"});
+                                withCredentials : true,
+                                "password": password,
+                                "phoneNumber": phoneNum
+                            }).then((res)=>{
+                                console.log(res.data.data)
+                            //ToastAndroid.show("됐다", ToastAndroid.SHORT);
                         })
                             .catch((err)=>{console.log(err)});
                     }
