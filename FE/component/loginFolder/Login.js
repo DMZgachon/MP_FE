@@ -11,30 +11,26 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import SwipeButton from 'rn-swipe-button';
-import instance from "../../api/axiosInstance";
-
-// 이제 Config.API_URL을 사용하여 API 요청을 수행할 수 있습니다.
 
 function Login(props){
-    const [phone, setPhone] = useState('01052672383');
     const handleSignup = () => {
         props.navigation.navigate('Signup');
     };
 
     return(
-            <View style={styles.container}>
-                <View style={styles.navBox}>
-                    <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                        props.navigation.navigate('MainPage')}
-                    }>
-                        <Image style={styles.backImg}
-                               source={require('../img/backButton.png')}/>
-                    </TouchableOpacity>
-                </View>
+        <View style={styles.container}>
+            <View style={styles.navBox}>
+                <TouchableOpacity style={styles.backBtn} onPress={()=>{
+                    props.navigation.navigate('MainPage')}
+                }>
+                    <Image style={styles.backImg}
+                           source={require('../img/backButton.png')}/>
+                </TouchableOpacity>
+            </View>
             <View style={{flex: 1}}></View>
             <Text style={styles.Title}>로그인</Text>
             <View style={{flex: 2}}></View>
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'flex-start', marginLeft: '20%' }}>
                 <SwipeButton
                     disabled={false}
                     swipeSuccessThreshold={30}
@@ -50,7 +46,7 @@ function Login(props){
                     railBackgroundColor="#dd9b9c" //(Optional)
                     railBorderColor="#bbeaff" //(Optional)
                 />
-                </View>
+            </View>
             <TextInput
                 style={styles.textInput}
                 placeholder="전화번호를 입력해주세요."
@@ -64,27 +60,17 @@ function Login(props){
                 <TouchableOpacity onPress={()=>{
                     props.navigation.navigate('Set_pw_phone')}
                 }>
-                    <Text style={styles.buttonText2}>비밀번호 재설정</Text>
+                    <Text style={styles.buttonText2}>비밀번호를 잊어버리셨습니까?</Text>
                 </TouchableOpacity>
             </View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    // props.navigation.navigate('HomePage', {data : "My BucketList App"})
-                        instance.get(`/api/profile`,
-                            {
-                                withCredentials : true
-                            }
-                            ).then((res)=>{
-                            ToastAndroid.show("됐다", ToastAndroid.SHORT);
-                            props.navigation.navigate('HomePage', {data : "My BucketList App"});
-                        })
-                            .catch((err)=>{console.log(err)});
-                    }
+                    props.navigation.navigate()}
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>
             </View>
-            </View>
+        </View>
     )
 }
 
@@ -127,7 +113,9 @@ const styles = StyleSheet.create({
         textAlign: "left",
         fontWeight: 'bold',
         fontSize: 32,
-        color: "black"
+        color: "black",
+        alignItems: 'flex-start',
+        marginLeft: '-5%'
     },
     button:{
         width: "70%",
@@ -157,9 +145,10 @@ const styles = StyleSheet.create({
     },
     buttonText2:{
         textAlign: 'center',
-        color: "#c77293",
+        color: "#de6467",
         fontSize: 15,
-        textDecorationLine: 'underline'
+        textDecorationLine: 'underline',
+        marginTop: '5%'
     },
     textInput: {
         marginTop: 20,
@@ -167,9 +156,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         height: 40,
         width: "65%",
+        fontSize: 16,
         //borderRadius: 10,
-        borderColor: 'black',
-        borderWidth: 1
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
     }
 });
 
