@@ -8,6 +8,7 @@ import {Edit} from './component/pageFolder/Home/Edit';
 import {SearchPage} from './component/pageFolder/search/SearchPage';
 import {ChattingPage} from './component/pageFolder/chatting/ChattingPage';
 import {FriendPage} from './component/pageFolder/friend/FriendPage';
+import {Setting} from "./component/pageFolder/friend/Setting";
 import {CategoryPage} from './component/pageFolder/category/CategoryPage';
 import {Upload} from './component/pageFolder/Home/Upload';
 import {Login} from './component/loginFolder/Login';
@@ -19,7 +20,7 @@ import {Input_phonenum} from './component/signUpFolder/Input_phonenum';
 import {Set_pw} from './component/findFolder/Set_pw';
 import {Set_pw_code} from './component/findFolder/Set_pw_code';
 import {Set_pw_phone} from './component/findFolder/Set_pw_phone';
-
+import {Check_pw} from './component/findFolder/Check_pw';
 const Stack = createNativeStackNavigator(); // Stack Navigation함수를 Stack변수명으로 저장
 
 function Main(){
@@ -42,7 +43,9 @@ function Main(){
                 <Stack.Screen name="SearchPage" component={SearchPage} />
                 <Stack.Screen name="ChattingPage" component={ChattingPage} />
                 <Stack.Screen name="FriendPage" component={FriendPage} />
+                <Stack.Screen name="Setting" component={Setting}/>
                 <Stack.Screen name="Category" component={CategoryPage} />
+                <Stack.Screen name="Check_pw" component={Check_pw} />
             </Stack.Navigator>
         </NavigationContainer>
     )

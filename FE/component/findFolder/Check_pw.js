@@ -10,35 +10,36 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-function Input_code(props){
+function Check_pw(props){
     return(
         <View style={styles.container}>
             <View style={styles.navBox}>
                 <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                    props.navigation.navigate('Input_phonenum')}
+                    props.navigation.navigate('Setting')}
                 }>
                     <Image style={styles.backImg}
                            source={require('../img/backButton.png')}/>
                 </TouchableOpacity>
             </View>
+
             <View style={{flex: 2}}></View>
-            <Text style={styles.Title}>인증번호</Text>
+            <Text style={styles.Title}>현재 비밀번호</Text>
             <Text style={styles.text}>입력 해주세용</Text>
             <View style={{flex: 1}}></View>
 
             <TextInput
                 style={styles.textInput}
-                placeholder="인증번호를 입력해주세요"
+                placeholder="현재 비밀번호를 입력해주세요."
                 secureTextEntry={true}
+                onChangeText={text => setPassword(text)}
             />
-            <Text style={styles.buttonText2} >인증번호 재전송</Text>
-            <View style={{flex: 2}}></View>
-
+            <View style={{flex: 1}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('Completion')}
+                    props.navigation.navigate('Set_pw_code')}
                 }>
                     <Text style={styles.buttonText}>입력</Text>
+                    //입력 누름과 동시에 로그아웃
                 </TouchableOpacity>
             </View>
         </View>
@@ -61,7 +62,8 @@ const styles = StyleSheet.create({
         padding: "3%",
     },
     backImg: {
-        marginLeft: 20,
+        marginLeft: 25,
+        marginTop: 8,
         width: 35,
         height: 30,
         resizeMode: "cover"
@@ -71,40 +73,36 @@ const styles = StyleSheet.create({
         width: "55%",
         textAlign: "left",
         fontWeight: 'bold',
-        fontSize: 32,
+        fontSize: 25,
         color: "black"
     },
     button:{
         width: "70%",
         borderRadius: 40,
-        height: "45%",
+        height: "35%",
         marginLeft: 10,
         justifyContent: 'center',
         backgroundColor: "#FF037C"
     },
     textBold:{
+        marginLeft: '-5%',
         width: "55%",
+        paddingTop: 40,
         textAlign: "left",
         fontWeight: 'bold',
-        fontSize: 32,
+        fontSize: 28,
         color: "black"
     },
     text:{
         marginLeft: '-5%',
         width: "55%",
         textAlign: "left",
-        fontSize: 32
+        fontSize: 28
     },
     buttonText:{
         textAlign: 'center',
         color: 'white',
         fontSize: 20
-    },
-    buttonText2:{
-        textAlign: 'center',
-        color: "#c77293",
-        fontSize: 15,
-        textDecorationLine: 'underline'
     },
     textInput: {
         marginTop: 20,
@@ -119,4 +117,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export {Input_code}
+export {Check_pw}

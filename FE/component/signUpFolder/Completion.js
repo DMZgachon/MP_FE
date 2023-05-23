@@ -14,16 +14,18 @@ function Completion(props){
     return(
         <View style={styles.container}>
             <View style={{flex: 2}}></View>
-            <Text style={styles.Title}>회원가입 완료.</Text>
-            <Text style={styles.text}>당신의 꿈을 응원합니당</Text>
-            <View style={{flex: 2}}></View>
+            <Text style={styles.Title}>회원가입 완료</Text>
+            <Text style={styles.text}>당신의 꿈을 응원합니다</Text>
+            <View style={{flex: 1.5}}></View>
 
             <View style={{flexDirection: 'row', flex: 2}}>
-              <TouchableOpacity onPress={()=>{
-                props.navigation.navigate('Login')}
-              }>
-                <Text style={styles.buttonText2}>로그인 페이지로 돌아가기</Text>
-             </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={(
+
+                )=>{props.navigation.navigate('Login', {data : 'Login'})}}>
+
+                    <Text style={styles.buttonText}>로그인 페이지 이동</Text>
+                </TouchableOpacity>
+
              </View>
             </View>
     )
@@ -35,39 +37,31 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
     },
     Title:{
-        width: "55%",
-        textAlign: "left",
+        width: "47%",
         fontWeight: 'bold',
         fontSize: 32,
         color: "black"
     },
     button:{
+        marginTop: 15,
         width: "60%",
+        borderRadius: 40,
         height: "25%",
         marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#f3b1d0"
-    },
-    textBold:{
-        width: "55%",
-        textAlign: "left",
-        fontWeight: 'bold',
-        fontSize: 32,
-        color: "black"
+        backgroundColor: "#fd037c"
     },
     text:{
-        width: "55%",
+        width: "50%",
         paddingTop: 10,
-        textAlign: "left",
         fontSize: 20,
-        color: "#565656"
+        color: "#4b4b4b"
     },
-    buttonText2:{
+    buttonText:{
         textAlign: 'center',
-        color: "#c77293",
-        fontSize: 15,
-        textDecorationLine: 'underline',
-        fontWeight: 'bold'
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 500,
     },
     textInput: {
         marginTop: 20,

@@ -19,7 +19,7 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {Footer} from "../Layout/footer";
-import {Header} from '../Layout/Header'
+import {Header} from '../Layout/Header';
 
 function CategoryPage(props){
     return(
