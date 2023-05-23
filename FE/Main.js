@@ -9,6 +9,7 @@ import {SearchPage} from './component/pageFolder/search/SearchPage';
 import {ChattingPage} from './component/pageFolder/chatting/ChattingPage';
 import {FriendPage} from './component/pageFolder/friend/FriendPage';
 import {Setting} from "./component/pageFolder/friend/Setting";
+import {ManagePage} from "./component/pageFolder/friend/ManagePage";
 import {CategoryPage} from './component/pageFolder/category/CategoryPage';
 import {Upload} from './component/pageFolder/Home/Upload';
 import {Login} from './component/loginFolder/Login';
@@ -44,6 +45,7 @@ function Main(){
                 <Stack.Screen name="ChattingPage" component={ChattingPage} />
                 <Stack.Screen name="FriendPage" component={FriendPage} />
                 <Stack.Screen name="Setting" component={Setting}/>
+                <Stack.Screen name="ManagePage" component={ManagePage}/>
                 <Stack.Screen name="Category" component={CategoryPage} />
                 <Stack.Screen name="Check_pw" component={Check_pw} />
             </Stack.Navigator>

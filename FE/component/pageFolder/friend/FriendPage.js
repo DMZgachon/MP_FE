@@ -21,6 +21,7 @@ import {
 import {Footer} from "../Layout/footer";
 import {Header} from '../Layout/Header';
 import {Setting} from "./Setting";
+import {ManagaPage} from "./ManagePage";
 
 function FriendPage(props){
     return(
@@ -55,7 +56,7 @@ function FriendPage(props){
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={styles.settext}>계정 관리</Text>
                     <View style={{flex: 1}}></View>
-                    <TouchableOpacity onPress={()=>{props.navigation.navigate()}}>
+                    <TouchableOpacity onPress={()=>{props.navigation.navigate('ManagePage', {data : 'ManagePage'})}}>
                         <Image style={styles.moreImg} source={require('FE/component/img/more.png')}/>
                     </TouchableOpacity>
                 </View>
