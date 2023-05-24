@@ -29,14 +29,13 @@ function Input_code(props){
             <TextInput
                 style={styles.textInput}
                 placeholder="인증번호를 입력해주세요"
-                secureTextEntry={true}
             />
             <Text style={styles.buttonText2} >인증번호 재전송</Text>
             <View style={{flex: 2}}></View>
 
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('Completion')}
+                    props.navigation.navigate('Input_name')}
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>

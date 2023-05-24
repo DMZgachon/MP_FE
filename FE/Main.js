@@ -10,6 +10,8 @@ import {ChattingPage} from './component/pageFolder/chatting/ChattingPage';
 import {FriendPage} from './component/pageFolder/friend/FriendPage';
 import {Setting} from "./component/pageFolder/friend/Setting";
 import {ManagePage} from "./component/pageFolder/friend/ManagePage";
+import {Question} from "./component/pageFolder/friend/Question";
+import {Condition} from "./component/pageFolder/friend/Condition";
 import {CategoryPage} from './component/pageFolder/category/CategoryPage';
 import {Upload} from './component/pageFolder/Home/Upload';
 import {Login} from './component/loginFolder/Login';
@@ -46,6 +48,8 @@ function Main(){
                 <Stack.Screen name="FriendPage" component={FriendPage} />
                 <Stack.Screen name="Setting" component={Setting}/>
                 <Stack.Screen name="ManagePage" component={ManagePage}/>
+                <Stack.Screen name="Question" component={Question}/>
+                <Stack.Screen name="Condition" component={Condition}/>
                 <Stack.Screen name="Category" component={CategoryPage} />
                 <Stack.Screen name="Check_pw" component={Check_pw} />
             </Stack.Navigator>

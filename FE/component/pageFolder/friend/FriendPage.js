@@ -35,8 +35,8 @@ function FriendPage(props){
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Image style={styles.profileImg} source={require('FE/component/img/profile.png')}/>
                     <View style={{flex: 1}}>
-                        <Text style={styles.text1}>이름:  김이영  010-2673-6326</Text>
-                        <Text style={styles.text2}>버킷리스트를 위해 달려가는 중</Text>
+                        <Text style={styles.text1}>이 름:  본인 이름  (본인 닉네임) </Text>
+                        <Text style={styles.text2}>본인 ------- 목표</Text>
                     </View>
                 </View>
                 <TouchableOpacity style={styles.editbtn} onPress={()=>{props.navigation.navigate('Setting', {data : 'Setting'})}}>
@@ -70,7 +70,7 @@ function FriendPage(props){
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={styles.settext}>자주 묻는 질문</Text>
                     <View style={{flex: 1}}></View>
-                    <TouchableOpacity onPress={()=>{props.navigation.navigate()}}>
+                    <TouchableOpacity onPress={()=>{props.navigation.navigate('Question', {data : 'Question'})}}>
                         <Image style={styles.moreImg} source={require('FE/component/img/more.png')}/>
                     </TouchableOpacity>
                 </View>
@@ -78,7 +78,7 @@ function FriendPage(props){
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={styles.settext}>이용 약관</Text>
                     <View style={{flex: 1}}></View>
-                    <TouchableOpacity onPress={()=>{props.navigation.navigate()}}>
+                    <TouchableOpacity onPress={()=>{props.navigation.navigate('Condition', {data : 'Condition'})}}>
                         <Image style={styles.moreImg} source={require('FE/component/img/more.png')}/>
                     </TouchableOpacity>
                 </View>

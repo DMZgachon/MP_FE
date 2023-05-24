@@ -45,13 +45,18 @@ function Setting(props){ //이름 설정 잘못함.. 셋팅이 아니라 프로�
                         placeholder="현재 이름"
                     />
                 </View>
-
+                <View style={styles.inputContainer}>
+                    <Text style={styles.Title}>닉네임: </Text>
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder="현재 닉네임"
+                    />
+                </View>
                 <View style={styles.inputContainer}>
                     <Text style={styles.Title}>자기소개: </Text>
                     <TextInput
                         style={styles.textInput}
                         placeholder="현재 자기소개"
-                        secureTextEntry={true}
                     />
                 </View>
 

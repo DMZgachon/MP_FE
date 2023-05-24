@@ -22,13 +22,13 @@ function Input_phonenum(props){
                 </TouchableOpacity>
             </View>
             <View style={{flex: 2}}></View>
-            <Text style={styles.Title}>전화번호</Text>
-            <Text style={styles.text}>입력 해주세용</Text>
+            <Text style={styles.Title}>비밀번호</Text>
+            <Text style={styles.text}>재입력 해주세용</Text>
             <View style={{flex: 1}}></View>
 
             <TextInput
                 style={styles.textInput}
-                placeholder="전화번호를 입력해주세요."
+                placeholder="비밀번호를 다시 입력해주세요." //회원가입 페이지에서 입력한 비밀번호가 다르다면, 비밀번호가 다르다고 팝업
                 secureTextEntry={true}
             />
             <View style={{flex: 2}}></View>

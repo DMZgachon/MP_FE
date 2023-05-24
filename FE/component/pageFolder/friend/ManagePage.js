@@ -36,7 +36,7 @@ function ManagePage(props){
                     <Text style={styles.text1}>저장된 나의 전화번호 </Text>
                     <Text style={styles.Title}>010-0000-0000 </Text>
                 </View>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{flexDirection: 'row', alignItems: 'center', marginTop: '-15%'}}>
                     <Text style={styles.settext}>프로필 편집</Text>
                     <View style={{flex: 1}}></View>
                     <TouchableOpacity onPress={()=>{props.navigation.navigate('Setting', {data : 'Setting'})}}>
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
         color: "#d91717",
         fontSize: 15,
         fontWeight: 'bold',
-        marginTop: '35%'
+        marginTop: '20%'
     },
 });
 

@@ -81,7 +81,7 @@ function Signup(props) {
             <View style={{flex: 2}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={() => {
-                    props.navigation.navigate('Input_name')
+                    props.navigation.navigate('Input_phonenum')
                 }
                 }>
                     <Text style={styles.buttonText}>입력</Text>

@@ -28,12 +28,11 @@ function Input_name(props){
             <TextInput
                 style={styles.textInput}
                 placeholder="이름을 입력해주세요."
-                secureTextEntry={true}
             />
             <View style={{flex: 2}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('Input_phonenum')}
+                    props.navigation.navigate('Completion')}
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>
