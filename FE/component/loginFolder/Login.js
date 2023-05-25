@@ -43,6 +43,7 @@ function Login(props){
                 </TouchableOpacity>
             </View>
             <View style={{flex: 1}}></View>
+
             <Text style={styles.Title}>로그인</Text>
             <View style={{flex: 2}}></View>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

@@ -20,8 +20,28 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {Footer} from "../Layout/footer";
 import {Header} from '../Layout/Header'
+import axios from "axios";
+import {useFocusEffect} from "@react-navigation/native";
+import {getAndReissueTokens} from "../../../api/reRefresh";
+
+
 
 function SearchPage(props){
+    const CancelToken = axios.CancelToken;
+    let cancel;
+
+    useFocusEffect(
+        React.useCallback(() => {
+            console.log('Screen was focused');
+
+            getAndReissueTokens(cancel).then(r => console.log('getAndReissueTokens'));
+
+            return () => {
+                console.log('Screen was unfocused');
+                if (cancel !== undefined) cancel();
+            };
+        }, [])
+    );
     return(
         <View style={styles.container}>
 

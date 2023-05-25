@@ -20,8 +20,28 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {useFocusEffect} from "@react-navigation/native";
+import axios from "axios";
+import {getAndReissueTokens} from "../../../api/reRefresh";
+
+
 
 function ChattingPage(props){
+    const CancelToken = axios.CancelToken;
+    let cancel;
+
+    useFocusEffect(
+        React.useCallback(() => {
+            console.log('Screen was focused');
+
+            getAndReissueTokens(cancel).then(r => console.log('getAndReissueTokens'));
+
+            return () => {
+                console.log('Screen was unfocused');
+                if (cancel !== undefined) cancel();
+            };
+        }, [])
+    );
     return(
         <View style={styles.container}>
 
