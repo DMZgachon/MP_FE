@@ -1,6 +1,8 @@
 import React, {Component, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView,TouchableHighlight,
-Modal} from 'react-native';
+import {
+    View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, TouchableHighlight,
+    Modal, ToastAndroid, Image
+} from 'react-native';
 
 import {
     Colors,
@@ -9,10 +11,14 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import instance from "../../../api/axiosInstance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 function Footer(props){
     // 그 여기서 자신의 페이지 확인
     // 여기서 페이지 별 스테이트 만들고 메인페이지 인지 아닌지ç
+    const propCategory = props.category
     const [ifMain, changePage] = useState(false);
 
     //여기가 이제 + 버튼 관리하는 스테이트
@@ -33,47 +39,65 @@ function Footer(props){
         setIsModalVisible(false);
     };
 
+    const [accessToken, setAccessToken] = useState('')
+    const [refreshToken, setRefreshToken] = useState('')
+    const objectToken = new Object()
+    const [bucket, bucketList] = useState('')
     useEffect(() =>{
-       if(props.data == 'My BucketList App'){
-           changePage(!ifMain)
-       }else {
-       }
-    },[props.data])
+        const getAccess = async () => {
+            try {
+                const storedValue = await AsyncStorage.getItem('accessToken');
+                console.log('Stored value:', storedValue);
+            } catch (e){
+                console.log(e)
+            }
+        }
+
+        if(props.data == 'HomePage'){
+            changePage(true)
+        }else {
+        }
+    },[props])
 
 
     // 맞으면 + 아니면 이미지 로고
     return(
         <View style={styles.container}>
-            {   console.log(props.data) }
+            {  console.log(props.data) }
             <View style = {{width : '100%', height : '100%', flexDirection: 'row'}}>
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
                     <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                        props.navigation.navigate('HomePage', {data : 'My BucketList App'})}
+                        props.navigation.navigate('HomePage', {data : 'HomePage'})}
                     }>
                         <Text style ={{fontSize : 35}}> 🏠 </Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
-                    <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                        props.navigation.navigate('SearchPage',{data : 'SearchPage'})}
+                    <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
+                        props.navigation.navigate('SearchPage', {data : 'SearchPage'})}
                     }>
                         <Text style ={{fontSize : 35}}> 🔍 </Text>
                     </TouchableOpacity>
                 </View>
 
                 {
-                    ifMain ?  <View style ={{flex : 1.5, alignItems : 'center'}}>
-                        <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                            props.setIsModalVisible(true)}
+                    ifMain ?  <View style ={{flex : 1.4, alignItems : 'center'}}>
+                        <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
+                            console.log('category data : ',propCategory)
+                            props.navigation.navigate('Upload', {data : propCategory})
+                        }
                         }>
                             <Text style ={{fontSize : 35}}> ➕ </Text>
                         </TouchableOpacity>
                     </View> : <View style ={{flex : 1.5, alignItems : 'center'}}>
-                        <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                            props.navigation.navigate()}
+                        <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
+                            props.navigation.navigate('HomePage', {data : 'HomePage'})}
                         }>
-                            <Text style ={{fontSize : 35}}> Logo </Text>
+                            <Image
+                                source={require('./../../img/꿈동이_new.png')}
+                                style={{ width: 80, height: 70, marginTop: -10 }}
+                            />
                         </TouchableOpacity>
                     </View>
                 }

@@ -1,19 +1,16 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {
     View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
-    TouchableHighlight, Modal, ImageBackground
+    TouchableHighlight, Modal, ImageBackground, ToastAndroid
 } from 'react-native';
 import {Header} from '../Layout/Header'
 import {Upload} from "./Upload";
-
-import {
-    Colors,
-    DebugInstructions,
-    LearnMoreLinks,
-    ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 import {Footer} from "../Layout/footer";
-import * as PropTypes from "prop-types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { instance, setAccessTokenHeader } from '../../../api/axiosInstance'
+import {useFocusEffect} from "@react-navigation/native";
+import axios from "axios";
+import {ca} from "date-fns/locale";
 
 function ImageButton(props) {
     return null;
@@ -30,6 +27,10 @@ function HomePage(props){
         setIsModalVisible(false);
     };
 
+    const [addCategory, changeCategoryName] = useState('')
+    const [addCategoryImage, changeCategoryImage] = useState('')
+
+
     //카테고리 추가 버튼 관리 스테이트
     const [isModalVisible2, setIsModalVisible2] = useState(false);
     const handleOpenModal2 = () => {
@@ -39,23 +40,108 @@ function HomePage(props){
         setIsModalVisible2(false);
     };
 
+    const [accessT, setAccessT] = useState('')
+    const [refreshT, setRefreshT] = useState('')
+    const [chk, setChk] = useState(0)
 
 
-    const [page, changePage] = useState('My BucketList App')
+    const [page, changePage] = useState('HomePage')
     // 나중에 서버로 부터 카테고리 받아올거임 근데 형식이 배열이 어떻게 되는지에 따라서 index 를 어떻게 지정할지 달라질듯
     const [category,changeCategory] = useState([
-        ['https://www.korea.kr/newsWeb/resources/temp/images/000074/img_01.jpg', 'study'],
-        ['https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_2916,h_1944,f_auto/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/eltdn5sjc3mnkq2sg3z7/NZONE퀸스타운스카이다이빙-클룩KLOOK한국.jpg','sports'],
-        ['https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202204/03/089fb301-56e6-4169-b5c5-8efea295cdd6.jpg','money'],
-        ['https://media.istockphoto.com/id/1392044276/ko/벡터/폴더-아이콘-스톡-그림-파일-폴더-링-바인더-아이콘-컴퓨터-데스크톱-pc.jpg?s=1024x1024&w=is&k=20&c=ZELmyl9nCe2EpYZ7C5gMSMaqwg2HLq_zmpQI4fhutT8=','things']
+
     ])
     const image = { uri: "https://reactjs.org/logo-og.png" };
+
+    const getAccess = async () => {
+        try {
+            const accessToken = await AsyncStorage.getItem('accessToken')
+            const refreshToken = await AsyncStorage.getItem('refreshToken')
+            console.log('IN getAccess method access : ', accessToken)
+            console.log('IN getAccess method access : ', refreshToken)
+
+            return { accessToken, refreshToken };
+        } catch (error) {
+            // handle the error
+            console.log(error);
+        }
+    }
+
+    const CancelToken = axios.CancelToken;
+    let cancel;
+
+    const [categoryList, setCategoryList] = useState([]); // 카테고리 목록 상태 추가
+
+    useFocusEffect(
+        React.useCallback(() => {
+            console.log('Screen was focused');
+
+            const getAndReissueTokens = async () => {
+                const { accessToken, refreshToken } = await getAccess();
+
+                // Cancel the previous request before making a new request
+                if (cancel !== undefined) cancel();
+
+                // 카테고리 목록이 비어있을 때만 API 요청
+                // 카테고리 리스트를 먼저 비워줍니다
+                setCategoryList([]);
+                changeCategory([]);
+
+                instance
+                    .post('/api/auth/reissue', {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    })
+                    .then(async (response) => {
+                        instance
+                            .get('api/category/categoryList', {})
+                            .then(async (response) => {
+                                console.log('id is : ', response.data.data.id)
+                                const newItems = response.data.data.map(item => [item.categoryImage, item.categoryName, item.id]);
+
+                                // Update the state.
+                                changeCategory(prevItems => [...prevItems, ...newItems]);
+
+                                // 카테고리 목록 상태 업데이트
+                                setCategoryList(newItems);
+                            })
+                            .catch((error) => {
+                                if (axios.isCancel(error)) {
+                                    console.log('Request canceled', error.message);
+                                } else {
+                                    // handle the error
+                                    console.log('카테고리 발급 실패');
+                                }
+                            });
+
+
+                        await AsyncStorage.setItem('accessToken', response.data.data.accessToken);
+                        await AsyncStorage.setItem('refreshToken', response.data.data.refreshToken);
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        if (axios.isCancel(error)) {
+                            console.log('Request canceled', error.message);
+                        } else {
+                            // handle the error
+                            console.log(error);
+                        }
+                    });
+            }
+            getAndReissueTokens().then(r => console.log('getAndReissueTokens'));
+
+            return () => {
+                console.log('Screen was unfocused');
+                if (cancel !== undefined) cancel();
+            };
+        }, []) // 카테고리 목록 상태가 변경될 때마다 이 훅을 다시 실행
+    );
+
+
 
 
 
     return(
         <View style={styles.container}>
-
             <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
                 <Header data = {props.route.params.data}></Header>
 
@@ -78,15 +164,12 @@ function HomePage(props){
 
 
 
-            <View style ={{ width : '100%', height : '70%', alignItems : 'center', margin : 3}}>
+            <View style ={{ width : '2000%', height : '70%', alignItems : 'center', margin : 3}}>
                <ScrollView>
                    {
                        category.map((content, i ) =>{
                            return(
                                <View>
-                                  <View style={{alignContent : 'center'}}>
-                                      <Text style={{fontSize : 20, paddingLeft : '35%'}}> <Text> [</Text> {content[1]} <Text>]</Text> </Text>
-                                  </View>
                                <TouchableOpacity
                                    onPress={() => {
                                        props.navigation.navigate('Category',{data : content})
@@ -96,16 +179,21 @@ function HomePage(props){
                                        }
                                    } key={i}>
 
-                                   <Image
-                                       style={{
-                                           width: 300,
-                                           height: 220,
-                                           borderColor: 'blue',
-                                           marginBottom: 10, // 이미지 간격 조절
-                                           flexDirection : 'row'
-                                       }}
-                                       source={{uri : content[0]}}
-                                   />
+
+                                   <View style={{ flexDirection: 'row' }}>
+                                       <Image
+                                           style={{
+                                               width: 130,
+                                               height: 220,
+                                               borderColor: 'blue',
+                                               marginRight : 5,
+                                               marginBottom: 10, // 이미지 간격 조절
+                                               flexDirection : 'row',
+                                               borderRadius : 10
+                                           }}
+                                           source={{uri : category[i][0]}}
+                                       />
+                                   </View>
                                </TouchableOpacity>
                                </View>
                            )
@@ -115,16 +203,19 @@ function HomePage(props){
             </View>
 
             <View style={{height : '3%', width : '100%', flexDirection : 'row'}}>
-                <TouchableHighlight style={{alignItems : 'center', width : '100%'}} onPress={handleOpenModal2}>
-                    <Text style ={{fontSize : 15}}>카테고리 추가하기</Text>
-                </TouchableHighlight>
+                <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
+                    props.navigation.navigate('addCategory', {data : 'addCategory'})
+                }
+                }>
+                    <Text style ={{fontSize : 10}}> 카테고리 추가하기 </Text>
+                </TouchableOpacity>
             </View>
 
 
             <View style={styles.bottomView}>
                 <View style={{flexDirection: 'row', flex: 1.5, width : '95%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}
-                        setIsModalVisible={setIsModalVisible} ></Footer>
+                        setIsModalVisible={setIsModalVisible} category={category} ></Footer>
                 </View>
             </View>
 
@@ -134,30 +225,6 @@ function HomePage(props){
                 transparent={false}
                 visible={isModalVisible}
                 onRequestClose={handleCloseModal}>
-                {/*<View>*/}
-                {/*    <View style={{alignItems : 'center'}}>*/}
-                {/*        <View style ={{width : '100%', height : '20%'}}>*/}
-                {/*            <Text style ={{textAlign : 'center', fontSize : 30}}>새로운 버킷 리스트 추가하기</Text>*/}
-                {/*        </View>*/}
-                {/*        <View style ={{width : '80%', height : '70%', backgroundColor : 'gray', borderRadius : 10}}>*/}
-                {/*            <Text style ={{textAlign : 'center'}}>버킷 리스트 이름 설정하기</Text>*/}
-                {/*            <TextInput placeholder="버킷리스트 이름"></TextInput>*/}
-                {/*            <Text style ={{textAlign : 'center'}}>버킷s 리스트 이름 설정하기</Text>*/}
-                {/*            <TextInput placeholder="준비과정"></TextInput>*/}
-                {/*            <TextInput placeholder="준비과정"></TextInput>*/}
-                {/*            <TextInput placeholder="준비과정"></TextInput>*/}
-                {/*            <TextInput placeholder="준비과정"></TextInput>*/}
-
-                {/*        </View>*/}
-                {/*        <View>*/}
-                {/*            <TouchableHighlight onPress={handleCloseModal} underlayColor ="red"*/}
-                {/*                                style={{width : '13%'}}>*/}
-                {/*                <Text>돌아가기</Text>*/}
-                {/*            </TouchableHighlight>*/}
-                {/*        </View>*/}
-                {/*    </View>*/}
-                {/*</View>*/}
-                {/*이거 안됨*/}
                 <View>
                     <Upload navigation = {props.navigation}/>
                 </View>
@@ -176,11 +243,13 @@ function HomePage(props){
                         </View>
                         <View style ={{width : '80%', height : '70%', backgroundColor : 'gray', borderRadius : 10}}>
                             <Text style ={{textAlign : 'center'}}>카테고리 이름</Text>
-                            <TextInput placeholder="카테고리 이름 설정"></TextInput>
+                            <TextInput
+                                placeholder="카테고리 이름 설정"
+                                onChangeText={text => changeCategoryName(text)}
+                                value={addCategory}
+                            />
                             <Text style ={{textAlign : 'center'}}>이미지 첨부</Text>
                             <TextInput placeholder="이미지 주소 첨부하기"></TextInput>
-
-
                         </View>
                         <View>
                             <TouchableHighlight onPress={handleCloseModal2} underlayColor ="red"

@@ -12,12 +12,37 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {Footer} from "../Layout/footer";
+import axios from "axios";
+import {useFocusEffect} from "@react-navigation/native";
+import {getAndReissueTokens} from "../../../api/reRefreshToken";
+import {instance, setAccessTokenHeader} from "../../../api/axiosInstance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Edit(props){
-    console.log('Edit Page : ', props.route.params.data)
-    const [images, changeImage] = useState(props.route.params.data)
 
-    const showAlert = (content, index) => {
+
+    const [category, changeCategory] = useState(props.route.params.data);
+
+    const deleteImage = (id) => {
+        instance
+            .delete(`/api/category/delete/${id}`, {})
+            .then(async (response) => {
+                console.log('삭제요청됨' ,response.data);
+                // 삭제 후 상태 업데이트
+                let updatedCategory = category.filter(content => content[2] !== id);
+                changeCategory(updatedCategory); // Update the state with the new array
+            })
+            .catch((error) => {
+                if (axios.isCancel(error)) {
+                    console.log('Request canceled', error.message);
+                } else {
+                    // handle the error
+                    console.log('삭제요청 실패');
+                }
+            });
+    };
+
+    const showAlert = (content, id) => {
         Alert.alert(
             content,
             'Delete Sure?',
@@ -29,16 +54,15 @@ function Edit(props){
                 },
                 {
                     text: 'OK', onPress: () => {
-                        console.log(content)
-                        const filteredCategory = images.filter(item => item[1] !== content);
-                        changeImage(filteredCategory);
-                        console.log(content, '카테고리 삭제함')
+                        console.log('id : ', id)
+                        deleteImage(id); // Call deleteImage function
                     }
                 }
             ],
             { cancelable: false }
         );
     };
+
 
     return(
         <View style={styles.container}>
@@ -50,13 +74,16 @@ function Edit(props){
             <View style ={{ width : '100%', height : '60%', alignItems : 'center', margin : 3}}>
                     <ScrollView>
                         {
-                            images.map((content, i ) =>{
-                                console.log(content[1])
+                            category.map((content, i ) =>{
                                 return(
                                     <View>
+                                        {
+                                            console.log('id : ', content[2])
+                                        }
+
                                         <TouchableOpacity
                                             onPress={() =>
-                                            {showAlert(content[1], i)}
+                                            {showAlert(content[1], content[2])}
                                             } key={i}>
 
                                             <Image

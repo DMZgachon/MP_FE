@@ -1,7 +1,14 @@
-import React, {useState} from 'react';
+import axios from 'axios';
+import Config from 'react-native-config';
+import { instance, setAccessTokenHeader } from '../../api/axiosInstance'
 
-import {SafeAreaView, View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
-    Button, StatusBar, TouchableHighlight, Modal, ToastAndroid} from 'react-native';
+import React, {useEffect, useState} from 'react';
+
+import {
+    SafeAreaView, View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
+    Button, StatusBar, TouchableHighlight, Modal, ToastAndroid, Alert
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
     Colors,
@@ -11,7 +18,6 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import SwipeButton from 'rn-swipe-button';
-import instance from "../../api/axiosInstance";
 
 // 이제 Config.API_URL을 사용하여 API 요청을 수행할 수 있습니다.
 
@@ -21,20 +27,26 @@ function Login(props){
         props.navigation.navigate('Signup');
     };
 
+    const [accessToken, setAccessToken] = useState('')
+    const [refreshToken, setRefreshToken] = useState('')
+    const [phoneNum, setPhoneNum] = useState('')
+    const [password, setPassword] = useState('')
+
     return(
-            <View style={styles.container}>
-                <View style={styles.navBox}>
-                    <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                        props.navigation.navigate('MainPage')}
-                    }>
-                        <Image style={styles.backImg}
-                               source={require('../img/backButton.png')}/>
-                    </TouchableOpacity>
-                </View>
+        <View style={styles.container}>
+            <View style={styles.navBox}>
+                <TouchableOpacity style={styles.backBtn} onPress={()=>{
+                    props.navigation.navigate('MainPage')}
+                }>
+                    <Image style={styles.backImg}
+                           source={require('../img/backButton.png')}/>
+                </TouchableOpacity>
+            </View>
             <View style={{flex: 1}}></View>
+
             <Text style={styles.Title}>로그인</Text>
             <View style={{flex: 2}}></View>
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <SwipeButton
                     disabled={false}
                     swipeSuccessThreshold={30}
@@ -50,15 +62,17 @@ function Login(props){
                     railBackgroundColor="#dd9b9c" //(Optional)
                     railBorderColor="#bbeaff" //(Optional)
                 />
-                </View>
+            </View>
             <TextInput
                 style={styles.textInput}
                 placeholder="전화번호를 입력해주세요."
+                onChangeText={text => setPhoneNum(text)}
             />
             <TextInput
                 style={styles.textInput}
                 placeholder="비밀번호를 입력해주세요."
                 secureTextEntry={true}
+                onChangeText={text => setPassword(text)}
             />
             <View style={{flex: 2}}>
                 <TouchableOpacity onPress={()=>{
@@ -70,21 +84,51 @@ function Login(props){
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
                     // props.navigation.navigate('HomePage', {data : "My BucketList App"})
-                        instance.get(`/api/profile`,
-                            {
-                                withCredentials : true
-                            }
-                            ).then((res)=>{
-                            ToastAndroid.show("됐다", ToastAndroid.SHORT);
-                            props.navigation.navigate('HomePage', {data : "My BucketList App"});
+                    instance
+                        .post('/api/auth/login', {
+                            password: password,
+                            phoneNumber: phoneNum,
                         })
-                            .catch((err)=>{console.log(err)});
-                    }
+                        .then(async (response) => { // async 키워드를 추가합니다.
+                            console.log('We get resopne in login Page',response.data)
+                            const pass = response.data.status
+
+                            if(pass == 200){
+                                console.log('Response in Login Page', response.data);
+                                console.log('access Token in Login', response.data.data.accessToken);
+                                console.log('refresh Toekn in Login', response.data.data.refreshToken);
+
+                                setAccessToken(response.data.data.accessToken)
+                                setRefreshToken(response.data.data.refreshToken)
+                                console.log('we change accessToken', accessToken)
+                                console.log('we change refreshToken', refreshToken)
+
+
+                                // accessToken과 refreshToken을 직접 AsyncStorage에 저장합니다.
+                                console.log('we setItme in asy store')
+                                await AsyncStorage.setItem('accessToken', response.data.data.accessToken);
+                                await AsyncStorage.setItem('refreshToken', response.data.data.refreshToken);
+
+                                setAccessTokenHeader(response.data.data.accessToken) // axios header 저장
+
+                                ToastAndroid.show('됐다', ToastAndroid.SHORT);
+
+                                props.navigation.navigate('HomePage', { data: 'HomePage' });
+                            }
+                            else {
+                                Alert.alert('회원가입이 되지 않았습니다람쥐')
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                }
+
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>
             </View>
-            </View>
+        </View>
     )
 }
 

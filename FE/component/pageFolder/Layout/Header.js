@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         height : '80%'
     },
     title : {
-        fontSize : 25,
+        fontSize : 20,
         padding : 20
     },
 
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: '#000',
         padding: 10,
-        fontSize: 20,
+        fontSize: 15,
     },
 
     EditButton : {

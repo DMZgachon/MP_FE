@@ -18,7 +18,8 @@ import {Input_name} from './component/signUpFolder/Input_name';
 import {Input_phonenum} from './component/signUpFolder/Input_phonenum';
 import {Set_pw} from './component/findFolder/Set_pw';
 import {Set_pw_code} from './component/findFolder/Set_pw_code';
-import {Set_pw_phone} from './component/findFolder/Set_pw_phone';
+import {Set_pw_phone} from "./component/findFolder/Set_pw_phone";
+import {addCategory} from "./component/pageFolder/category/addCategory";
 
 const Stack = createNativeStackNavigator(); // Stack Navigation함수를 Stack변수명으로 저장
 
@@ -43,6 +44,7 @@ function Main(){
                 <Stack.Screen name="ChattingPage" component={ChattingPage} />
                 <Stack.Screen name="FriendPage" component={FriendPage} />
                 <Stack.Screen name="Category" component={CategoryPage} />
+                <Stack.Screen name="addCategory" component={addCategory} />
             </Stack.Navigator>
         </NavigationContainer>
     )
