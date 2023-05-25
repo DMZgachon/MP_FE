@@ -10,7 +10,7 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import axios from "axios";
-import instance from "../../api/axiosInstance";
+import {instance, setAccessTokenHeader} from "../../api/axiosInstance";
 
 function Input_code(props){
 

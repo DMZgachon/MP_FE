@@ -15,7 +15,7 @@ import {
 import { useLocation } from 'react-router-dom';
 
 import axios from 'axios'
-import instance from "../../api/axiosInstance";
+import {instance, setAccessTokenHeader} from "../../api/axiosInstance";
 
 function Input_name(props){
 
@@ -31,9 +31,7 @@ function Input_name(props){
         else{
             //휴대폰으로 인증번호 보내기 작업
             instance.get(`/api/auth/check/sendSMS`, {params: {to:phoneNum}},
-                {
-                    withCredentials : true
-                }
+
             ).then((res)=>{
                 ToastAndroid.show("됐다", ToastAndroid.SHORT);
                 props.navigation.navigate('Input_code', {name:name, phoneNum:phoneNum, password:password});

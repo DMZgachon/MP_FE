@@ -11,14 +11,13 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import instance from "../../../api/axiosInstance";
+import { instance, setAccessTokenHeader } from "../../../api/axiosInstance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 function Footer(props){
     // 그 여기서 자신의 페이지 확인
     // 여기서 페이지 별 스테이트 만들고 메인페이지 인지 아닌지ç
-    const propCategory = props.category
     const [ifMain, changePage] = useState(false);
 
     //여기가 이제 + 버튼 관리하는 스테이트
@@ -39,10 +38,11 @@ function Footer(props){
         setIsModalVisible(false);
     };
 
+    const bucektCategory = props.category
+    console.log('footer 의 버킷리스트 받은거', props.category)
     const [accessToken, setAccessToken] = useState('')
     const [refreshToken, setRefreshToken] = useState('')
     const objectToken = new Object()
-    const [bucket, bucketList] = useState('')
     useEffect(() =>{
         const getAccess = async () => {
             try {
@@ -63,7 +63,7 @@ function Footer(props){
     // 맞으면 + 아니면 이미지 로고
     return(
         <View style={styles.container}>
-            {  console.log(props.data) }
+            {  console.log("현재 페이지: ", props.data) }
             <View style = {{width : '100%', height : '100%', flexDirection: 'row'}}>
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
                     <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
@@ -74,8 +74,8 @@ function Footer(props){
                 </View>
 
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
-                    <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
-                        props.navigation.navigate('SearchPage', {data : 'SearchPage'})}
+                    <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
+                        props.navigation.navigate('SearchPage',{data : 'SearchPage'})}
                     }>
                         <Text style ={{fontSize : 35}}> 🔍 </Text>
                     </TouchableOpacity>
@@ -84,8 +84,8 @@ function Footer(props){
                 {
                     ifMain ?  <View style ={{flex : 1.4, alignItems : 'center'}}>
                         <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
-                            console.log('category data : ',propCategory)
-                            props.navigation.navigate('Upload', {data : propCategory})
+                            console.log('category data : ',props.category)
+                            props.navigation.navigate('Upload', {data : 'Upload', category1: props.category})
                         }
                         }>
                             <Text style ={{fontSize : 35}}> ➕ </Text>

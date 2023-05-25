@@ -1,5 +1,5 @@
 import React, {Component, useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, Pressable, Platform, PermissionsAndroid} from 'react-native';
+import {Modal, View, Text, TouchableHighlight, Alert, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, Pressable, Platform, PermissionsAndroid} from 'react-native';
 import {StepInput} from "./StepInput";
 import {
     Colors,
@@ -8,12 +8,12 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import { Picker } from '@react-native-picker/picker';
+
 
 import { Calendar } from "react-native-calendars";
 import { format } from "date-fns";
 import { launchImageLibrary, launchCamera } from "react-native-image-picker";
-import {useFocusEffect} from "@react-navigation/native";
+import {useFocusEffect, useRoute} from "@react-navigation/native";
 import {getAndReissueTokens} from "../../../api/reRefresh";
 import axios from "axios";
 import {Footer} from "../Layout/footer";
@@ -21,8 +21,8 @@ import { RadioButton } from 'react-native-paper';
 import { instance, setAccessTokenHeader } from '../../../api/axiosInstance'
 import RNFS from 'react-native-fs';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {route} from "express/lib/router";
-import DropDownPicker from 'react-native-dropdown-picker'
+import DropDownPicker from 'react-native-dropdown-picker';
+
 
 const imagePickerOption = {
     mediaType: "photo",
@@ -31,7 +31,6 @@ const imagePickerOption = {
     includeBase64: Platform.OS === "android",
 };
 function Upload(props){
-    const bucketList =  props.route.params.data
     const [countList, setCountList] = useState([])
     const [calendar, setCalendar] = useState(false)
     const [selectedDate, setSelectedDate] = useState(
@@ -44,26 +43,28 @@ function Upload(props){
     const [hashtag, setHashtag] = useState("");
 
     const [visibility, setVisibility] = useState("공개");
-    const [category, setCategory] = useState(48);
+    const [category, setCategory] = useState(52);
     const [accessToken , setAccess] = useState();
     const formData = new FormData();
-    const [selectedItem, setSelectedItem] = useState('afasdf');
 
     const CancelToken = axios.CancelToken;
     let cancel;
+
+    const route = useRoute();
+    const {data, category1} = route.params;
+    console.log("받아졌나? :" , category1)
+
+    const [selectedValue, setSelectedValue] = useState(null);
+    const items = category1.map((item, index) => ({ label: item[1] , value: item[2] }));
+    const [modalVisible, setModalVisible] = useState(false);
 
     async function fetchTokenAndSet() {
         const token = await AsyncStorage.getItem("accessToken");
         setAccess(token);
     }
-    const [propCategory,change] = useState([])
-    useEffect(()=>{
-        console.log(props.data)
-    })
 
     useFocusEffect(
         React.useCallback( () => {
-
             console.log('Screen was focused');
 
             getAndReissueTokens(cancel).then(r =>
@@ -75,9 +76,9 @@ function Upload(props){
                 console.log('Screen was unfocused');
                 if (cancel !== undefined) cancel();
             };
+
         }, [])
     );
-
 
     const onChangeTextHandler = text => {
         setTitle(text);
@@ -102,7 +103,7 @@ function Upload(props){
         });
     }
 
-const onRemoveStep = () => {
+    const onRemoveStep = () => {
         let contentArr = [...content]
         contentArr.pop()
         setContent(contentArr)
@@ -155,7 +156,7 @@ const onRemoveStep = () => {
 
         formData.append('deadline', "2023-05-19 12:30:00");
 
-        formData.append('category', 46);
+        formData.append('category', category);
 
         // 컨텐츠 리스트 추가
         // Change this
@@ -167,12 +168,13 @@ const onRemoveStep = () => {
 
 
 // To this, if the server expects a single field with a JSON array
-       // formData.append('posts', JSON.stringify(content));
+        // formData.append('posts', JSON.stringify(content));
 
 
 
         //formData에 잘 저장되었는 지 확인
         console.log('-------------------------------------');
+        //console.log("현재 받은 카테고리들:" , props.category)
         // console.log("Title: ", title);
         // console.log("content: ", content);
         // console.log("tagList: ", hashtagList);
@@ -231,19 +233,15 @@ const onRemoveStep = () => {
             console.log("Image already loaded"); // 이미 불러온 이미지가 있다면 메시지 출력
         }
     }
-    const [now_bucekt, setNowBucket] = useState()
-    const items = [
-        {"label": "Item 1", "value": 45},
-        {"label": "313131", "value": 51},
-        {"label": "Item 3", "value": 52}
-    ];
+    const [bucketList, selectBucketList] = useState("");
+
 
     return(
         <View style={{flex: 1}}>
             <ScrollView style={styles.container}>
                 <View style={styles.navBox}>
                     <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                        props.navigation.navigate('HomePage', {data : 'HomePage'})}
+                        props.navigation.navigate('MainPage')}
                     }>
                         <Image
                             source={require('../../img/backButton.png')}/>
@@ -285,9 +283,8 @@ const onRemoveStep = () => {
                                     <Text style={{textAlign: "center", fontSize: 16, color: "black"}}> 과정 삭제  </Text>
                                 </TouchableOpacity>
                                 {
-                                    console.log('버킷리스트 입니다 터치 안: ', bucketList)
+                                    console.log('버킷리스트 입니다 : ', props.data)
                                 }
-
 
                             </View>
 
@@ -320,6 +317,7 @@ const onRemoveStep = () => {
                                    onChangeText={text => setHashtag(text)}></TextInput>
                     </View>
 
+
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <RadioButton.Group onValueChange={value => setVisibility(value)} value={visibility}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -333,25 +331,58 @@ const onRemoveStep = () => {
                         </RadioButton.Group>
                     </View>
 
+                    <View style={{marginTop: 22}}>
+                        {console.log("시발:", items)}
+
+                        <Modal
+                            animationType="slide"
+                            transparent={false}
+                            visible={modalVisible}
+                            onRequestClose={() => {
+                                setModalVisible(false);
+                            }}
+                        >
+                            <View style={{ marginTop: 22 }}>
+                                <View>
+                                    {items.map((item, index) => (
+                                        <TouchableHighlight
+                                            key={index}
+                                            onPress={() => setCategory(item.value)}
+                                        >
+                                            <Text>
+                                                Label: {item.label}, Value: {item.value}
+                                            </Text>
+                                        </TouchableHighlight>
+                                    ))}
+
+                                    <TouchableHighlight
+                                        onPress={() => {
+                                            setModalVisible(false);
+                                        }}
+                                    >
+                                        <Text>Hide Modal</Text>
+                                    </TouchableHighlight>
+                                </View>
+                            </View>
+                        </Modal>
+
+                        <TouchableHighlight
+                            onPress={() => {
+                                setModalVisible(true);
+                            }}
+                        >
+                            <Text>카테고리 선택하기</Text>
+                        </TouchableHighlight>
+
+                    </View>
+
                 </View>
-
-
-                <DropDownPicker
-                    items={items}
-                    defaultValue={selectedItem}
-                    containerStyle={{height: 70}}
-                    style={{backgroundColor: '#fafafa'}}
-                    itemStyle={{
-                        justifyContent: 'flex-start'
-                    }}
-                    dropDownStyle={{backgroundColor: '#fafafa'}}
-                    onChangeItem={item => setSelectedItem(item.value)}
-                />
 
             </ScrollView>
             <View style={styles.bottomView}>
                 <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
-                    <Footer navigation = {props.navigation} ></Footer>
+                    <Footer navigation = {props.navigation} data ={props.route.params.data}
+                           category={category} ></Footer>
                 </View>
             </View>
         </View>
@@ -361,7 +392,8 @@ const onRemoveStep = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "white",
+        overflow: 'visible', // 추가
     },
     navBox: {
         width: "100%",
@@ -450,6 +482,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 50,
     },
+    dropDownStyle: {
+        flex: 1
+    }
 });
 
 export {Upload}

@@ -32,7 +32,7 @@ export const getAndReissueTokens = async (cancel) => {
             await AsyncStorage.setItem('accessToken', response.data.data.accessToken);
             await AsyncStorage.setItem('refreshToken', response.data.data.refreshToken);
             setAccessTokenHeader(response.data.data.accessToken)
-            console.log(response.data);
+            console.log("재발급 성공!", response.data);
         })
         .catch((error) => {
             if (axios.isCancel(error)) {
