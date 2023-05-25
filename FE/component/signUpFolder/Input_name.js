@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
         resizeMode: "cover"
     },
     Title:{
+        marginLeft: '-5%',
         width: "55%",
         textAlign: "left",
         fontWeight: 'bold',
@@ -117,6 +118,7 @@ const styles = StyleSheet.create({
         color: "black"
     },
     text:{
+        marginLeft: '-5%',
         width: "55%",
         textAlign: "left",
         fontSize: 32
@@ -130,12 +132,13 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 10,
         paddingHorizontal: 10,
-        width: "65%",
         height: 40,
+        width: "65%",
+        fontSize: 16,
         //borderRadius: 10,
-        borderColor: 'black',
-        borderWidth: 1
-    }
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
+    },
 });
 
 export {Input_name}

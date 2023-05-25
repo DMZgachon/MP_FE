@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { PanResponder } from 'react-native';
 
 import {SafeAreaView, View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
     Button, StatusBar, TouchableHighlight, Modal, ToastAndroid, Alert} from 'react-native';
@@ -15,29 +16,20 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import SwipeButton from 'rn-swipe-button';
 
-function Signup(props){
-    const handleSignup = () => {
+function Signup(props) {
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [swipeButtonState, setSwipeButtonState] = useState(null);
+    const handleLogin = () => {
         props.navigation.navigate('Login');
     };
-    const [phoneNum, setPhoneNum] = useState('')
-    const [password, setPassword] = useState('')
-    const [showPassword, setShowPassword] = useState(false);
 
-    const onEnterBtn = () => {
-        if (phoneNum == '' || password == ''){
-            console.log('empty')
-            Alert.alert('전화번호와 비밀번호를 모두 입력하세요!')
-        }
-        else{
-            props.navigation.navigate('Input_name', {phoneNum:phoneNum, password:password})
-        }
-    }
-
-    return(
+    return (
         <View style={styles.container}>
             <View style={styles.navBox}>
-                <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                    props.navigation.navigate('MainPage')}
+                <TouchableOpacity style={styles.backBtn} onPress={() => {
+                    props.navigation.navigate('MainPage')
+                }
                 }>
                     <Image style={styles.backImg}
                            source={require('../img/backButton.png')}/>
@@ -46,15 +38,16 @@ function Signup(props){
             <View style={{flex: 1}}></View>
             <Text style={styles.Title}>회원가입</Text>
             <View style={{flex: 2}}></View>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'flex-start', marginLeft: '20%' }}>
                 <SwipeButton
+                    enableRightToLeftSwipe={true}
                     disabled={false}
-                    swipeSuccessThreshold={30}
+                    swipeSuccessThreshold={-30}
                     height={30}
                     width={80}
                     title={"sign up"}
                     titleFontSize={13}
-                    onSwipeSuccess={handleSignup}
+                    onSwipeSuccess={handleLogin}
                     railFillBackgroundColor="#f8c1c2"//(Optional)
                     railFillBorderColor="#f8c1c2" //(Optional)
                     thumbIconBackgroundColor="#ffffff" //(Optional)
@@ -67,31 +60,32 @@ function Signup(props){
             <TextInput
                 style={styles.textInput}
                 placeholder="전화번호를 입력해주세요."
-                onChangeText={text => setPhoneNum(text)}
             />
             <View style={{flexDirection: "row"}}>
-            <TextInput
-                style={styles.textInput}
-                placeholder="비밀번호를 입력해주세요."
-                secureTextEntry={!showPassword}
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-            />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <Image
-                    source={
-                        showPassword
-                            ? require('../img/visible.png')
-                            : require('../img/invisible.png')
-                    }
-                    style={styles.E_image}
-                    resizeMode="contain"
+                <TextInput
+                    style={styles.textInput}
+                    placeholder="비밀번호를 입력해주세요."
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={(text) => setPassword(text)}
                 />
-            </TouchableOpacity>
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                    <Image
+                        source={
+                            showPassword
+                                ? require('../img/visible.png')
+                                : require('../img/invisible.png')
+                        }
+                        style={styles.E_image}
+                        resizeMode="contain"
+                    />
+                </TouchableOpacity>
             </View>
             <View style={{flex: 2}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
-                <TouchableOpacity style={styles.button} onPress={()=>{onEnterBtn()}
+                <TouchableOpacity style={styles.button} onPress={() => {
+                    props.navigation.navigate('Input_phonenum')
+                }
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>
@@ -127,7 +121,9 @@ const styles = StyleSheet.create({
         textAlign: "left",
         fontWeight: 'bold',
         fontSize: 32,
-        color: "black"
+        color: "black",
+        alignItems: 'flex-start',
+        marginLeft: '-5%'
     },
     button:{
         width: "68%",
@@ -167,9 +163,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         height: 40,
         width: "65%",
+        fontSize: 16,
         //borderRadius: 10,
-        borderColor: 'black',
-        borderWidth: 1
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
     },
     E_image: {
         width: 40,
@@ -177,6 +174,34 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 10,
         top: 15,
+    },
+    swipeButtonContainer: {
+        flexDirection: 'row-reverse', // Reverse the direction of the swipe animation
+        justifyContent: 'flex-end', // Align the swipe button to the right
+        alignItems: 'center',
+    },
+    swipeButtonRail: {
+        flex: 1,
+        height: 30,
+        borderRadius: 15,
+        backgroundColor: "#f8c1c2",
+        borderWidth: 1,
+        borderColor: "#f8c1c2",
+    },
+    swipeButtonRailFill: {
+        height: '100%',
+        borderRadius: 15,
+        backgroundColor: '#ffffff',
+        borderWidth: 1,
+        borderColor: '#ffffff',
+    },
+    swipeButtonThumbIcon: {
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        backgroundColor: '#ffffff',
+        borderWidth: 1,
+        borderColor: '#ffffff',
     },
 });
 

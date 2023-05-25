@@ -1,8 +1,6 @@
-import React, {useState} from 'react';
-import {
-    View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
-    TouchableHighlight, Modal, Alert, ToastAndroid
-} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
+    TouchableHighlight, Modal} from 'react-native';
 
 import {
     Colors,
@@ -113,6 +111,7 @@ const styles = StyleSheet.create({
         resizeMode: "cover"
     },
     Title:{
+        marginLeft: '-5%',
         width: "55%",
         textAlign: "left",
         fontWeight: 'bold',
@@ -135,6 +134,7 @@ const styles = StyleSheet.create({
         color: "black"
     },
     text:{
+        marginLeft: '-5%',
         width: "55%",
         textAlign: "left",
         fontSize: 32
@@ -156,10 +156,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         height: 40,
         width: "65%",
+        fontSize: 16,
         //borderRadius: 10,
-        borderColor: 'black',
-        borderWidth: 1
-    }
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
+    },
 });
 
 export {Input_code}

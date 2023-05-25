@@ -13,10 +13,34 @@ import {
 function Set_pw_code(props){
     return(
         <View style={styles.container}>
-            <View style={{flex: 1}}></View>
+            <View style={styles.navBox}>
+                <TouchableOpacity style={styles.backBtn} onPress={()=>{
+                    props.navigation.navigate('Set_pw_phone')}
+                }>
+                    <Image style={styles.backImg}
+                           source={require('../img/backButton.png')}/>
+                </TouchableOpacity>
+            </View>
+            <View style={{flex: 0.5}}></View>
             <Text style={styles.Title}>비밀번호 재설정</Text>
+            <View style={{flex: 0.5}}></View>
             <Text style={styles.textBold}>인증번호</Text>
             <Text style={styles.text}>입력 해주세용</Text>
+            <View style={{flex: 0.5}}></View>
+
+            <TextInput
+                style={styles.textInput}
+                placeholder="인증번호를 입력해주세요."
+                secureTextEntry={true}
+            />
+            <View style={{flex: 1}}></View>
+            <View style={{flexDirection: 'row', flex: 2}}>
+                <TouchableOpacity style={styles.button} onPress={()=>{
+                    props.navigation.navigate('Set_pw')}
+                }>
+                    <Text style={styles.buttonText}>입력</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
@@ -24,19 +48,26 @@ function Input_code(props){
     return (
         <>
             <View style={styles.container}>
+                <View style={styles.navBox}>
+                    <TouchableOpacity style={styles.backBtn} onPress={()=>{
+                        props.navigation.navigate('Input_phonenum')}
+                    }>
+                        <Image style={styles.backImg}
+                               source={require('../img/backButton.png')}/>
+                    </TouchableOpacity>
+                </View>
                 <View style={{flex: 2}}></View>
                 <Text style={styles.Title}>인증번호</Text>
-                <Text style={styles.textBold}>입력 해주세용</Text>
+                <Text style={styles.text}>입력 해주세용</Text>
                 <View style={{flex: 1}}></View>
 
                 <TextInput
                     style={styles.textInput}
-                    placeholder="인증번호를 입력해주세요."
+                    placeholder="인증번호를 입력해주세요"
                     secureTextEntry={true}
                 />
-                <View style={{flex: 1}}></View>
-                <Text style={styles.buttonText2}>인증번호 재전송</Text>
-                <View style={{flex: 1}}></View>
+                <Text style={styles.buttonText2} >인증번호 재전송</Text>
+                <View style={{flex: 2}}></View>
 
                 <View style={{flexDirection: 'row', flex: 2}}>
                     <TouchableOpacity style={styles.button} onPress={()=>{
@@ -44,6 +75,7 @@ function Input_code(props){
                     }></TouchableOpacity>
                     <View style={{flex: 2}}></View>
                 </View>
+
                 <View style={{flexDirection: 'row', flex: 2}}>
                     <TouchableOpacity style={styles.button} onPress={()=>{
                         props.navigation.navigate('Completion')}
@@ -74,20 +106,22 @@ const styles = StyleSheet.create({
         padding: "3%",
     },
     backImg: {
-        marginLeft: 20,
+        marginLeft: 25,
+        marginTop: 8,
         width: 35,
         height: 30,
         resizeMode: "cover"
     },
     Title:{
+        marginLeft: '-5%',
         width: "55%",
         textAlign: "left",
         fontWeight: 'bold',
-        fontSize: 32,
+        fontSize: 25,
         color: "black"
     },
     button:{
-        width: "80%",
+        width: "70%",
         borderRadius: 40,
         height: "35%",
         marginLeft: 10,
@@ -95,17 +129,19 @@ const styles = StyleSheet.create({
         backgroundColor: "#FF037C"
     },
     textBold:{
+        marginLeft: '-5%',
         width: "55%",
         paddingTop: 40,
         textAlign: "left",
         fontWeight: 'bold',
-        fontSize: 32,
+        fontSize: 28,
         color: "black"
     },
     text:{
+        marginLeft: '-5%',
         width: "55%",
         textAlign: "left",
-        fontSize: 32
+        fontSize: 28
     },
     buttonText:{
         textAlign: 'center',
@@ -123,10 +159,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: 10,
         height: 40,
+        width: "65%",
+        fontSize: 16,
         //borderRadius: 10,
-        borderColor: 'black',
-        borderWidth: 1
-    }
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
+    },
 });
 
 export {Set_pw_code};

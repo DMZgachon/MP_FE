@@ -13,11 +13,21 @@ import {
 function Set_pw_phone(props){
     return(
         <View style={styles.container}>
-            <View style={{flex: 1}}></View>
+            <View style={styles.navBox}>
+                <TouchableOpacity style={styles.backBtn} onPress={()=>{
+                    props.navigation.navigate('Login')}
+                }>
+                    <Image style={styles.backImg}
+                           source={require('../img/backButton.png')}/>
+                </TouchableOpacity>
+            </View>
+
+            <View style={{flex: 0.5}}></View>
             <Text style={styles.Title}>비밀번호 재설정</Text>
+            <View style={{flex: 0.5}}></View>
             <Text style={styles.textBold}>전화번호</Text>
             <Text style={styles.text}>입력 해주세용</Text>
-            <View style={{flex: 1}}></View>
+            <View style={{flex: 0.5}}></View>
 
             <TextInput
                 style={styles.textInput}
@@ -52,20 +62,22 @@ const styles = StyleSheet.create({
         padding: "3%",
     },
     backImg: {
-        marginLeft: 20,
+        marginLeft: 25,
+        marginTop: 8,
         width: 35,
         height: 30,
         resizeMode: "cover"
     },
     Title:{
+        marginLeft: '-5%',
         width: "55%",
         textAlign: "left",
         fontWeight: 'bold',
-        fontSize: 32,
+        fontSize: 25,
         color: "black"
     },
     button:{
-        width: "80%",
+        width: "70%",
         borderRadius: 40,
         height: "35%",
         marginLeft: 10,
@@ -73,17 +85,19 @@ const styles = StyleSheet.create({
         backgroundColor: "#FF037C"
     },
     textBold:{
+        marginLeft: '-5%',
         width: "55%",
         paddingTop: 40,
         textAlign: "left",
         fontWeight: 'bold',
-        fontSize: 32,
+        fontSize: 28,
         color: "black"
     },
     text:{
+        marginLeft: '-5%',
         width: "55%",
         textAlign: "left",
-        fontSize: 32
+        fontSize: 28
     },
     buttonText:{
         textAlign: 'center',
@@ -95,10 +109,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: 10,
         height: 40,
+        width: "65%",
+        fontSize: 16,
         //borderRadius: 10,
-        borderColor: 'black',
-        borderWidth: 1
-    }
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
+    },
 });
 
 export {Set_pw_phone}

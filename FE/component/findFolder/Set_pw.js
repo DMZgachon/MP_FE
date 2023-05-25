@@ -13,6 +13,7 @@ import {
 function Set_pw(props){
     return(
         <View style={styles.container}>
+
             <View style={{flex: 2}}></View>
             <Text style={styles.Title}>비밀번호 재설정</Text>
             <View style={{flex: 1}}></View>
@@ -42,52 +43,41 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: "white",
     },
-    navBox: {
-        width: "100%",
-        height: 50,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    backBtn: {
-        justifyContent: 'flex-start',
-        padding: "3%",
-    },
-    backImg: {
-        marginLeft: 20,
-        width: 35,
-        height: 30,
-        resizeMode: "cover"
-    },
+
     Title:{
+        marginLeft: '-5%',
         width: "55%",
         textAlign: "left",
         fontWeight: 'bold',
-        fontSize: 32,
+        fontSize: 25,
         color: "black"
     },
     button:{
-        width: "60%",
-        height: "25%",
+        width: "70%",
+        borderRadius: 40,
+        height: "35%",
         marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#f3b1d0"
+        backgroundColor: "#FF037C"
     },
     textBold:{
+        marginLeft: '-5%',
         width: "55%",
+        paddingTop: 40,
         textAlign: "left",
         fontWeight: 'bold',
-        fontSize: 32,
+        fontSize: 28,
         color: "black"
     },
     text:{
+        marginLeft: '-5%',
         width: "55%",
-        paddingTop: 10,
         textAlign: "left",
-        fontSize: 18
+        fontSize: 28
     },
     buttonText:{
         textAlign: 'center',
-        color: 'black',
+        color: 'white',
         fontSize: 20
     },
     textInput: {
@@ -95,10 +85,12 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: 10,
         height: 40,
+        width: "65%",
+        fontSize: 16,
         //borderRadius: 10,
-        borderColor: 'black',
-        borderWidth: 1
-    }
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
+    },
 });
 
 export {Set_pw}
