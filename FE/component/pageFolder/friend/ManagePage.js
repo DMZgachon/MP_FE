@@ -59,7 +59,7 @@ function ManagePage(props){
                     }>
                         <Text style={styles.buttonText2}>계정 삭제하기</Text>
                     </TouchableOpacity>
-                 </View>
+                </View>
             </View>
 
 

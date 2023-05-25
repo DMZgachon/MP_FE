@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Config from 'react-native-config';
-import { instance, setAccessTokenHeader } from '../../api/axiosInstance'
 
 import React, {useEffect, useState} from 'react';
 
@@ -18,7 +17,7 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import SwipeButton from 'rn-swipe-button';
-import instance from "../../api/axiosInstance";
+import { instance, setAccessTokenHeader } from "../../api/axiosInstance";
 
 // 이제 Config.API_URL을 사용하여 API 요청을 수행할 수 있습니다.
 
@@ -113,7 +112,7 @@ function Login(props){
 
                                 ToastAndroid.show('됐다', ToastAndroid.SHORT);
 
-                                props.navigation.navigate('FriendPage', { data: 'FriendPage' });
+                                props.navigation.navigate('HomePage', { data: 'HomePage' });
                             }
                             else {
                                 Alert.alert('회원가입이 되지 않았습니다람쥐')
@@ -221,4 +220,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export {Login}
+export {Login};

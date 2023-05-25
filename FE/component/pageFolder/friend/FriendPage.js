@@ -19,32 +19,11 @@ import {
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {Footer} from "../Layout/footer";
-import {Header} from '../Layout/Header'
-import {useFocusEffect} from "@react-navigation/native";
-import {instance} from "../../../api/axiosInstance";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import {getAndReissueTokens} from "../../../api/reRefresh";
+import {Header} from '../Layout/Header';
 import {Setting} from "./Setting";
 import {ManagaPage} from "./ManagePage";
 
 function FriendPage(props){
-    const CancelToken = axios.CancelToken;
-    let cancel;
-
-    useFocusEffect(
-        React.useCallback(() => {
-            console.log('Screen was focused');
-
-            getAndReissueTokens(cancel).then(r => console.log('getAndReissueTokens'));
-
-            return () => {
-                console.log('Screen was unfocused');
-                if (cancel !== undefined) cancel();
-            };
-        }, [])
-    );
-
     return(
         <View style={styles.container}>
 
@@ -111,6 +90,8 @@ function FriendPage(props){
                     <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
                 </View>
             </View>
+
+
         </View>
     )
 }
