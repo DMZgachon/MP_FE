@@ -1,6 +1,6 @@
 import React, {Component, useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, Pressable, Platform, PermissionsAndroid} from 'react-native';
-import StepInput from "./StepInput";
+import {Modal, View, Text, TouchableHighlight, Alert, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, Pressable, Platform, PermissionsAndroid} from 'react-native';
+import {StepInput} from "./StepInput";
 import {
     Colors,
     DebugInstructions,
@@ -8,9 +8,21 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+
 import { Calendar } from "react-native-calendars";
 import { format } from "date-fns";
 import { launchImageLibrary, launchCamera } from "react-native-image-picker";
+import {useFocusEffect, useRoute} from "@react-navigation/native";
+import {getAndReissueTokens} from "../../../api/reRefresh";
+import axios from "axios";
+import {Footer} from "../Layout/footer";
+import { RadioButton } from 'react-native-paper';
+import { instance, setAccessTokenHeader } from '../../../api/axiosInstance'
+import RNFS from 'react-native-fs';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import DropDownPicker from 'react-native-dropdown-picker';
+
 
 const imagePickerOption = {
     mediaType: "photo",
@@ -19,44 +31,84 @@ const imagePickerOption = {
     includeBase64: Platform.OS === "android",
 };
 function Upload(props){
-    const [countList, setCountList] = useState([1])
+    const [countList, setCountList] = useState([])
     const [calendar, setCalendar] = useState(false)
     const [selectedDate, setSelectedDate] = useState(
         format(new Date(), "yyyy-MM-dd"),
     );
     const [title, setTitle] = useState("");
-    const [content, setContent] = useState([]);
-    const [hashtagList, setHashtagList] = useState([]);
+    const [imageData, setImageData] = useState(null);
+    const [content, setContent] = useState([""]);
+    const [hashtagList, setHashtagList] = useState([""]);
     const [hashtag, setHashtag] = useState("");
 
-    const onPickImage = (res) => {
-        if (res.didCancel || !res) {
-            return;
-        }
-        console.log("PickImage", res);
+    const [visibility, setVisibility] = useState("공개");
+    const [category, setCategory] = useState(52);
+    const [accessToken , setAccess] = useState();
+    const formData = new FormData();
+
+    const CancelToken = axios.CancelToken;
+    let cancel;
+
+    const route = useRoute();
+    const {data, category1} = route.params;
+    console.log("받아졌나? :" , category1)
+
+    const [selectedValue, setSelectedValue] = useState(null);
+    const items = category1.map((item, index) => ({ label: item[1] , value: item[2] }));
+    const [modalVisible, setModalVisible] = useState(false);
+
+    async function fetchTokenAndSet() {
+        const token = await AsyncStorage.getItem("accessToken");
+        setAccess(token);
     }
-    const addImage = () => {
-        launchImageLibrary(imagePickerOption, onPickImage);
+
+    useFocusEffect(
+        React.useCallback( () => {
+            console.log('Screen was focused');
+
+            getAndReissueTokens(cancel).then(r =>
+                    console.log('Upload: getAndReissueTokens'),
+                fetchTokenAndSet()
+            )
+
+            return () => {
+                console.log('Screen was unfocused');
+                if (cancel !== undefined) cancel();
+            };
+
+        }, [])
+    );
+
+    const onChangeTextHandler = text => {
+        setTitle(text);
+        //console.log('제목 :', title);
     }
-    const onLaunchCamera = () => {
-        launchCamera(imagePickerOption, onPickImage);
-    };
+
+    // const onAddStep = () => {
+    //     //alert('dd')
+    //     let countArr = [...countList]
+    //     let counter = countArr.slice(-1)[0]
+    //     counter += 1
+    //     countArr.push(counter)	// index 사용 X
+    //     // countArr[counter] = counter	// index 사용 시 윗줄 대신 사용
+    //     setCountList(countArr)
+    //}
+
 
     const onAddStep = () => {
-        //alert('dd')
-        let countArr = [...countList]
-        let counter = countArr.slice(-1)[0]
-        counter += 1
-        countArr.push(counter)	// index 사용 X
-        // countArr[counter] = counter	// index 사용 시 윗줄 대신 사용
-        setCountList(countArr)
+        setCountList((prevCountList) => {
+            const counter = prevCountList.slice(-1)[0] + 1;
+            return [...prevCountList, counter];
+        });
     }
+
     const onRemoveStep = () => {
         let contentArr = [...content]
         contentArr.pop()
         setContent(contentArr)
 
-        console.log(content)
+        //console.log(content)
 
         //alert('dd')
         let countArr = [...countList]
@@ -68,102 +120,280 @@ function Upload(props){
     const onCalendar = () => {
         setCalendar(!calendar)
     }
-    const onRegister = () => {
+    const onRegister = async () => {
+        let imageBlob;
 
-        let arr = hashtag.split("#").filter((word) => word !== "");
-        setHashtagList(arr)
-        console.log(hashtagList)
+        formData.append('tagList', content);
+
+
+        //formData.append('tagList', hashtagList);
+
+        // 이미지 추가 (imageData가 File 혹은 Blob 객체인 경우)
+        try {
+            if (imageData && imageData.uri) {
+
+                const response = await fetch(imageData.uri);
+                const blob = await response.blob();
+                imageBlob = {
+                    uri: imageData.uri,
+                    type: imageData.type,
+                    name: imageData.fileName,
+                    data: blob
+                };
+
+                formData.append('bucketImage', imageData);
+                console.log("BucketImage: " ,imageData);
+            } else {
+                console.error('No image data');
+            }
+        } catch (error) {
+            console.error('Error in creating Blob: ', error);
+        }
+
+        // 나머지 데이터 추가
+        formData.append('bucketTitle', title);
+        formData.append('visibility', visibility);
+
+        formData.append('deadline', "2023-05-19 12:30:00");
+
+        formData.append('category', category);
+
+        // 컨텐츠 리스트 추가
+        // Change this
+        // content.forEach((item, index) => {
+        //     formData.append('posts', item);
+        // });
+        formData.append('posts',countList);
+
+
+
+// To this, if the server expects a single field with a JSON array
+        // formData.append('posts', JSON.stringify(content));
+
+
+
+        //formData에 잘 저장되었는 지 확인
+        console.log('-------------------------------------');
+        //console.log("현재 받은 카테고리들:" , props.category)
+        // console.log("Title: ", title);
+        // console.log("content: ", content);
+        // console.log("tagList: ", hashtagList);
+        // console.log("visibility:", visibility);
+        // // console.log("image: ", blob);
+        // console.log("deadline: ", selectedDate);
+        // console.log("category:" , category);
+        console.log(formData)
+        console.log('-------------------------------------');
+
+        // axios로 데이터 전송
+        //const access_token = await AsyncStorage.getItem("accessToken");
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization' : `Bearer ${accessToken}`
+            }
+        };
+        await instance.post('api/bucket/add', formData, config)
+            .then((res) => {
+                console.log('Success:', res);
+            })
+            .catch((error) => {
+                console.log("Error:", error);
+            });
     }
 
+    const pickImage = () => {
+        launchImageLibrary({ noData: true }, (response) => {
+            if (response.didCancel || response.error) {
+                console.log('Image picker cancelled or failed');
+            } else {
+                setImageData(response);
+            }
+        });
+    };
+
+    const ShowPicker = () => {
+        //launchImageLibrary : 사용자 앨범 접근
+        if(1) { // 이미지를 아직 불러오지 않았다면
+            launchImageLibrary({}, async (res) => {
+                const uri = res?.assets?.[0]?.uri;
+                const response = await fetch(uri);
+                const blob = await response.blob();
+
+                const file = {
+                    name: res?.assets?.[0]?.fileName,
+                    type: blob.type, // blob type 사용
+                    uri: uri,
+                    data: blob, // blob data 추가
+                }
+
+                setImageData(file)
+            });
+        } else {
+            console.log("Image already loaded"); // 이미 불러온 이미지가 있다면 메시지 출력
+        }
+    }
+    const [bucketList, selectBucketList] = useState("");
+
+
     return(
-        <ScrollView style={styles.container}>
-            <View style={styles.navBox}>
-                <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                    props.navigation.navigate('MainPage')}
-                }>
-                    <Image
-                        source={require('../../img/backButton.png')}/>
-                </TouchableOpacity>
-                <Text style={styles.title}>새 버킷리스트</Text>
-                <TouchableOpacity onPress={onRegister}>
-                    <Text style={styles.enterBtn}>등록</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={{flexDirection: "column", margin: "3%"}}>
-                <TouchableOpacity onPress={addImage}>
-                    <Image
-                        style={
-                            {width: 90, height: 90, marginLeft: 130}
-                        }
-                        source={require('../../img/PlusImg.png')}/>
-                </TouchableOpacity>
-                <View>
-                    <TextInput placeholder={"버킷리스트 제목 입력"} placeholderTextColor={'#BBB4B4'} style={styles.inputBox}
-                        onChangeText={text => setTitle(text)}></TextInput>
-                    <StepInput countList={countList} content={content} setContent={setContent}/>
-
-                    <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                        <View style={{flexDirection: "row"}}>
-                            <TouchableOpacity style={styles.plusBtn}
-                                              onPress={onAddStep}>
-                                <Text style={{textAlign: "center", fontSize: 16, color: "black"}}> 과정 추가  </Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={styles.plusBtn}
-                                              onPress={onRemoveStep}>
-                                <Text style={{textAlign: "center", fontSize: 16, color: "black"}}> 과정 삭제  </Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <TouchableOpacity>
-                            <Image
-                                style={
-                                    {width: 20, height: 30}
-                                }
-                                source={require('../../img/qm.png')}/>
-                            <Text>help!</Text>
-                        </TouchableOpacity>
-                    </View>
+        <View style={{flex: 1}}>
+            <ScrollView style={styles.container}>
+                <View style={styles.navBox}>
+                    <TouchableOpacity style={styles.backBtn} onPress={()=>{
+                        props.navigation.navigate('MainPage')}
+                    }>
+                        <Image
+                            source={require('../../img/backButton.png')}/>
+                    </TouchableOpacity>
+                    <Text style={styles.title}>새 버킷리스트</Text>
+                    <TouchableOpacity onPress={onRegister}>
+                        <Text style={styles.enterBtn}>등록</Text>
+                    </TouchableOpacity>
                 </View>
 
-                <View style={{flexDirection: "row"}}>
-                    <TouchableOpacity style={{ marginLeft: "4%"}} onPress={onCalendar}>
+                <View style={{flexDirection: "column", margin: "3%"}}>
+                    <TouchableOpacity onPress={ShowPicker}>
                         <Image
                             style={
-                                {width: 35, height: 32}
+                                {width: 90, height: 90, marginLeft: 130}
                             }
-                            source={require('../../img/date.png')}/>
+                            source={require('../../img/PlusImg.png')}/>
                     </TouchableOpacity>
-                    <Text style={styles.textBox}>{selectedDate}</Text>
+                    <View>
+                        <TextInput
+                            placeholder={"버킷리스트 제목 입력"}
+                            placeholderTextColor={'#BBB4B4'}
+                            style={styles.inputBox}
+                            onChangeText={onChangeTextHandler}
+                            value={title}
+                        />
+
+                        <StepInput countList={countList} content={content} setContent={setContent}/>
+
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                            <View style={{flexDirection: "row"}}>
+                                <TouchableOpacity style={styles.plusBtn}
+                                                  onPress={onAddStep}>
+                                    <Text style={{textAlign: "center", fontSize: 16, color: "black"}}> 과정 추가  </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={styles.plusBtn}
+                                                  onPress={onRemoveStep}>
+                                    <Text style={{textAlign: "center", fontSize: 16, color: "black"}}> 과정 삭제  </Text>
+                                </TouchableOpacity>
+                                {
+                                    console.log('버킷리스트 입니다 : ', props.data)
+                                }
+
+                            </View>
+
+                            <TouchableOpacity>
+                                <Image
+                                    style={
+                                        {width: 20, height: 30}
+                                    }
+                                    source={require('../../img/qm.png')}/>
+                                <Text>help!</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                    <View style={{flexDirection: "row"}}>
+                        <TouchableOpacity style={{ marginLeft: "4%"}} onPress={onCalendar}>
+                            <Image
+                                style={
+                                    {width: 35, height: 32}
+                                }
+                                source={require('../../img/date.png')}/>
+                        </TouchableOpacity>
+                        <Text style={styles.textBox}>{selectedDate}</Text>
+                    </View>
+                    {calendar && <Calendar onDayPress={(day)=>{
+                        setSelectedDate(day.dateString)
+                    }}/>}
+                    <View>
+                        <TextInput placeholder={"#을 이용해 태그를 입력해보세요!(최대 10개)"} placeholderTextColor={'#BBB4B4'} style={styles.inputBox}
+                                   onChangeText={text => setHashtag(text)}></TextInput>
+                    </View>
+
+
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <RadioButton.Group onValueChange={value => setVisibility(value)} value={visibility}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text>보이게</Text>
+                                <RadioButton value="공개" />
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text>안보이게</Text>
+                                <RadioButton value="비공개" />
+                            </View>
+                        </RadioButton.Group>
+                    </View>
+
+                    <View style={{marginTop: 22}}>
+                        {console.log("시발:", items)}
+
+                        <Modal
+                            animationType="slide"
+                            transparent={false}
+                            visible={modalVisible}
+                            onRequestClose={() => {
+                                setModalVisible(false);
+                            }}
+                        >
+                            <View style={{ marginTop: 22 }}>
+                                <View>
+                                    {items.map((item, index) => (
+                                        <TouchableHighlight
+                                            key={index}
+                                            onPress={() => setCategory(item.value)}
+                                        >
+                                            <Text>
+                                                Label: {item.label}, Value: {item.value}
+                                            </Text>
+                                        </TouchableHighlight>
+                                    ))}
+
+                                    <TouchableHighlight
+                                        onPress={() => {
+                                            setModalVisible(false);
+                                        }}
+                                    >
+                                        <Text>Hide Modal</Text>
+                                    </TouchableHighlight>
+                                </View>
+                            </View>
+                        </Modal>
+
+                        <TouchableHighlight
+                            onPress={() => {
+                                setModalVisible(true);
+                            }}
+                        >
+                            <Text>카테고리 선택하기</Text>
+                        </TouchableHighlight>
+
+                    </View>
+
                 </View>
-                {calendar && <Calendar onDayPress={(day)=>{
-                    setSelectedDate(day.dateString)
-                }}/>}
-                <View>
-                    <TextInput placeholder={"#을 이용해 태그를 입력해보세요!(최대 10개)"} placeholderTextColor={'#BBB4B4'} style={styles.inputBox}
-                        onChangeText={text => setHashtag(text)}></TextInput>
+
+            </ScrollView>
+            <View style={styles.bottomView}>
+                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
+                    <Footer navigation = {props.navigation} data ={props.route.params.data}
+                           category={category} ></Footer>
                 </View>
             </View>
-            {/*<View style={{flex: 2}}></View>
-            <Text style={styles.textBold}>안녕하세요.</Text>
-            <Text style={styles.text}>로그인 해주세요.</Text>
-            <View style={{flex: 2}}></View>
-            <View style={{flexDirection: 'row', flex: 2}}>
-                <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('HomePage')}
-                }>
-                    <Text style={styles.buttonText}>시작하기</Text>
-                </TouchableOpacity>
-            </View>*/}
-        </ScrollView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "white",
+        overflow: 'visible', // 추가
     },
     navBox: {
         width: "100%",
@@ -243,6 +473,17 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'white',
         fontSize: 20
+    },
+    bottomView: {
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 50,
+    },
+    dropDownStyle: {
+        flex: 1
     }
 });
 

@@ -1,6 +1,8 @@
 import React, {Component, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView,TouchableHighlight,
-Modal} from 'react-native';
+import {
+    View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, TouchableHighlight,
+    Modal, ToastAndroid, Image
+} from 'react-native';
 
 import {
     Colors,
@@ -9,6 +11,9 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import { instance, setAccessTokenHeader } from "../../../api/axiosInstance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 function Footer(props){
     // 그 여기서 자신의 페이지 확인
@@ -33,47 +38,87 @@ function Footer(props){
         setIsModalVisible(false);
     };
 
+    const bucektCategory = props.category
+    console.log('footer 의 버킷리스트 받은거', props.category)
+    const [accessToken, setAccessToken] = useState('')
+    const [refreshToken, setRefreshToken] = useState('')
+    const objectToken = new Object()
     useEffect(() =>{
-       if(props.data == 'My BucketList App'){
-           changePage(!ifMain)
-       }else {
-       }
+        const getAccess = async () => {
+            try {
+                const storedValue = await AsyncStorage.getItem('accessToken');
+                console.log('Stored value:', storedValue);
+            } catch (e){
+                console.log(e)
+            }
+        }
+
+        // AsyncStorage.getItem('accessToken')
+        //     .then((accessToken) => {
+        //         setaccessToken(accessToken)
+        //     })
+        //     .catch((error) => {
+        //         console.log('Error retrieving accessToken:', error);
+        //     });
+        //
+        // AsyncStorage.getItem('refreshToken')
+        //     .then((refreshToken) => {
+        //         setRefreshToken(refreshToken)
+        //     })
+        //     .catch((error) => {
+        //         console.log('Error retrieving accessToken:', error);
+        //     });
+        //
+        // objectToken.accessToken = accessToken
+        // objectToken.refreshToken = refreshToken
+        //
+        // setJSONToken(JSON.stringify(objectToken))
+
+        if(props.data == 'HomePage'){
+            changePage(true)
+        }else {
+        }
     },[props.data])
 
 
     // 맞으면 + 아니면 이미지 로고
     return(
         <View style={styles.container}>
-            {   console.log(props.data) }
+            {  console.log("현재 페이지: ", props.data) }
             <View style = {{width : '100%', height : '100%', flexDirection: 'row'}}>
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
                     <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                        props.navigation.navigate('HomePage', {data : 'My BucketList App'})}
+                        props.navigation.navigate('HomePage', {data : 'HomePage'})}
                     }>
                         <Text style ={{fontSize : 35}}> 🏠 </Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
-                    <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                        props.navigation.navigate('SearchPage',{data : 'SearchPage'})}
+                    <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
+                        props.navigation.navigate('SearchPage', {data : 'SearchPage'})}
                     }>
                         <Text style ={{fontSize : 35}}> 🔍 </Text>
                     </TouchableOpacity>
                 </View>
 
                 {
-                    ifMain ?  <View style ={{flex : 1.5, alignItems : 'center'}}>
-                        <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                            props.setIsModalVisible(true)}
+                    ifMain ?  <View style ={{flex : 1.4, alignItems : 'center'}}>
+                        <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
+                            console.log('category data : ',props.category)
+                            props.navigation.navigate('Upload', {data : 'Upload', category1: props.category})
+                        }
                         }>
                             <Text style ={{fontSize : 35}}> ➕ </Text>
                         </TouchableOpacity>
                     </View> : <View style ={{flex : 1.5, alignItems : 'center'}}>
-                        <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                            props.navigation.navigate()}
+                        <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
+                            props.navigation.navigate('HomePage', {data : 'HomePage'})}
                         }>
-                            <Text style ={{fontSize : 35}}> Logo </Text>
+                            <Image
+                                source={require('./../../img/꿈동이_new.png')}
+                                style={{ width: 80, height: 70, marginTop: -10 }}
+                            />
                         </TouchableOpacity>
                     </View>
                 }
