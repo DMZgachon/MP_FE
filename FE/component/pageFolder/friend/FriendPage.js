@@ -33,7 +33,7 @@ function FriendPage(props){
 
             <View style={styles.navBox1}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Image style={styles.profileImg} source={require('FE/component/img/profile.png')}/>
+                    <Image style={styles.profileImg} source={require('../../img/profile.png')}/>
                     <View style={{flex: 1}}>
                         <Text style={styles.text1}>이 름:  본인 이름  (본인 닉네임) </Text>
                         <Text style={styles.text2}>본인 ------- 목표</Text>
@@ -57,7 +57,7 @@ function FriendPage(props){
                     <Text style={styles.settext}>계정 관리</Text>
                     <View style={{flex: 1}}></View>
                     <TouchableOpacity onPress={()=>{props.navigation.navigate('ManagePage', {data : 'ManagePage'})}}>
-                        <Image style={styles.moreImg} source={require('FE/component/img/more.png')}/>
+                        <Image style={styles.moreImg} source={require('../../img/more.png')}/>
                     </TouchableOpacity>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -71,7 +71,7 @@ function FriendPage(props){
                     <Text style={styles.settext}>자주 묻는 질문</Text>
                     <View style={{flex: 1}}></View>
                     <TouchableOpacity onPress={()=>{props.navigation.navigate('Question', {data : 'Question'})}}>
-                        <Image style={styles.moreImg} source={require('FE/component/img/more.png')}/>
+                        <Image style={styles.moreImg} source={require('../../img/more.png')}/>
                     </TouchableOpacity>
                 </View>
                 <View style={{flex: 0.2}}></View>
@@ -79,7 +79,7 @@ function FriendPage(props){
                     <Text style={styles.settext}>이용 약관</Text>
                     <View style={{flex: 1}}></View>
                     <TouchableOpacity onPress={()=>{props.navigation.navigate('Condition', {data : 'Condition'})}}>
-                        <Image style={styles.moreImg} source={require('FE/component/img/more.png')}/>
+                        <Image style={styles.moreImg} source={require('../../img/more.png')}/>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -133,7 +133,6 @@ const styles = StyleSheet.create({
     text1:{
         width: '100%',
         fontSize: 16,
-        fontWeight: 700,
         color: "black",
         padding: 5,
     },

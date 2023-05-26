@@ -23,7 +23,10 @@ import { instance, setAccessTokenHeader } from "../../api/axiosInstance";
 
 function Login(props){
     const [phone, setPhone] = useState('01052672383');
+
+
     const handleSignup = () => {
+        forceResetLastButton && forceResetLastButton()
         props.navigation.navigate('Signup');
     };
 
@@ -31,6 +34,8 @@ function Login(props){
     const [refreshToken, setRefreshToken] = useState('')
     const [phoneNum, setPhoneNum] = useState('')
     const [password, setPassword] = useState('')
+    let forceResetLastButton = null;
+
 
     return(
         <View style={styles.container}>
@@ -39,7 +44,7 @@ function Login(props){
                     props.navigation.navigate('MainPage')}
                 }>
                     <Image style={styles.backImg}
-                           source={require('FE/component/img/backButton.png')}/>
+                           source={require('../img/backButton.png')}/>
                 </TouchableOpacity>
             </View>
             <View style={{flex: 1}}></View>
@@ -53,6 +58,9 @@ function Login(props){
                     width={80}
                     title={"log in"}
                     titleFontSize={13}
+                    forceReset={ reset => {
+                        forceResetLastButton = reset
+                    }}
                     onSwipeSuccess={handleSignup}
                     railFillBackgroundColor="#f8c1c2"//(Optional)
                     railFillBorderColor="#f8c1c2" //(Optional)

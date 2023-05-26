@@ -17,11 +17,13 @@ import SwipeButton from 'rn-swipe-button';
 
 function Signup(props){
     const handleSignup = () => {
+        forceResetLastButton && forceResetLastButton()
         props.navigation.navigate('Login');
     };
     const [phoneNum, setPhoneNum] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false);
+    let forceResetLastButton = null;
 
     const onEnterBtn = () => {
         if (phoneNum == '' || password == ''){
@@ -46,12 +48,16 @@ function Signup(props){
             <View style={{flex: 1}}></View>
             <Text style={styles.Title}>회원가입</Text>
             <View style={{flex: 2}}></View>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'flex-start', marginLeft: '20%' }}>
                 <SwipeButton
                     disabled={false}
                     swipeSuccessThreshold={30}
                     height={30}
                     width={80}
+                    enableReverseSwipe={true}
+                    forceReset={ reset => {
+                        forceResetLastButton = reset
+                    }}
                     title={"sign up"}
                     titleFontSize={13}
                     onSwipeSuccess={handleSignup}
@@ -167,13 +173,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         height: 40,
         width: "65%",
+        fontSize: 16,
         //borderRadius: 10,
-        borderColor: 'black',
-        borderWidth: 1
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
     },
     E_image: {
         width: 40,
-        height: 40,
+        height: 50,
         position: 'absolute',
         right: 10,
         top: 15,
