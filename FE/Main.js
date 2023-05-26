@@ -24,7 +24,7 @@ import {Set_pw} from './component/findFolder/Set_pw';
 import {Set_pw_code} from './component/findFolder/Set_pw_code';
 import {Set_pw_phone} from './component/findFolder/Set_pw_phone';
 import {Check_pw} from './component/findFolder/Check_pw';
-import {addCategory} from "./component/pageFolder/category/addCategory";
+import {AddCategory} from "./component/pageFolder/category/AddCategory";
 
 const Stack = createNativeStackNavigator(); // Stack Navigation함수를 Stack변수명으로 저장
 
@@ -53,7 +53,7 @@ function Main(){
                 <Stack.Screen name="Question" component={Question}/>
                 <Stack.Screen name="Condition" component={Condition}/>
                 <Stack.Screen name="Category" component={CategoryPage} />
-                <Stack.Screen name="addCategory" component={addCategory} />
+                <Stack.Screen name="AddCategory" component={AddCategory} />
                 <Stack.Screen name="Check_pw" component={Check_pw} />
             </Stack.Navigator>
         </NavigationContainer>

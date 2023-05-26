@@ -3,17 +3,17 @@
     import {Header} from '../Layout/Header'
 
     import {
-        SafeAreaView,
-        ScrollView,
-        StatusBar,
-        StyleSheet,
-        Text,
-        TouchableOpacity,
-        useColorScheme,
-        Image,
-        View,
-        Button, TouchableHighlight, TextInput,
-    } from 'react-native';
+    SafeAreaView,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    useColorScheme,
+    Image,
+    View,
+    Button, TouchableHighlight, TextInput, ToastAndroid,
+} from 'react-native';
 
     import {
         Colors,
@@ -30,8 +30,8 @@
 
 
 
-    function addCategory(props){
-        const CancelToken = axios.CancelToken;
+    function AddCategory(props){
+        // const CancelToken = axios.CancelToken;
         let cancel;
 
 
@@ -54,7 +54,7 @@
 
 // 이미지를 불러왔는지 확인하는 상태 추가
         const [imageLoaded, setImageLoaded] = useState(false);
-
+        const [imgData,setImgData] = useState(new FormData());
         const ShowPicker = () => {
             //launchImageLibrary : 사용자 앨범 접근
             if(!imageLoaded) { // 이미지를 아직 불러오지 않았다면
@@ -72,17 +72,19 @@
                     }
                     formdata.append('categoryImage', file); // 카테고리 이미지 추가
                     formdata.append('categoryName', phoneNumber); // 카테고리 이름 추가
+                    
+                    setImgData(formdata);
 
-                    const access_token = await AsyncStorage.getItem("accessToken");
-                    // POST 요청 보내기
-                    await instance.post('/api/category/add', formdata, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                            'Authorization': `Bearer ${access_token}`,
-                        },
-                    }).then((response) => {
-                        console.log('success');
-                    });
+                    // const access_token = await AsyncStorage.getItem("accessToken");
+                    // // POST 요청 보내기
+                    // await instance.post('/api/category/add', formdata, {
+                    //     headers: {
+                    //         'Content-Type': 'multipart/form-data',
+                    //         'Authorization': `Bearer ${access_token}`,
+                    //     },
+                    // }).then((response) => {
+                    //     console.log('success');
+                    // });
                 });
             } else {
                 console.log("Image already loaded"); // 이미 불러온 이미지가 있다면 메시지 출력
@@ -90,6 +92,21 @@
         }
 
 
+        const send = async () => {
+            const access_token = await AsyncStorage.getItem("accessToken");
+            // POST 요청 보내기
+            await instance.post('/api/category/add', imgData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${access_token}`,
+                },
+            }).then((response) => {
+                ToastAndroid.show('카테고리 업로드 성공이다', ToastAndroid.SHORT);
+                console.log('success');
+            }).catch((res)=>{
+                ToastAndroid.show('카테고리 업로드 실패다', ToastAndroid.SHORT);
+            });
+        }
         return(
             <View style={styles.container}>
 
@@ -98,23 +115,32 @@
                 </View>
 
                 <TextInput
-                    placeholder="전화번호를 입력하세요"
+                    placeholder="카테고리 이름을 입력해주세요."
                     onChangeText={text => setPhoneNumber(text)}
                     value={phoneNumber}
                 />
 
-                <TextInput
-                    placeholder="이미지 URL을 입력하세요"
-                    onChangeText={text => setImageUrl(text)}
-                    value={imageUrl}
-                />
+                {/*<TextInput*/}
+                {/*    placeholder="이미지 URL을 입력하세요"*/}
+                {/*    onChangeText={text => setImageUrl(text)}*/}
+                {/*    value={imageUrl}*/}
+                {/*/>*/}
 
 
                 <Button
-                    title="버튼"
+                    title="이미지 선택 버튼"
                     onPress={() => {
                         ShowPicker();
                     }}
+                    style={{ marginBottom: "3%"}}
+                />
+
+                <Button
+                    title="카테고리 만들기"
+                    onPress={() => {
+                        send();
+                    }}
+                    style={{ marginTop: "3%"}}
                 />
 
                 <View style={styles.bottomView}>
@@ -143,4 +169,4 @@
         },
     });
 
-    export {addCategory}
+    export {AddCategory}

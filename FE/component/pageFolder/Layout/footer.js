@@ -88,7 +88,7 @@ function Footer(props){
                             props.navigation.navigate('Upload', {data : 'Upload', category1: props.category})
                         }
                         }>
-                            <Text style ={{fontSize : 35}}> ➕ </Text>
+                            <Text style ={{fontSize : 35, width: 80, height: 70, marginTop: -10, textAlign: 'center', textAlignVertical: 'center'}}> ➕ </Text>
                         </TouchableOpacity>
                     </View> : <View style ={{flex : 1.5, alignItems : 'center'}}>
                         <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{

@@ -70,6 +70,7 @@ function HomePage(props){
     let cancel;
 
     const [categoryList, setCategoryList] = useState([]); // 카테고리 목록 상태 추가
+    const [rows,setRows] = useState(0);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -103,6 +104,8 @@ function HomePage(props){
 
                                 // 카테고리 목록 상태 업데이트
                                 setCategoryList(newItems);
+                                console.log(Math.ceil(newItems.length / 2));
+                                setRows(Math.ceil(newItems.length / 2));
                             })
                             .catch((error) => {
                                 if (axios.isCancel(error)) {
@@ -164,45 +167,83 @@ function HomePage(props){
 
             <View style ={{ width : '2000%', height : '70%', alignItems : 'center', margin : 3}}>
                <ScrollView>
-                   {
-                       category.map((content, i ) =>{
-                           return(
-                               <View>
-                               <TouchableOpacity
-                                   onPress={() => {
-                                       props.navigation.navigate('Category',{data : content})
-                                       {
-                                           console.log(props.route.params.data)
-                                       }
-                                       }
-                                   } key={i}>
+                   {/*{*/}
+                   {/*    category.map((content, i ) =>{*/}
+                   {/*        return(*/}
+                   {/*            <View style={{ flexDirection: 'row' }} key={i}>*/}
+                   {/*            <TouchableOpacity*/}
+                   {/*                onPress={() => {*/}
+                   {/*                    props.navigation.navigate('Category',{data : content})*/}
+                   {/*                    {*/}
+                   {/*                        console.log(props.route.params.data)*/}
+                   {/*                    }*/}
+                   {/*                    }*/}
+                   {/*                }>*/}
 
 
-                                   <View style={{ flexDirection: 'row' }}>
-                                       <Image
-                                           style={{
-                                               width: 130,
-                                               height: 220,
-                                               borderColor: 'blue',
-                                               marginRight : 5,
-                                               marginBottom: 10, // 이미지 간격 조절
-                                               flexDirection : 'row',
-                                               borderRadius : 10
-                                           }}
-                                           source={{uri : category[i][0]}}
-                                       />
-                                   </View>
-                               </TouchableOpacity>
-                               </View>
-                           )
-                       })
-                   }
+                   {/*                <View style={{ flexDirection: 'row' }}>*/}
+                   {/*                    <Image*/}
+                   {/*                        style={{*/}
+                   {/*                            width: 130,*/}
+                   {/*                            height: 220,*/}
+                   {/*                            borderColor: 'blue',*/}
+                   {/*                            marginRight : 5,*/}
+                   {/*                            marginBottom: 10, // 이미지 간격 조절*/}
+                   {/*                            flexDirection : 'row',*/}
+                   {/*                            borderRadius : 10*/}
+                   {/*                        }}*/}
+                   {/*                        source={{uri : category[i][0]}}*/}
+                   {/*                    />*/}
+                   {/*                </View>*/}
+                   {/*            </TouchableOpacity>*/}
+                   {/*            </View>*/}
+                   {/*        )*/}
+                   {/*    })*/}
+                   {/*}*/}
+                   <View style={{ flexDirection: 'column' }}>
+                       {Array.from(Array(rows)).map((_, rowIndex) => (
+                           <View style={{ flexDirection: 'row' }} key={rowIndex}>
+                               {Array.from(Array(2)).map((_, colIndex) => {
+                                   const index = rowIndex * 2 + colIndex;
+                                   if (index < categoryList.length) {
+                                       const content = categoryList[index];
+                                       console.log(content);
+                                       return (
+                                           <TouchableOpacity
+                                               onPress={() => {
+                                                   props.navigation.navigate('Category', { data: content });
+                                               }}
+                                               key={index}
+                                           >
+                                               <View style={{ flexDirection: 'row' }}>
+                                                   <Image
+                                                       style={{
+                                                           width: 180,
+                                                           height: 220,
+                                                           borderColor: 'blue',
+                                                           marginRight: 5,
+                                                           marginBottom: 10,
+                                                           flexDirection: 'row',
+                                                           borderRadius: 10,
+                                                       }}
+                                                       source={{ uri: content[0] }}
+                                                   />
+                                               </View>
+                                           </TouchableOpacity>
+                                       );
+                                   } else {
+                                       return <View style={{ flex: 0.5 }} key={index} />;
+                                   }
+                               })}
+                           </View>
+                       ))}
+                   </View>
                </ScrollView>
             </View>
 
             <View style={{height : '3%', width : '100%', flexDirection : 'row'}}>
                 <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
-                    props.navigation.navigate('addCategory', {data : 'addCategory'})
+                    props.navigation.navigate('AddCategory', {data : 'AddCategory'})
                 }
                 }>
                     <Text style ={{fontSize : 10}}> 카테고리 추가하기 </Text>
@@ -211,7 +252,7 @@ function HomePage(props){
 
 
             <View style={styles.bottomView}>
-                <View style={{flexDirection: 'row', flex: 1.5, width : '95%', justifyContent : 'center'}}>
+                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}
                         setIsModalVisible={setIsModalVisible} category={category} ></Footer>
                 </View>
@@ -274,7 +315,7 @@ const styles = StyleSheet.create({
     bottomView: {
         position: 'absolute',
         bottom: 0,
-        width: '10%',
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         height: 50,
