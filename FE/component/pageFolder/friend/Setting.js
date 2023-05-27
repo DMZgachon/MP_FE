@@ -32,7 +32,7 @@ function Setting(props){ //이름 설정 잘못함.. 셋팅이 아니라 프로�
             <View style={styles.navBox1}>
                 <View style={{ flex: 1.5 }}></View>
                 <View style={styles.storeCon}>
-                    <TouchableOpacity onPress={()=>{props.navigation.navigate('FriendPage', {data : 'FriendPage'})}}>
+                    <TouchableOpacity onPress={()=>{props.navigation.navigate('FriendPage', {data : 'My Page'})}}>
                         <Text style={styles.buttonText2}>저장</Text>
                     </TouchableOpacity>
                 </View>
@@ -42,7 +42,7 @@ function Setting(props){ //이름 설정 잘못함.. 셋팅이 아니라 프로�
                     <Text style={styles.Title}>이름: </Text>
                     <TextInput
                         style={styles.textInput}
-                        placeholder="현재 이름"
+                        placeholder="이름"
                     />
                 </View>
                 <View style={styles.inputContainer}>
@@ -56,7 +56,7 @@ function Setting(props){ //이름 설정 잘못함.. 셋팅이 아니라 프로�
                     <Text style={styles.Title}>자기소개: </Text>
                     <TextInput
                         style={styles.textInput}
-                        placeholder="현재 자기소개"
+                        placeholder="인트로튜스 아 유어 세프"
                     />
                 </View>
 

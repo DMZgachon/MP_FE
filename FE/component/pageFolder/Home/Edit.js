@@ -2,7 +2,7 @@ import {Header} from '../Layout/Header'
 import React, {Component, useState} from 'react';
 import {
     View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
-    TouchableHighlight, Modal, Button, Alert
+    TouchableHighlight, Modal, Button, Alert, ToastAndroid
 } from 'react-native'
 
 import {
@@ -23,14 +23,17 @@ function Edit(props){
 
     const [category, changeCategory] = useState(props.route.params.data);
 
-    const deleteImage = (id) => {
+    const deleteImage = (id,content) => {
         instance
             .delete(`/api/category/delete/${id}`, {})
             .then(async (response) => {
                 console.log('삭제요청됨' ,response.data);
                 // 삭제 후 상태 업데이트
                 let updatedCategory = category.filter(content => content[2] !== id);
+                ToastAndroid.show(`${content} - 삭제되었습니다.`, ToastAndroid.SHORT);
                 changeCategory(updatedCategory); // Update the state with the new array
+
+                props.navigation.navigate('HomePage', { data: 'HomePage' });
             })
             .catch((error) => {
                 if (axios.isCancel(error)) {
@@ -55,7 +58,7 @@ function Edit(props){
                 {
                     text: 'OK', onPress: () => {
                         console.log('id : ', id)
-                        deleteImage(id); // Call deleteImage function
+                        deleteImage(id,content); // Call deleteImage function
                     }
                 }
             ],

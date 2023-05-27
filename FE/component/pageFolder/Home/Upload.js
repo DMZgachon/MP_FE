@@ -241,7 +241,7 @@ function Upload(props){
             <ScrollView style={styles.container}>
                 <View style={styles.navBox}>
                     <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                        props.navigation.navigate('MainPage')}
+                        props.navigation.navigate('HomePage' , {data : 'HomePage'})}
                     }>
                         <Image
                             source={require('../../img/backButton.png')}/>
@@ -255,11 +255,11 @@ function Upload(props){
                 <View style={{flexDirection: "column", margin: "3%"}}>
                     <TouchableOpacity onPress={ShowPicker}>
                         <Image
-                            style={
-                                {width: 90, height: 90, marginLeft: 130}
-                            }
-                            source={require('../../img/PlusImg.png')}/>
+                            style={{width: 90, height: 90, marginLeft: 130}}
+                            source={imageData ? {uri: imageData.uri} : require('../../img/2142261_kln9jb34hkl00.jpg')}
+                        />
                     </TouchableOpacity>
+
                     <View>
                         <TextInput
                             placeholder={"버킷리스트 제목 입력"}

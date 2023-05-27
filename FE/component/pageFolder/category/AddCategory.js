@@ -103,6 +103,8 @@
             }).then((response) => {
                 ToastAndroid.show('카테고리 업로드 성공이다', ToastAndroid.SHORT);
                 console.log('success');
+                props.navigation.navigate('HomePage', { data: 'HomePage' });
+
             }).catch((res)=>{
                 ToastAndroid.show('카테고리 업로드 실패다', ToastAndroid.SHORT);
             });
@@ -127,21 +129,30 @@
                 {/*/>*/}
 
 
-                <Button
-                    title="이미지 선택 버튼"
-                    onPress={() => {
-                        ShowPicker();
-                    }}
-                    style={{ marginBottom: "3%"}}
-                />
+                <View style={{ flexDirection: 'column' , margin : '5%'}}>
+                    <Button
+                        title="select Image"
+                        color={"#fd007c"}
+                        onPress={() => {
+                            ShowPicker();
+                        }}
+                        style={styles.button}
+                    />
+                </View>
 
-                <Button
-                    title="카테고리 만들기"
-                    onPress={() => {
-                        send();
-                    }}
-                    style={{ marginTop: "3%"}}
-                />
+
+                <View style={{ flexDirection: 'column' , margin : '5%'}}>
+
+                    <Button
+                        title="Add"
+                        color={"#fd007c"}
+                        onPress={() => {
+                            send();
+                        }}
+                    />
+                </View>
+
+
 
                 <View style={styles.bottomView}>
                     <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
@@ -167,6 +178,13 @@
             alignItems: 'center',
             height: 50,
         },
+
+        button : {
+            margin : '5%',
+            backgroundColor: "#fd007c",
+        }
     });
+
+
 
     export {AddCategory}

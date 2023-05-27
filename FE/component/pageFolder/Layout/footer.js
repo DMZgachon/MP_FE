@@ -107,7 +107,10 @@ function Footer(props){
                     <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
                         props.navigation.navigate('ChattingPage', {data : 'ChattingPage'})}
                     }>
-                        <Text style ={{fontSize : 35}}> 💬 </Text>
+                        <Image
+                            source={require('./../../img/150589_159693_4748.jpg')}
+                            style={{ width: 80, height: 70, marginTop: -10 }}
+                        />
                     </TouchableOpacity>
                 </View>
 
