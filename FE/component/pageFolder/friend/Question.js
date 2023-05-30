@@ -31,7 +31,7 @@ function Question(props){
 
             <View style={styles.navBox1}>
                 <View style={{flex: 1}}></View>
-                <ScrollView style={{marginTop: '20%'}}>
+                <ScrollView>
                     <Text style={styles.text1}>
                         버킷리스트 어플을 이용하는 사용자들이 자주 묻는 질문(FAQ)을 아래에 제시해 드리겠습니다.
                         {'\n\n'}
@@ -95,7 +95,7 @@ function Question(props){
             </View>
 
             <View style={styles.bottomView}>
-                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
+                <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
                 </View>
             </View>
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: "100%",
-        height: '90%',
+        height: '85%',
         marginBottom: '5%',
         padding: '5%',
         borderRadius: 10,

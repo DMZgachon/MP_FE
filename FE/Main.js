@@ -13,6 +13,7 @@ import {ManagePage} from "./component/pageFolder/friend/ManagePage";
 import {Question} from "./component/pageFolder/friend/Question";
 import {Condition} from "./component/pageFolder/friend/Condition";
 import {CategoryPage} from './component/pageFolder/category/CategoryPage';
+import {BucketDetail} from './component/pageFolder/category/BucketDetail';
 import {Upload} from './component/pageFolder/Home/Upload';
 import {Login} from './component/loginFolder/Login';
 import {Signup} from './component/signUpFolder/Signup';
@@ -20,10 +21,10 @@ import {Completion} from './component/signUpFolder/Completion';
 import {Input_code} from './component/signUpFolder/Input_code';
 import {Input_name} from './component/signUpFolder/Input_name';
 import {Input_phonenum} from './component/signUpFolder/Input_phonenum';
+import {Check_pw} from './component/findFolder/Check_pw';
 import {Set_pw} from './component/findFolder/Set_pw';
 import {Set_pw_code} from './component/findFolder/Set_pw_code';
 import {Set_pw_phone} from './component/findFolder/Set_pw_phone';
-import {Check_pw} from './component/findFolder/Check_pw';
 import {AddCategory} from "./component/pageFolder/category/AddCategory";
 
 const Stack = createNativeStackNavigator(); // Stack Navigation함수를 Stack변수명으로 저장
@@ -41,6 +42,7 @@ function Main(){
                 <Stack.Screen name="Input_code" component={Input_code} />
                 <Stack.Screen name="Input_name" component={Input_name} />
                 <Stack.Screen name="Input_phonenum" component={Input_phonenum} />
+                <Stack.Screen name="Check_pw" component={Check_pw} />
                 <Stack.Screen name="Set_pw" component={Set_pw} />
                 <Stack.Screen name="Set_pw_code" component={Set_pw_code} />
                 <Stack.Screen name="Set_pw_phone" component={Set_pw_phone} />
@@ -53,8 +55,9 @@ function Main(){
                 <Stack.Screen name="Question" component={Question}/>
                 <Stack.Screen name="Condition" component={Condition}/>
                 <Stack.Screen name="Category" component={CategoryPage} />
+                <Stack.Screen name="BucketDetail" component={BucketDetail} />
                 <Stack.Screen name="AddCategory" component={AddCategory} />
-                <Stack.Screen name="Check_pw" component={Check_pw} />
+
             </Stack.Navigator>
         </NavigationContainer>
     )

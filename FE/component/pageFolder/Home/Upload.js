@@ -31,19 +31,21 @@ const imagePickerOption = {
     includeBase64: Platform.OS === "android",
 };
 function Upload(props){
-    const [countList, setCountList] = useState([])
+    const [countList, setCountList] = useState([""])
+
     const [calendar, setCalendar] = useState(false)
     const [selectedDate, setSelectedDate] = useState(
         format(new Date(), "yyyy-MM-dd"),
     );
-    const [title, setTitle] = useState("");
+
+    const [title, setTitle] = useState([""]);
     const [imageData, setImageData] = useState(null);
-    const [content, setContent] = useState([""]);
-    const [hashtagList, setHashtagList] = useState([""]);
+    const [content, setContent] = useState(["default"]);
+    const [hashtagList, setHashtagList] = useState(["default"]);
     const [hashtag, setHashtag] = useState("");
 
     const [visibility, setVisibility] = useState("공개");
-    const [category, setCategory] = useState(52);
+    const [category, setCategory] = useState();
     const [accessToken , setAccess] = useState();
     const formData = new FormData();
 
@@ -85,6 +87,17 @@ function Upload(props){
         //console.log('제목 :', title);
     }
 
+    useEffect(() => {
+        const splitHashtags = hashtag.trim().split("#");
+
+        if (splitHashtags[0] === "") {
+            splitHashtags.shift();
+        }
+
+        setHashtagList(splitHashtags);
+    }, [hashtag]);
+
+
     // const onAddStep = () => {
     //     //alert('dd')
     //     let countArr = [...countList]
@@ -121,9 +134,21 @@ function Upload(props){
         setCalendar(!calendar)
     }
     const onRegister = async () => {
+
+        const splitHashtags = hashtag.trim().split("#");
+
+        // 첫 번째 요소는 분리한 결과의 첫 부분이 공백 문자열("")일 가능성이 있으므로 제거
+        if (splitHashtags[0] === "") {
+            splitHashtags.shift();
+        }
+
+        setHashtagList(splitHashtags);
+
+        console.log("hash :" , hashtagList)
+        console.log("content: ", content)
         let imageBlob;
 
-        formData.append('tagList', content);
+        formData.append('tagList', hashtagList);
 
 
         //formData.append('tagList', hashtagList);
@@ -163,7 +188,7 @@ function Upload(props){
         // content.forEach((item, index) => {
         //     formData.append('posts', item);
         // });
-        formData.append('posts',countList);
+        formData.append('posts',content);
 
 
 
@@ -196,6 +221,17 @@ function Upload(props){
         await instance.post('api/bucket/add', formData, config)
             .then((res) => {
                 console.log('Success:', res);
+                if(res.status == 200) {
+                    console.log("등록 성공");
+                    Alert.alert('버킷 등록',
+                        '이쿠죠!!!!!!!',
+                        [
+                            {
+                                text: 'OK',
+                                onPress: () => props.navigation.navigate('HomePage', {data: 'HomePage'})
+                            }
+                        ]);
+                }
             })
             .catch((error) => {
                 console.log("Error:", error);
@@ -241,7 +277,7 @@ function Upload(props){
             <ScrollView style={styles.container}>
                 <View style={styles.navBox}>
                     <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                        props.navigation.navigate('MainPage')}
+                        props.navigation.navigate('HomePage' , {data : 'HomePage'})}
                     }>
                         <Image
                             source={require('../../img/backButton.png')}/>
@@ -255,11 +291,12 @@ function Upload(props){
                 <View style={{flexDirection: "column", margin: "3%"}}>
                     <TouchableOpacity onPress={ShowPicker}>
                         <Image
-                            style={
-                                {width: 90, height: 90, marginLeft: 130}
-                            }
-                            source={require('../../img/PlusImg.png')}/>
+                            style={{width: 90, height: 90, marginLeft: 130}}
+                            source={imageData ? {uri: imageData.uri} : require('../../img/PlusImg.png')}
+                        />
+
                     </TouchableOpacity>
+
                     <View>
                         <TextInput
                             placeholder={"버킷리스트 제목 입력"}
@@ -332,7 +369,8 @@ function Upload(props){
                     </View>
 
                     <View style={{marginTop: 22}}>
-                        {console.log("시발:", items)}
+                        {//console.log("시발:", items)
+                        }
 
                         <Modal
                             animationType="slide"
@@ -342,37 +380,44 @@ function Upload(props){
                                 setModalVisible(false);
                             }}
                         >
-                            <View style={{ marginTop: 22 }}>
+                            <View style={styles.container}>
                                 <View>
+
                                     {items.map((item, index) => (
                                         <TouchableHighlight
+                                            underlayColor="#FFECEC"
                                             key={index}
-                                            onPress={() => setCategory(item.value)}
+                                            style={styles.listItem}
+                                            onPress={() => {
+                                                setCategory(item.value);
+                                                setModalVisible(false);
+                                            }}
                                         >
-                                            <Text>
-                                                Label: {item.label}, Value: {item.value}
+                                            <Text style={styles.listItemText}>
+                                                {item.label}
                                             </Text>
                                         </TouchableHighlight>
                                     ))}
 
-                                    <TouchableHighlight
+                                    <TouchableOpacity
+                                        style={styles.hideModalButton}
                                         onPress={() => {
                                             setModalVisible(false);
                                         }}
                                     >
-                                        <Text>Hide Modal</Text>
-                                    </TouchableHighlight>
+                                        <Text style={styles.hideModalButtonText}>닫기</Text>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </Modal>
 
-                        <TouchableHighlight
-                            onPress={() => {
-                                setModalVisible(true);
-                            }}
+                        <TouchableOpacity style={styles.categoryBtn}
+                                          onPress={() => {
+                                              setModalVisible(true);
+                                          }}
                         >
-                            <Text>카테고리 선택하기</Text>
-                        </TouchableHighlight>
+                            <Text style={{fontSize: 16, color: "black",}}>카테고리 선택</Text>
+                        </TouchableOpacity>
 
                     </View>
 
@@ -382,7 +427,7 @@ function Upload(props){
             <View style={styles.bottomView}>
                 <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}
-                           category={category} ></Footer>
+                            category={category} ></Footer>
                 </View>
             </View>
         </View>
@@ -484,7 +529,52 @@ const styles = StyleSheet.create({
     },
     dropDownStyle: {
         flex: 1
-    }
+    },
+    chooseCg : {
+        flex: 1,
+        padding: 10,
+        backgroundColor: '#f8f8f8'
+    },
+    listItem: {
+        backgroundColor: '#fff',
+        marginTop: 10,
+        padding: 15,
+        borderRadius: 5,
+        elevation: 1, // for android
+        shadowColor: "#000", // for ios
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    listItemText: {
+        fontSize: 16,
+        color: '#333'
+    },
+    hideModalButton: {
+        backgroundColor: "#FACBCB",
+        marginTop: 10,
+        padding: 15,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    hideModalButtonText: {
+        color: 'black',
+        fontSize: 16
+    },
+    categoryBtn: {
+        padding: "1.5%",
+        borderRadius: 10,
+        width: "32%",
+        height: "26%",
+        backgroundColor: "#FACBCB",
+        marginLeft: "3%",
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
 });
 
 export {Upload}

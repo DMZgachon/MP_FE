@@ -31,7 +31,7 @@ function Condition(props){
 
             <View style={styles.navBox1}>
                 <View style={{flex: 1}}></View>
-                <ScrollView style={{marginTop: '20%'}}>
+                <ScrollView>
                     <Text>
                         [버킷리스트 어플 이용 약관]
                         {'\n\n'}{'\n'}
@@ -76,7 +76,7 @@ function Condition(props){
             </View>
 
             <View style={styles.bottomView}>
-                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
+                <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
                 </View>
             </View>
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: "100%",
-        height: '90%',
+        height: '85%',
         marginBottom: '5%',
         padding: '5%',
         borderRadius: 10,

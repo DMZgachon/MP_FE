@@ -30,6 +30,8 @@ function CategoryPage(props){
     let cancel;
     const [bucket_image, changeimage] = useState([])
     const [bucket_title, changetitle] = useState([])
+    const [bucketid, changeId] = useState(0)
+
     const [listlist, changeList] = useState([])
 
     useFocusEffect(
@@ -39,10 +41,10 @@ function CategoryPage(props){
                 .get(`/api/bucket/load/${id}`)
                 .then(async (response) => {
                     changeList(response)
-                    console.log('자 축소하자',response.request._response);
                     const parsedResponse = JSON.parse(response.request._response);
                     const bucketImageList = parsedResponse.data.map(item => item.bucketImage);
-                    console.log(bucketImageList);
+                    const bucketIdlist = parsedResponse.data.map(item => item.id);
+                    changeId(bucketIdlist)
                     changeimage(bucketImageList)
 
                     const bucketTitle = parsedResponse.data.map(item => item.title);
@@ -50,7 +52,7 @@ function CategoryPage(props){
                     changetitle(bucketTitle)
                 })
                 .catch((error) => {
-                        console.log('버킷 발급 실패');
+                    console.log('버킷 발급 실패');
                 });
 
             getAndReissueTokens(cancel).then(r => console.log('getAndReissueTokens'));
@@ -68,7 +70,7 @@ function CategoryPage(props){
         <View style={styles.container}>
 
             <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
-                <Header data = {props.route.params.data[1]}></Header>
+                <Header data = {props.route.params.name}></Header>
             </View>
 
             <View style ={{ width : '2000%', height : '70%', alignItems : 'center', margin : 3}}>
@@ -79,7 +81,7 @@ function CategoryPage(props){
                                 <View>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            props.navigation.navigate('Category',{data : content})
+                                            props.navigation.navigate('BucketDetail',{data : bucket_title[i], id : bucketid[i]})
                                             {
                                                 console.log(props.route.params.data)
                                             }
@@ -87,7 +89,7 @@ function CategoryPage(props){
                                         } key={i}>
                                         <View style={{ flexDirection: 'row' }}>
                                             <View>
-                                                <Text style={{ }} >{bucket_title[i]}</Text>
+                                                <Text >{bucket_title[i]}</Text>
                                             </View>
                                             <Image
                                                 style={{

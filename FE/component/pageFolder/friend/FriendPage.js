@@ -86,7 +86,7 @@ function FriendPage(props){
 
 
             <View style={styles.bottomView}>
-                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
+                <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
                 </View>
             </View>
@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#fdfdfe',
     },
     navBox1: {
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#fae7e9',
+        backgroundColor: '#ffe9e9',
         width: "97%",
         height: '22%',
         marginTop: '3%',
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     navBox2: {
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#fce9ea',
+        backgroundColor: '#ffe9e9',
         width: "97%",
         height: '48%',
         paddingTop: '-10%',
@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
         width: 65,
         height: 65,
         resizeMode: "cover",
+        borderRadius: 50
     },
     moreImg:{
         marginLeft: 5,
@@ -177,7 +178,7 @@ const styles = StyleSheet.create({
         height: "30%",
         marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#e3e3f6"
+        backgroundColor: "#cce6fc"
     },
     setbtn:{
         width: "30%",
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
         height: "45%",
         marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#e3e3f6"
+        backgroundColor: "#faf3d6"
     },
     setbtn2:{
         width: "30%",
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
         height: "45%",
         marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#eedadc"
+        backgroundColor: "#faf3d6"
     },
     buttonText:{
         textAlign: 'center',

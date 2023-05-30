@@ -72,42 +72,43 @@ function Edit(props){
             </View>
 
             <View style ={{ width : '100%', height : '60%', alignItems : 'center', margin : 3}}>
-                    <ScrollView>
-                        {
-                            category.map((content, i ) =>{
-                                return(
-                                    <View>
-                                        {
-                                            console.log('id : ', content[2])
-                                        }
+                <ScrollView>
+                    {
+                        category.map((content, i ) =>{
+                            return(
+                                <View>
+                                    {
+                                        console.log('id : ', content[2])
+                                    }
 
-                                        <TouchableOpacity
-                                            onPress={() =>
-                                            {showAlert(content[1], content[2])}
-                                            } key={i}>
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                        {showAlert(content[1], content[2])}
+                                        } key={i}>
 
-                                            <Image
-                                                style={{
-                                                    width: 300,
-                                                    height: 220,
-                                                    borderColor: 'blue',
-                                                    marginBottom: 20 // 이미지 간격 조절
-                                                }}
-                                                source={{uri : content[0]}}
-                                            />
-                                        </TouchableOpacity>
+                                        <Image
+                                            style={{
+                                                width: 300,
+                                                height: 200,
+                                                borderColor: 'blue',
+                                                marginBottom: 20 // 이미지 간격 조절
+                                            }}
+                                            source={{uri : content[0]}}
+                                        />
+                                        <Text style={{fontSize: 17, color: 'black'}}>{content[1]}</Text>
+                                    </TouchableOpacity>
 
-                                    </View>
-                                )
-                            })
-                        }
-                    </ScrollView>
+                                </View>
+                            )
+                        })
+                    }
+                </ScrollView>
             </View>
 
 
 
             <View style={styles.bottomView}>
-                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
+                <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
                 </View>
             </View>

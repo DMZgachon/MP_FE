@@ -39,7 +39,7 @@ function Footer(props){
     };
 
     const bucektCategory = props.category
-    console.log('footer 의 버킷리스트 받은거', props.category)
+    //console.log('footer 의 버킷리스트 받은거', props.category)
     const [accessToken, setAccessToken] = useState('')
     const [refreshToken, setRefreshToken] = useState('')
     const objectToken = new Object()
@@ -47,7 +47,7 @@ function Footer(props){
         const getAccess = async () => {
             try {
                 const storedValue = await AsyncStorage.getItem('accessToken');
-                console.log('Stored value:', storedValue);
+                //console.log('Stored value:', storedValue);
             } catch (e){
                 console.log(e)
             }
@@ -63,7 +63,8 @@ function Footer(props){
     // 맞으면 + 아니면 이미지 로고
     return(
         <View style={styles.container}>
-            {  console.log("현재 페이지: ", props.data) }
+            { // console.log("현재 페이지: ", props.data)
+            }
             <View style = {{width : '100%', height : '100%', flexDirection: 'row'}}>
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
                     <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
@@ -84,8 +85,8 @@ function Footer(props){
                 {
                     ifMain ?  <View style ={{flex : 1.4, alignItems : 'center'}}>
                         <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
-                            console.log('category data : ',props.category)
-                            props.navigation.navigate('Upload', {data : 'Upload', category1: props.category})
+                            //console.log('category data : ',props.category)
+                            props.navigation.navigate('Upload', {data : 'Upload', category1: props.category, navigation: props.navigation})
                         }
                         }>
                             <Text style ={{fontSize : 35, width: 80, height: 70, marginTop: -10, textAlign: 'center', textAlignVertical: 'center'}}> ➕ </Text>
@@ -96,7 +97,7 @@ function Footer(props){
                         }>
                             <Image
                                 source={require('./../../img/꿈동이_new.png')}
-                                style={{ width: 80, height: 70, marginTop: -10 }}
+                                style={{ width: 80, height: 70, marginTop: -3 }}
                             />
                         </TouchableOpacity>
                     </View>
@@ -126,9 +127,14 @@ function Footer(props){
 
 const styles = StyleSheet.create({
     container: {
+        width: '100%',
+        backgroundColor: 'white',
         alignItems: 'center',
         position : 'absolute',
         bottom : 0,
+        borderTopWidth: 1,
+        borderStyle: 'solid',
+        borderColor: '#F08484',
     },
 });
 
