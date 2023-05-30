@@ -52,6 +52,7 @@ function HomePage(props){
     ])
     const image = { uri: "https://reactjs.org/logo-og.png" };
 
+
     const getAccess = async () => {
         try {
             const accessToken = await AsyncStorage.getItem('accessToken')
@@ -72,8 +73,7 @@ function HomePage(props){
     const [categoryList, setCategoryList] = useState([]); // 카테고리 목록 상태 추가
     const [rows,setRows] = useState(0);
 
-    useFocusEffect
-    (
+    useFocusEffect(
         React.useCallback(() => {
             console.log('Screen was focused');
 
@@ -159,49 +159,51 @@ function HomePage(props){
             </View>
 
 
-            <View style ={{ width : '2000%', height : '70%', alignItems : 'center', margin : 3}}>
-                <ScrollView>
-                    <View style={{ flexDirection: 'column' }}>
-                        {Array.from(Array(rows)).map((_, rowIndex) => (
-                            <View style={{ flexDirection: 'row' }} key={rowIndex}>
-                                {Array.from(Array(2)).map((_, colIndex) => {
-                                    const index = rowIndex * 2 + colIndex;
-                                    if (index < categoryList.length) {
-                                        const content = categoryList[index];
-                                        console.log(content);
-                                        return (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    props.navigation.navigate('Category', { data: content, name : 'Category' });
-                                                }}
-                                                key={index}
-                                            >
-                                                <View style={{ flexDirection: 'column', alignItems: 'center'}}>
-                                                    <Text style={{fontSize:17, textAlign: 'center'}}>{content[1]}</Text>
-                                                    <Image
-                                                        style={{
-                                                            width: 160,
-                                                            height: 160,
-                                                            borderColor: '#FFECEC',
-                                                            borderWidth: 2,
-                                                            marginRight: 20,
-                                                            marginBottom: 10,
-                                                            flexDirection: 'row',
-                                                            borderRadius: 5,
-                                                        }}
-                                                        source={{ uri: content[0] }}
-                                                    />
-                                                </View>
-                                            </TouchableOpacity>
-                                        );
-                                    } else {
-                                        return <View style={{ flex: 0.5 }} key={index} />;
-                                    }
-                                })}
-                            </View>
-                        ))}
-                    </View>
-                </ScrollView>
+            <View style ={{ width : '2500%', height : '70%', alignItems : 'center', margin : 3}}>
+               <ScrollView>
+                   <View style={{ flexDirection: 'column' }}>
+                       {Array.from(Array(rows)).map((_, rowIndex) => (
+                           <View style={{ flexDirection: 'column' }} key={rowIndex}>
+                               {Array.from(Array(2)).map((_, colIndex) => {
+                                   const index = rowIndex * 2 + colIndex;
+                                   if (index < categoryList.length) {
+                                       const content = categoryList[index];
+                                       console.log(content);
+                                       return (
+                                           <TouchableOpacity
+                                               onPress={() => {
+                                                   props.navigation.navigate('Category', { data: content });
+                                               }}
+                                               key={index}
+                                           >
+                                               <View>
+                                                   <View style={{ flexDirection: 'column', alignItems: 'center',
+                                                        margin: 10, backgroundColor: 'white', borderRadius: 0, borderColor: 'black',
+                                                       borderWidth: 1,}}>
+                                                       <Text style={{fontSize:17, textAlign: 'center', color: 'black'}}>{content[1]}</Text>
+                                                       <Image
+                                                           style={{
+                                                               width: 380,
+                                                               height: 260,
+                                                               borderColor: '#FFECEC',
+                                                               borderWidth: 2,
+                                                               flexDirection: 'row',
+                                                               borderRadius: 0,
+                                                           }}
+                                                           source={{ uri: content[0] }}
+                                                       />
+                                                   </View>
+                                               </View>
+                                           </TouchableOpacity>
+                                       );
+                                   } else {
+                                       return <View style={{ flex: 0.5 }} key={index} />;
+                                   }
+                               })}
+                           </View>
+                       ))}
+                   </View>
+               </ScrollView>
             </View>
 
             <View style={{height : '3%', width : '100%', flexDirection : 'row'}}>
@@ -215,53 +217,11 @@ function HomePage(props){
 
 
             <View style={styles.bottomView}>
-                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
+                <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}
-                            setIsModalVisible={setIsModalVisible} category={category} ></Footer>
+                        setIsModalVisible={setIsModalVisible} category={category} ></Footer>
                 </View>
             </View>
-
-
-            <Modal
-                animationType="slide"
-                transparent={false}
-                visible={isModalVisible}
-                onRequestClose={handleCloseModal}>
-                <View>
-                    <Upload navigation = {props.navigation}/>
-                </View>
-            </Modal>
-
-
-            <Modal
-                animationType="slide"
-                transparent={false}
-                visible={isModalVisible2}
-                onRequestClose={handleCloseModal2}>
-                <View>
-                    <View style={{alignItems : 'center'}}>
-                        <View style ={{width : '100%', height : '20%'}}>
-                            <Text style ={{textAlign : 'center', fontSize : 30}}>새로운 카테고리 추가하기</Text>
-                        </View>
-                        <View style ={{width : '80%', height : '70%', backgroundColor : 'gray', borderRadius : 10}}>
-                            <Text style ={{textAlign : 'center'}}>카테고리 이름</Text>
-                            <TextInput
-                                placeholder="카테고리 이름 설정"
-                                onChangeText={text => changeCategoryName(text)}
-                                value={addCategory}
-                            />
-                            <Text style ={{textAlign : 'center'}}>이미지 첨부</Text>
-                            <TextInput placeholder="이미지 주소 첨부하기"></TextInput>
-                        </View>
-                        <View>
-                            <TouchableHighlight onPress={handleCloseModal2} underlayColor ="red"
-                                                style={{width : '13%'}}>
-                                <Text>돌아가기</Text>
-                            </TouchableHighlight>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
 
 
         </View>
@@ -273,7 +233,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#FFF4F4',
     },
     bottomView: {
         position: 'absolute',

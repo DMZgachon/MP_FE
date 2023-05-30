@@ -92,12 +92,13 @@ function Edit(props){
                                             <Image
                                                 style={{
                                                     width: 300,
-                                                    height: 220,
+                                                    height: 200,
                                                     borderColor: 'blue',
                                                     marginBottom: 20 // 이미지 간격 조절
                                                 }}
                                                 source={{uri : content[0]}}
                                             />
+                                            <Text style={{fontSize: 17, color: 'black'}}>{content[1]}</Text>
                                         </TouchableOpacity>
 
                                     </View>
@@ -110,7 +111,7 @@ function Edit(props){
 
 
             <View style={styles.bottomView}>
-                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
+                <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
                 </View>
             </View>

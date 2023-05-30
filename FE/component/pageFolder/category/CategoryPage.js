@@ -30,9 +30,9 @@ function CategoryPage(props){
     let cancel;
     const [bucket_image, changeimage] = useState([])
     const [bucket_title, changetitle] = useState([])
-    const [bucketid, changeId] = useState(0)
-
     const [listlist, changeList] = useState([])
+    const [rows,setRows] = useState(0);
+    const [bucketList, setBucketList] = useState([])
 
     useFocusEffect(
         React.useCallback(() => {
@@ -40,19 +40,25 @@ function CategoryPage(props){
             instance
                 .get(`/api/bucket/load/${id}`)
                 .then(async (response) => {
+                    //console.log(response)
                     changeList(response)
+                    console.log('자 축소하자',response.request._response);
                     const parsedResponse = JSON.parse(response.request._response);
                     const bucketImageList = parsedResponse.data.map(item => item.bucketImage);
-                    const bucketIdlist = parsedResponse.data.map(item => item.id);
-                    changeId(bucketIdlist)
+                    console.log(bucketImageList);
                     changeimage(bucketImageList)
 
                     const bucketTitle = parsedResponse.data.map(item => item.title);
                     console.log(bucketTitle);
                     changetitle(bucketTitle)
+
+                    const newItems = response.data.data.map(item => [item.bucketImage, item.title]);
+                    setBucketList(newItems);
+                    console.log(Math.ceil(newItems.length / 2));
+                    setRows(Math.ceil(newItems.length / 2));
                 })
                 .catch((error) => {
-                    console.log('버킷 발급 실패');
+                        console.log('버킷 발급 실패');
                 });
 
             getAndReissueTokens(cancel).then(r => console.log('getAndReissueTokens'));
@@ -70,51 +76,60 @@ function CategoryPage(props){
         <View style={styles.container}>
 
             <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
-                <Header data = {props.route.params.name}></Header>
+                <Header data = {props.route.params.data[1]}></Header>
             </View>
 
-            <View style ={{ width : '2000%', height : '70%', alignItems : 'center', margin : 3}}>
+            <Text style={{fontSize: 20, color: '#FF357E'}}>"{props.route.params.data[1]}"의 버킷</Text>
+
+            <View style ={{ width : '2500%', height : '70%', alignItems : 'center', margin : 3}}>
                 <ScrollView>
-                    {
-                        bucket_image.map((content, i ) =>{
-                            return(
-                                <View>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            props.navigation.navigate('BucketDetail',{data : bucket_title[i], id : bucketid[i]})
-                                            {
-                                                console.log(props.route.params.data)
-                                            }
-                                        }
-                                        } key={i}>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <View>
-                                                <Text >{bucket_title[i]}</Text>
-                                            </View>
-                                            <Image
-                                                style={{
-                                                    width: 130,
-                                                    height: 220,
-                                                    borderColor: 'blue',
-                                                    marginRight : 5,
-                                                    marginBottom: 10, // 이미지 간격 조절
-                                                    flexDirection : 'row',
-                                                    borderRadius : 10,
-                                                    marginTop : 20
+                    <View style={{ flexDirection: 'column' }}>
+                        {Array.from(Array(rows)).map((_, rowIndex) => (
+                            <View style={{ flexDirection: 'column' }} key={rowIndex}>
+                                {Array.from(Array(2)).map((_, colIndex) => {
+                                    const index = rowIndex * 2 + colIndex;
+                                    if (index < bucketList.length) {
+                                        const content = bucketList[index];
+                                        console.log(content);
+                                        return (
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    props.navigation.navigate('HomePage', { data: 'HomePage' });
                                                 }}
-                                                source={{uri : content}}
-                                            />
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            )
-                        })
-                    }
+                                                key={index}
+                                            >
+                                                <View>
+                                                    <View style={{ flexDirection: 'column', alignItems: 'center',
+                                                        margin: 10, backgroundColor: 'white', borderRadius: 0, borderColor: 'black',
+                                                        borderWidth: 1,}}>
+                                                        <Text style={{fontSize:17, textAlign: 'center', color: 'black'}}>{content[1]}</Text>
+                                                        <Image
+                                                            style={{
+                                                                width: 380,
+                                                                height: 260,
+                                                                borderColor: '#FFECEC',
+                                                                borderWidth: 2,
+                                                                flexDirection: 'row',
+                                                                borderRadius: 0,
+                                                            }}
+                                                            source={{ uri: content[0] }}
+                                                        />
+                                                    </View>
+                                                </View>
+                                            </TouchableOpacity>
+                                        );
+                                    } else {
+                                        return <View style={{ flex: 0.5 }} key={index} />;
+                                    }
+                                })}
+                            </View>
+                        ))}
+                    </View>
                 </ScrollView>
             </View>
 
             <View style={styles.bottomView}>
-                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
+                <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
                 </View>
             </View>
@@ -127,7 +142,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#FFF4F4',
     },
     bottomView: {
         position: 'absolute',

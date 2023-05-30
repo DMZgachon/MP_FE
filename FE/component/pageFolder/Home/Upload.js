@@ -45,7 +45,7 @@ function Upload(props){
     const [hashtag, setHashtag] = useState("");
 
     const [visibility, setVisibility] = useState("공개");
-    const [category, setCategory] = useState(52);
+    const [category, setCategory] = useState();
     const [accessToken , setAccess] = useState();
     const formData = new FormData();
 
@@ -221,6 +221,17 @@ function Upload(props){
         await instance.post('api/bucket/add', formData, config)
             .then((res) => {
                 console.log('Success:', res);
+                if(res.status == 200) {
+                    console.log("등록 성공");
+                    Alert.alert('버킷 등록',
+                        '이쿠죠!!!!!!!',
+                        [
+                            {
+                                text: 'OK',
+                                onPress: () => props.navigation.navigate('HomePage', {data: 'HomePage'})
+                            }
+                        ]);
+                }
             })
             .catch((error) => {
                 console.log("Error:", error);
@@ -281,8 +292,9 @@ function Upload(props){
                     <TouchableOpacity onPress={ShowPicker}>
                         <Image
                             style={{width: 90, height: 90, marginLeft: 130}}
-                            source={imageData ? {uri: imageData.uri} : require('../../img/2142261_kln9jb34hkl00.jpg')}
+                            source={imageData ? {uri: imageData.uri} : require('../../img/PlusImg.png')}
                         />
+
                     </TouchableOpacity>
 
                     <View>
@@ -346,18 +358,19 @@ function Upload(props){
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <RadioButton.Group onValueChange={value => setVisibility(value)} value={visibility}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text>보이게</Text>
+                                <Text>공개</Text>
                                 <RadioButton value="공개" />
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text>안보이게</Text>
+                                <Text>비공개</Text>
                                 <RadioButton value="비공개" />
                             </View>
                         </RadioButton.Group>
                     </View>
 
                     <View style={{marginTop: 22}}>
-                        {console.log("시발:", items)}
+                        {//console.log("시발:", items)
+                        }
 
                         <Modal
                             animationType="slide"
@@ -367,37 +380,44 @@ function Upload(props){
                                 setModalVisible(false);
                             }}
                         >
-                            <View style={{ marginTop: 22 }}>
+                            <View style={styles.container}>
                                 <View>
+
                                     {items.map((item, index) => (
                                         <TouchableHighlight
+                                            underlayColor="#FFECEC"
                                             key={index}
-                                            onPress={() => setCategory(item.value)}
+                                            style={styles.listItem}
+                                            onPress={() => {
+                                                setCategory(item.value);
+                                                setModalVisible(false);
+                                            }}
                                         >
-                                            <Text>
-                                                Label: {item.label}, Value: {item.value}
+                                            <Text style={styles.listItemText}>
+                                                {item.label}
                                             </Text>
                                         </TouchableHighlight>
                                     ))}
 
-                                    <TouchableHighlight
+                                    <TouchableOpacity
+                                        style={styles.hideModalButton}
                                         onPress={() => {
                                             setModalVisible(false);
                                         }}
                                     >
-                                        <Text>Hide Modal</Text>
-                                    </TouchableHighlight>
+                                        <Text style={styles.hideModalButtonText}>닫기</Text>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </Modal>
 
-                        <TouchableHighlight
-                            onPress={() => {
-                                setModalVisible(true);
-                            }}
+                        <TouchableOpacity style={styles.categoryBtn}
+                                          onPress={() => {
+                                              setModalVisible(true);
+                                          }}
                         >
-                            <Text>카테고리 선택하기</Text>
-                        </TouchableHighlight>
+                            <Text style={{fontSize: 16, color: "black",}}>카테고리 선택</Text>
+                        </TouchableOpacity>
 
                     </View>
 
@@ -407,7 +427,7 @@ function Upload(props){
             <View style={styles.bottomView}>
                 <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}
-                           category={category} ></Footer>
+                            category={category} ></Footer>
                 </View>
             </View>
         </View>
@@ -417,8 +437,9 @@ function Upload(props){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white",
+        backgroundColor: 'white',
         overflow: 'visible', // 추가
+
     },
     navBox: {
         width: "100%",
@@ -427,7 +448,8 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderColor: '#F08484',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        backgroundColor: 'white',
     },
     backBtn: {
         justifyContent: 'flex-start',
@@ -509,7 +531,52 @@ const styles = StyleSheet.create({
     },
     dropDownStyle: {
         flex: 1
-    }
+    },
+    chooseCg : {
+        flex: 1,
+        padding: 10,
+        backgroundColor: '#f8f8f8'
+    },
+    listItem: {
+        backgroundColor: '#fff',
+        marginTop: 10,
+        padding: 15,
+        borderRadius: 5,
+        elevation: 1, // for android
+        shadowColor: "#000", // for ios
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    listItemText: {
+        fontSize: 16,
+        color: '#333'
+    },
+    hideModalButton: {
+        backgroundColor: "#FACBCB",
+        marginTop: 10,
+        padding: 15,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    hideModalButtonText: {
+        color: 'black',
+        fontSize: 16
+    },
+    categoryBtn: {
+        padding: "1.5%",
+        borderRadius: 10,
+        width: "32%",
+        height: "26%",
+        backgroundColor: "#FACBCB",
+        marginLeft: "3%",
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
 });
 
 export {Upload}
