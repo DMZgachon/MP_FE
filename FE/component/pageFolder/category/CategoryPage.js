@@ -52,7 +52,7 @@ function CategoryPage(props){
                     console.log(bucketTitle);
                     changetitle(bucketTitle)
 
-                    const newItems = response.data.data.map(item => [item.bucketImage, item.title]);
+                    const newItems = response.data.data.map(item => [item.id, item.bucketImage, item.title]);
                     setBucketList(newItems);
                     console.log(Math.ceil(newItems.length / 2));
                     setRows(Math.ceil(newItems.length / 2));
@@ -94,7 +94,7 @@ function CategoryPage(props){
                                         return (
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    props.navigation.navigate('HomePage', { data: 'HomePage' });
+                                                    props.navigation.navigate('BucketDetail', {data : bucket_title[index], id : content[0]});
                                                 }}
                                                 key={index}
                                             >
@@ -102,7 +102,7 @@ function CategoryPage(props){
                                                     <View style={{ flexDirection: 'column', alignItems: 'center',
                                                         margin: 10, backgroundColor: 'white', borderRadius: 0, borderColor: 'black',
                                                         borderWidth: 1,}}>
-                                                        <Text style={{fontSize:17, textAlign: 'center', color: 'black'}}>{content[1]}</Text>
+                                                        <Text style={{fontSize:17, textAlign: 'center', color: 'black'}}>{content[2]}</Text>
                                                         <Image
                                                             style={{
                                                                 width: 380,
@@ -112,7 +112,7 @@ function CategoryPage(props){
                                                                 flexDirection: 'row',
                                                                 borderRadius: 0,
                                                             }}
-                                                            source={{ uri: content[0] }}
+                                                            source={{ uri: content[1] }}
                                                         />
                                                     </View>
                                                 </View>

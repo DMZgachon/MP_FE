@@ -147,10 +147,7 @@ function AddCategory(props){
                     }}
                     style={styles.Btn}
                 >
-                    <Text style={{color: "black"}} onPress={()=>{
-                        props.navigation.navigate('HomePage', {data : 'HomePage'})
-                    }
-                    }>카테고리 만들기</Text>
+                    <Text style={{color: "black"}}>카테고리 만들기</Text>
 
                 </TouchableOpacity>
             </View>
