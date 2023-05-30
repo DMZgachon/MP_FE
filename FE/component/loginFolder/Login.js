@@ -41,6 +41,7 @@ function Login(props){
 
     return(
         <View style={styles.container}>
+
             <View style={styles.navBox}>
                 <TouchableOpacity style={styles.backBtn} onPress={()=>{
                     props.navigation.navigate('MainPage')}

@@ -13,33 +13,23 @@ import {
 function Check_pw(props){
     return(
         <View style={styles.container}>
-            <View style={styles.navBox}>
-                <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                    props.navigation.navigate('Setting')}
-                }>
-                    <Image style={styles.backImg}
-                           source={require('../img/backButton.png')}/>
-                </TouchableOpacity>
-            </View>
 
             <View style={{flex: 2}}></View>
             <Text style={styles.Title}>현재 비밀번호</Text>
             <Text style={styles.text}>입력 해주세용</Text>
             <View style={{flex: 1}}></View>
-
             <TextInput
                 style={styles.textInput}
-                placeholder="현재 비밀번호를 입력해주세요."
+                placeholder="현재 비밀번호를 입력해주세요"
                 secureTextEntry={true}
-                onChangeText={text => setPassword(text)}
             />
+
             <View style={{flex: 1}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('Set_pw_code')}
+                    props.navigation.navigate('Set_pw_phone')}
                 }>
                     <Text style={styles.buttonText}>입력</Text>
-                    //입력 누름과 동시에 로그아웃
                 </TouchableOpacity>
             </View>
         </View>
@@ -47,7 +37,7 @@ function Check_pw(props){
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 2,
         alignItems: 'center',
         backgroundColor: "white",
     },

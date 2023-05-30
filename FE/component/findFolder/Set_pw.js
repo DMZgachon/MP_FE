@@ -19,7 +19,7 @@ function Set_pw(props){
             <View style={{flex: 1}}></View>
             <TextInput
                 style={styles.textInput}
-                placeholder="세로운 비밀번호 입력"
+                placeholder="새로운 비밀번호 입력"
             />
             <TextInput
                 style={styles.textInput}

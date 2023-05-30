@@ -42,6 +42,7 @@ function Footer(props){
     //console.log('footer 의 버킷리스트 받은거', props.category)
     const [accessToken, setAccessToken] = useState('')
     const [refreshToken, setRefreshToken] = useState('')
+    const objectToken = new Object()
     useEffect(() =>{
         const getAccess = async () => {
             try {
@@ -63,7 +64,7 @@ function Footer(props){
     return(
         <View style={styles.container}>
             { // console.log("현재 페이지: ", props.data)
-                 }
+            }
             <View style = {{width : '100%', height : '100%', flexDirection: 'row'}}>
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
                     <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
@@ -96,7 +97,7 @@ function Footer(props){
                         }>
                             <Image
                                 source={require('./../../img/꿈동이_new.png')}
-                                style={{ width: 80, height: 70, marginTop: -10 }}
+                                style={{ width: 80, height: 70, marginTop: -3 }}
                             />
                         </TouchableOpacity>
                     </View>
@@ -107,10 +108,7 @@ function Footer(props){
                     <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
                         props.navigation.navigate('ChattingPage', {data : 'ChattingPage'})}
                     }>
-                        <Image
-                            source={require('./../../img/150589_159693_4748.jpg')}
-                            style={{ width: 80, height: 70, marginTop: -10 }}
-                        />
+                        <Text style ={{fontSize : 35}}> 💬 </Text>
                     </TouchableOpacity>
                 </View>
 
