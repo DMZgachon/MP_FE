@@ -2,8 +2,6 @@ import axios from 'axios';
 import Config from 'react-native-config';
 
 import React, {useEffect, useState} from 'react';
-import FastImage from 'react-native-fast-image';
-
 
 import {
     SafeAreaView, View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
@@ -51,18 +49,7 @@ function Login(props){
                 </TouchableOpacity>
             </View>
             <View style={{flex: 1}}></View>
-            <Image
-                source={require('../img/지크쇼.jpeg')}
-                style={{ width: 120, height: 70, marginTop: -10 }}
-            />
-            <FastImage
-                source={{
-                    uri: 'https://media.giphy.com/media/3ohzdLD2vN09ZavdqU/giphy.gif',
-                    priority: FastImage.priority.normal,
-                }}
-                resizeMode={FastImage.resizeMode.contain}
-                style={{width: 100, height: 100}}
-            />
+            <Text style={styles.Title}>로그인</Text>
             <View style={{flex: 2}}></View>
             <View style={{ flex: 1, justifyContent: 'center', alignSelf: 'flex-start', marginLeft: '20%' }}>
                 <SwipeButton
@@ -83,7 +70,7 @@ function Login(props){
                     railBackgroundColor="#dd9b9c" //(Optional)
                     railBorderColor="#bbeaff" //(Optional)
                 />
-                </View>
+            </View>
             <TextInput
                 style={styles.textInput}
                 placeholder="전화번호를 입력해주세요."
@@ -99,10 +86,7 @@ function Login(props){
                 <TouchableOpacity onPress={()=>{
                     props.navigation.navigate('Set_pw_phone')}
                 }>
-                    <Image
-                        source={require('../img/IMG_8E6EAE05FFD1-1.jpeg')}
-                        style={{ width: 140, height: 70, marginTop: -10 }}
-                    />
+                    <Text style={styles.buttonText2}>비밀번호를 잊어버리셨습니까?</Text>
                 </TouchableOpacity>
             </View>
             <View style={{flexDirection: 'row', flex: 2}}>

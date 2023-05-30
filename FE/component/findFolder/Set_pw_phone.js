@@ -32,7 +32,7 @@ function Set_pw_phone(props){
             <TextInput
                 style={styles.textInput}
                 placeholder="전화번호를 입력해주세요."
-                secureTextEntry={true}
+                secureTextEntry={false}
             />
             <View style={{flex: 1}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
