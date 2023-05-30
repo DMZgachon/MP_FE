@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -9,7 +9,7 @@ import {
     useColorScheme,
     Image,
     View,
-    Button, TextInput,
+    Button, TextInput, ToastAndroid,
 } from 'react-native';
 
 import {
@@ -20,8 +20,84 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {Footer} from "../Layout/footer";
 import {Header} from '../Layout/Header';
+import {useFocusEffect} from "@react-navigation/native";
+import {getAccess} from "../../../api/reRefresh";
+import {instance, setAccessTokenHeader } from "../../../api/axiosInstance";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function ManagePage(props){
+    let cancel;
+    const [phoneNumeber, setPhoneNumber] = useState("");
+
+    useFocusEffect
+    (
+        React.useCallback(() => {
+            console.log('Screen was focused');
+
+            const getAndReissueTokens = async () => {
+                const { accessToken, refreshToken } = await getAccess();
+
+                if (cancel !== undefined) cancel();
+
+                instance
+                    .post('/api/auth/reissue', {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    })
+                    .then(async (response) => {
+                        instance
+                            .get('api/member/load', {})
+                            .then(async (response) => {
+                                console.log("Res: ", response);
+                                console.log('Data : ',response.data.data)
+                                setPhoneNumber(response.data.data.phoneNumber)
+                            })
+                            .catch((error) => {
+                                if (axios.isCancel(error)) {
+                                    console.log('Request canceled', error.message);
+                                } else {
+                                    // handle the error
+                                    console.log('카테고리 발급 실패');
+                                }
+                            });
+
+
+                        await AsyncStorage.setItem('accessToken', response.data.data.accessToken);
+                        await AsyncStorage.setItem('refreshToken', response.data.data.refreshToken);
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        if (axios.isCancel(error)) {
+                            console.log('Request canceled', error.message);
+                        } else {
+                            // handle the error
+                            console.log(error);
+                        }
+                    });
+            }
+            getAndReissueTokens().then(r => console.log('getAndReissueTokens'));
+
+            return () => {
+                console.log('Screen was unfocused');
+                if (cancel !== undefined) cancel();
+            };
+        }, []) // 카테고리 목록 상태가 변경될 때마다 이 훅을 다시 실행
+    );
+
+    const memberDelete = async () =>{
+        await instance.delete(`/api/member/delete`,{
+
+        }).then((response)=>{
+            console.log('받은거',response.data.data)
+            ToastAndroid.show('닌 사라져있다... 성공이다', ToastAndroid.SHORT);
+        }).catch((e)=>{
+            console.log('삭제 실패',e)
+        })
+    }
+
+
+
     return(
         <View style={styles.container}>
 
@@ -34,7 +110,7 @@ function ManagePage(props){
 
                 <View style={styles.inputContainer}>
                     <Text style={styles.text1}>저장된 나의 전화번호 </Text>
-                    <Text style={styles.Title}>010-0000-0000 </Text>
+                    <Text style={styles.Title}> {phoneNumeber} </Text>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center', marginTop: '-15%'}}>
                     <Text style={styles.settext}>프로필 편집</Text>
@@ -55,7 +131,8 @@ function ManagePage(props){
                 </TouchableOpacity>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-start', width: '90%'}}>
                     <TouchableOpacity  onPress={()=>{
-                        props.navigation.navigate()}
+                        memberDelete();
+                    }
                     }>
                         <Text style={styles.buttonText2}>계정 삭제하기</Text>
                     </TouchableOpacity>
@@ -65,7 +142,7 @@ function ManagePage(props){
 
 
             <View style={styles.bottomView}>
-                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
+                <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
                 </View>
             </View>

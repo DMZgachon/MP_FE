@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -24,39 +24,54 @@ import axios from "axios";
 import {useFocusEffect} from "@react-navigation/native";
 import {getAndReissueTokens} from "../../../api/reRefresh";
 import {instance} from "../../../api/axiosInstance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function CategoryPage(props){
+function BucketDetail(props){
+    const [bucektImage, changeImage] = useState("");
+    const [deadLine, changeDeadLine] = useState();
+    const [progress, changeProcess] = useState();
+    const [title1, changeTitle] = useState();
+    const [tag, changeTag] = useState([]);
+    const [step, changeStep] = useState([]);
+
+
+
     const CancelToken = axios.CancelToken;
     let cancel;
-    const [bucket_image, changeimage] = useState([])
-    const [bucket_title, changetitle] = useState([])
-    const [bucketid, changeId] = useState(0)
+    const [bucketId, changeId] = useState();
 
-    const [listlist, changeList] = useState([])
-
-    useFocusEffect(
+    useFocusEffect
+    (
         React.useCallback(() => {
             console.log('Screen was focused');
-            instance
-                .get(`/api/bucket/load/${id}`)
-                .then(async (response) => {
-                    changeList(response)
-                    const parsedResponse = JSON.parse(response.request._response);
-                    const bucketImageList = parsedResponse.data.map(item => item.bucketImage);
-                    const bucketIdlist = parsedResponse.data.map(item => item.id);
-                    changeId(bucketIdlist)
-                    changeimage(bucketImageList)
 
-                    const bucketTitle = parsedResponse.data.map(item => item.title);
-                    console.log(bucketTitle);
-                    changetitle(bucketTitle)
-                })
-                .catch((error) => {
-                    console.log('버킷 발급 실패');
-                });
+            console.log('id : ', props.route.params.id);
+            changeId(props.route.params.id);
+            Promise.all([
+                instance.get(`/api/bucket/bucketDetail/${props.route.params.id}`),
+                instance.get(`/api/bucket/bucketListLoad/${props.route.params.id}`),
+                instance.get(`/api/bucket/tagLoad/${props.route.params.id}`)
+            ]).then((responses) => {
+                console.log('First response: ', responses[0].data.data);
+                changeImage(responses[0].data.data.bucketImage);
+                console.log('bucketImage: ', Image);
+                console.log('deadline: ', responses[0].data.data.deadline);
+                changeDeadLine(responses[0].data.data.deadline)
+                console.log('process: ', responses[0].data.data.process);
+                changeProcess(responses[0].data.data.process)
+                console.log('title: ', responses[0].data.data.title);
+                changeTitle(responses[0].data.data.title)
+                console.log('step: ', responses[1].data.data);
+                changeStep(responses[1].data.data)
+                console.log('tag: ', responses[2].data.data);
+                changeTag(responses[2].data.data)
+
+            }).catch((error) => {
+                console.log('bucket 오류');
+            });
+
 
             getAndReissueTokens(cancel).then(r => console.log('getAndReissueTokens'));
-
             return () => {
                 console.log('Screen was unfocused');
                 if (cancel !== undefined) cancel();
@@ -64,46 +79,46 @@ function CategoryPage(props){
         }, [])
     );
 
+    useEffect(()=>{
 
-    const id = props.route.params.data[2]
+    })
+
+
     return(
         <View style={styles.container}>
 
             <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
-                <Header data = {props.route.params.name}></Header>
+                <Header data = {props.route.params.data}></Header>
             </View>
+
+
+
+            <Text>{title1}</Text>
+
+
+            <Text>{deadLine}</Text>
+
+            <Image source={{ uri: bucektImage }} style={{ width: 200, height: 200 }} />
+
 
             <View style ={{ width : '2000%', height : '70%', alignItems : 'center', margin : 3}}>
                 <ScrollView>
                     {
-                        bucket_image.map((content, i ) =>{
+                        tag.map((content, i ) =>{
                             return(
                                 <View>
                                     <TouchableOpacity
                                         onPress={() => {
-                                            props.navigation.navigate('BucketDetail',{data : bucket_title[i], id : bucketid[i]})
                                             {
-                                                console.log(props.route.params.data)
+                                                console.log('onPress')
                                             }
                                         }
                                         } key={i}>
                                         <View style={{ flexDirection: 'row' }}>
                                             <View>
-                                                <Text >{bucket_title[i]}</Text>
+                                                <Text >{tag[i].content}</Text>
                                             </View>
-                                            <Image
-                                                style={{
-                                                    width: 130,
-                                                    height: 220,
-                                                    borderColor: 'blue',
-                                                    marginRight : 5,
-                                                    marginBottom: 10, // 이미지 간격 조절
-                                                    flexDirection : 'row',
-                                                    borderRadius : 10,
-                                                    marginTop : 20
-                                                }}
-                                                source={{uri : content}}
-                                            />
+
                                         </View>
                                     </TouchableOpacity>
                                 </View>
@@ -112,6 +127,7 @@ function CategoryPage(props){
                     }
                 </ScrollView>
             </View>
+
 
             <View style={styles.bottomView}>
                 <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
@@ -139,4 +155,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export {CategoryPage}
+export {BucketDetail}

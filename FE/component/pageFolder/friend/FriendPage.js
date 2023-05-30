@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -22,8 +22,83 @@ import {Footer} from "../Layout/footer";
 import {Header} from '../Layout/Header';
 import {Setting} from "./Setting";
 import {ManagaPage} from "./ManagePage";
+import {getAccess, getAndReissueTokens} from "../../../api/reRefresh";
+import {useFocusEffect, useRoute} from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { instance, setAccessTokenHeader } from '../../../api/axiosInstance'
+import axios from "axios";
+
 
 function FriendPage(props){
+
+    let cancel;
+    const [name, setName] = useState("");
+    const [nickname, setNickname] = useState("");
+    const [message,setMessage] = useState("");
+
+    useFocusEffect
+    (
+        React.useCallback(() => {
+            console.log('Screen was focused');
+
+            const getAndReissueTokens = async () => {
+                const { accessToken, refreshToken } = await getAccess();
+
+                if (cancel !== undefined) cancel();
+
+                instance
+                    .post('/api/auth/reissue', {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    })
+                    .then(async (response) => {
+                        instance
+                            .get('api/member/load', {})
+                            .then(async (response) => {
+                                console.log("Res: ", response);
+                                console.log('Data : ',response.data.data)
+                                setName(response.data.data.name);
+                                setNickname(response.data.data.nickname);
+
+                                if (response.data.data.message == null) {
+                                    setMessage("아자 아자 화이팅");
+                                }
+                                else setMessage(response.data.data.message);
+                            })
+                            .catch((error) => {
+                                if (axios.isCancel(error)) {
+                                    console.log('Request canceled', error.message);
+                                } else {
+                                    // handle the error
+                                    console.log('카테고리 발급 실패');
+                                }
+                            });
+
+
+                        await AsyncStorage.setItem('accessToken', response.data.data.accessToken);
+                        await AsyncStorage.setItem('refreshToken', response.data.data.refreshToken);
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        if (axios.isCancel(error)) {
+                            console.log('Request canceled', error.message);
+                        } else {
+                            // handle the error
+                            console.log(error);
+                        }
+                    });
+            }
+            getAndReissueTokens().then(r => console.log('getAndReissueTokens'));
+
+            return () => {
+                console.log('Screen was unfocused');
+                if (cancel !== undefined) cancel();
+            };
+        }, []) // 카테고리 목록 상태가 변경될 때마다 이 훅을 다시 실행
+    );
+
+
+
     return(
         <View style={styles.container}>
 
@@ -35,8 +110,8 @@ function FriendPage(props){
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Image style={styles.profileImg} source={require('../../img/profile.png')}/>
                     <View style={{flex: 1}}>
-                        <Text style={styles.text1}>이 름:  본인 이름  (본인 닉네임) </Text>
-                        <Text style={styles.text2}>본인 ------- 목표</Text>
+                        <Text style={styles.text1}>이 름:  {name}  ({nickname}) </Text>
+                        <Text style={styles.text2}> "{message}"</Text>
                     </View>
                 </View>
                 <TouchableOpacity style={styles.editbtn} onPress={()=>{props.navigation.navigate('Setting', {data : 'Setting'})}}>
@@ -86,7 +161,7 @@ function FriendPage(props){
 
 
             <View style={styles.bottomView}>
-                <View style={{flexDirection: 'row', flex: 2, width : '95%', justifyContent : 'center'}}>
+                <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
                 </View>
             </View>
@@ -101,12 +176,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#fdfdfe',
     },
     navBox1: {
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#fae7e9',
+        backgroundColor: '#ffe9e9',
         width: "97%",
         height: '22%',
         marginTop: '3%',
@@ -120,7 +195,7 @@ const styles = StyleSheet.create({
     navBox2: {
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#fce9ea',
+        backgroundColor: '#ffe9e9',
         width: "97%",
         height: '48%',
         paddingTop: '-10%',
@@ -135,12 +210,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: "black",
         padding: 5,
+        fontWeight: 'bold'
     },
     text2:{
         width: '100%',
         fontSize: 16,
         color: "black",
         padding: 5,
+        fontStyle: "italic"
     },
     settext:{
         width: '50%',
@@ -162,6 +239,7 @@ const styles = StyleSheet.create({
         width: 65,
         height: 65,
         resizeMode: "cover",
+        borderRadius: 50
     },
     moreImg:{
         marginLeft: 5,
@@ -177,7 +255,7 @@ const styles = StyleSheet.create({
         height: "30%",
         marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#e3e3f6"
+        backgroundColor: "#cce6fc"
     },
     setbtn:{
         width: "30%",
@@ -185,7 +263,7 @@ const styles = StyleSheet.create({
         height: "45%",
         marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#e3e3f6"
+        backgroundColor: "#faf3d6"
     },
     setbtn2:{
         width: "30%",
@@ -193,13 +271,14 @@ const styles = StyleSheet.create({
         height: "45%",
         marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#eedadc"
+        backgroundColor: "#faf3d6"
     },
     buttonText:{
         textAlign: 'center',
         color: 'black',
         fontSize: 15,
-    },
+    }
+
 });
 
 export {FriendPage}

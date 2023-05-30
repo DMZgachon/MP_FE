@@ -31,15 +31,17 @@ const imagePickerOption = {
     includeBase64: Platform.OS === "android",
 };
 function Upload(props){
-    const [countList, setCountList] = useState([])
+    const [countList, setCountList] = useState([""])
+
     const [calendar, setCalendar] = useState(false)
     const [selectedDate, setSelectedDate] = useState(
         format(new Date(), "yyyy-MM-dd"),
     );
-    const [title, setTitle] = useState("");
+
+    const [title, setTitle] = useState([""]);
     const [imageData, setImageData] = useState(null);
-    const [content, setContent] = useState([""]);
-    const [hashtagList, setHashtagList] = useState([""]);
+    const [content, setContent] = useState(["default"]);
+    const [hashtagList, setHashtagList] = useState(["default"]);
     const [hashtag, setHashtag] = useState("");
 
     const [visibility, setVisibility] = useState("공개");
@@ -85,6 +87,17 @@ function Upload(props){
         //console.log('제목 :', title);
     }
 
+    useEffect(() => {
+        const splitHashtags = hashtag.trim().split("#");
+
+        if (splitHashtags[0] === "") {
+            splitHashtags.shift();
+        }
+
+        setHashtagList(splitHashtags);
+    }, [hashtag]);
+
+
     // const onAddStep = () => {
     //     //alert('dd')
     //     let countArr = [...countList]
@@ -121,9 +134,21 @@ function Upload(props){
         setCalendar(!calendar)
     }
     const onRegister = async () => {
+
+        const splitHashtags = hashtag.trim().split("#");
+
+        // 첫 번째 요소는 분리한 결과의 첫 부분이 공백 문자열("")일 가능성이 있으므로 제거
+        if (splitHashtags[0] === "") {
+            splitHashtags.shift();
+        }
+
+        setHashtagList(splitHashtags);
+
+        console.log("hash :" , hashtagList)
+        console.log("content: ", content)
         let imageBlob;
 
-        formData.append('tagList', content);
+        formData.append('tagList', hashtagList);
 
 
         //formData.append('tagList', hashtagList);
@@ -163,7 +188,7 @@ function Upload(props){
         // content.forEach((item, index) => {
         //     formData.append('posts', item);
         // });
-        formData.append('posts',countList);
+        formData.append('posts',content);
 
 
 
