@@ -145,8 +145,8 @@ function CategoryPage(props){
                                                         <Text style={{fontSize:17, textAlign: 'center', color: 'black'}}>{content[2]}</Text>
                                                         <Image
                                                             style={{
-                                                                width: 380,
-                                                                height: 260,
+                                                                width: 190,
+                                                                height: 160,
                                                                 borderColor: '#FFECEC',
                                                                 borderWidth: 2,
                                                                 flexDirection: 'row',
