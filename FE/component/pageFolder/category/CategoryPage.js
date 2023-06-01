@@ -34,12 +34,12 @@ function CategoryPage(props){
     const [rows,setRows] = useState(0);
     const [bucketList, setBucketList] = useState([])
     const [category, setCategory] = useState(props.route.params.category)
-    const [content, setContent] = useState(props.route.params.data)
+    const [content2, setContent] = useState(props.route.params.data)
 
     useFocusEffect(
         React.useCallback(() => {
             console.log('Screen was focused');
-            console.log("이거 잘 받아졌는 지 확인해보자 :" ,content);
+            console.log("이거 잘 받아졌는 지 확인해보자 :" ,content2);
             instance
                 .get(`/api/bucket/load/${id}`)
                 .then(async (response) => {
@@ -98,7 +98,7 @@ function CategoryPage(props){
                                         return (
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    props.navigation.navigate('BucketDetail', {data : bucket_title[index], id : content[0]});
+                                                    props.navigation.navigate('BucketDetail', {data : bucket_title[index], id : content[0], categoryId : content2[2]});
                                                 }}
                                                 key={index}
                                             >
@@ -134,7 +134,7 @@ function CategoryPage(props){
 
             <View style={styles.bottomView}>
                 <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
-                    <Footer navigation = {props.navigation} data ={props.route.params.data} category={content} name='Category'></Footer>
+                    <Footer navigation = {props.navigation} data ={props.route.params.data} category={content2} name='Category'></Footer>
                 </View>
             </View>
         </View>
