@@ -81,7 +81,7 @@ function SearchPage(props){
                     <View style={{ flexDirection: 'row', marginTop: 60}}>
                         <TextInput
                             style={styles.input}
-                            placeholder="#태그를 이용해 검색해보세요"
+                            placeholder="태그를 이용해 검색해보세요"
                             onChangeText={text => setSearch(text)}
                         />
                         <TouchableOpacity style={{

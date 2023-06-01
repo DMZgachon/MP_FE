@@ -53,11 +53,12 @@ function Upload(props){
     let cancel;
 
     const route = useRoute();
-    const {data, category1} = route.params;
-    console.log("받아졌나? :" , category1)
+    const {data} = route.params;
+    const [category1, setCategory1] = useState(props.route.params.category1);
+    //console.log("받아졌나? :" , category1);
 
     const [selectedValue, setSelectedValue] = useState(null);
-    const items = category1.map((item, index) => ({ label: item[1] , value: item[2] }));
+    //const items = category1.map((item, index) => ({ label: item[1] , value: item[2] }));
     const [modalVisible, setModalVisible] = useState(false);
 
     async function fetchTokenAndSet() {
@@ -68,6 +69,7 @@ function Upload(props){
     useFocusEffect(
         React.useCallback( () => {
             console.log('Screen was focused');
+            //console.log('이거 맞냐? : ', category1)
 
             getAndReissueTokens(cancel).then(r =>
                     console.log('Upload: getAndReissueTokens'),
@@ -181,7 +183,7 @@ function Upload(props){
 
         formData.append('deadline', "2023-05-19 12:30:00");
 
-        formData.append('category', category);
+        formData.append('category', category1[2]);
 
         // 컨텐츠 리스트 추가
         // Change this
@@ -282,7 +284,7 @@ function Upload(props){
                         <Image
                             source={require('../../img/backButton.png')}/>
                     </TouchableOpacity>
-                    <Text style={styles.title}>새 버킷리스트</Text>
+                    <Text style={styles.title}>{category1[1]}</Text>
                     <TouchableOpacity onPress={onRegister}>
                         <Text style={styles.enterBtn}>등록</Text>
                     </TouchableOpacity>
@@ -368,7 +370,7 @@ function Upload(props){
                         </RadioButton.Group>
                     </View>
 
-                    <View style={{marginTop: 22}}>
+                    {/*<View style={{marginTop: 22}}>
                         {//console.log("시발:", items)
                         }
 
@@ -382,7 +384,6 @@ function Upload(props){
                         >
                             <View style={styles.container}>
                                 <View>
-
                                     {items.map((item, index) => (
                                         <TouchableHighlight
                                             underlayColor="#FFECEC"
@@ -419,7 +420,7 @@ function Upload(props){
                             <Text style={{fontSize: 16, color: "black",}}>카테고리 선택</Text>
                         </TouchableOpacity>
 
-                    </View>
+                    </View>*/}
 
                 </View>
 

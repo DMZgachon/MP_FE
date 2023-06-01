@@ -16,7 +16,6 @@ function ImageButton(props) {
     return null;
 }
 
-
 function HomePage(props){
     //여기가 이제 + 버튼 관리하는 스테이트
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -103,6 +102,7 @@ function HomePage(props){
                                 // Update the state.
                                 changeCategory(prevItems => [...prevItems, ...newItems]);
 
+
                                 // 카테고리 목록 상태 업데이트
                                 setCategoryList(newItems);
                                 console.log(Math.ceil(newItems.length / 2));
@@ -172,19 +172,20 @@ function HomePage(props){
                                        return (
                                            <TouchableOpacity
                                                onPress={() => {
-                                                   props.navigation.navigate('Category', { data: content });
+                                                   //console.log("찍찎찎 :" , category)
+                                                   props.navigation.navigate('Category', {data: content , category: category});
                                                }}
                                                key={index}
                                            >
                                                <View>
                                                    <View style={{ flexDirection: 'column', alignItems: 'center',
-                                                        margin: 10, backgroundColor: 'white', borderRadius: 0, borderColor: 'black',
+                                                        margin: 25, backgroundColor: 'white', borderRadius: 0, borderColor: 'black',
                                                        borderWidth: 1,}}>
-                                                       <Text style={{fontSize:17, textAlign: 'center', color: 'black'}}>{content[1]}</Text>
+                                                       <Text style={{fontSize:17, textAlign: 'center', color: 'black', margin: 5}}>{content[1]}</Text>
                                                        <Image
                                                            style={{
-                                                               width: 380,
-                                                               height: 260,
+                                                               width: 300,
+                                                               height: 210,
                                                                borderColor: '#FFECEC',
                                                                borderWidth: 2,
                                                                flexDirection: 'row',

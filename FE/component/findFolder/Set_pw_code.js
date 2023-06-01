@@ -1,6 +1,8 @@
-import React from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
-    TouchableHighlight, Modal} from 'react-native';
+import React, {useState} from 'react';
+import {
+    View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
+    TouchableHighlight, Modal, Alert
+} from 'react-native';
 
 import {
     Colors,
@@ -9,8 +11,39 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {instance} from "../../api/axiosInstance";
 
 function Set_pw_code(props){
+
+    const [phoneNumber, setPhoneNumber] = useState(props.route.params.phoneNumber)
+    const [exPassword, setExPassword] = useState(props.route.params.exPassword)
+    const [verifyNum, setVerifyNum] = useState('')
+
+    const onEnterBtn = () => {
+        if (verifyNum == ''){
+            Alert.alert('인증번호를 입력하세요!')
+        }
+        else{
+            //휴대폰으로 인증번호 보내기 작업
+            instance.get(`/api/auth/check/verifySMS`, {params: {code:verifyNum, to:phoneNumber}},
+                {
+                    withCredentials : true
+                }
+            ).then((res)=>{
+                console.log(res.data)
+                if(res.data.data.success == true){
+                    console.log('인증번호 일치')
+                    props.navigation.navigate('Set_pw', {phoneNumber:phoneNumber, exPassword:exPassword});
+                }
+                else{
+                    Alert.alert('인증번호 오류')
+                    console.log("인증번호 오류")
+                }
+            })
+                .catch((err)=>{console.log(err)});
+        }
+    }
+
     return(
         <View style={styles.container}>
             <View style={styles.navBox}>
@@ -23,7 +56,6 @@ function Set_pw_code(props){
             </View>
             <View style={{flex: 0.5}}></View>
             <Text style={styles.Title}>비밀번호 재설정</Text>
-            <View style={{flex: 0.5}}></View>
             <Text style={styles.textBold}>인증번호</Text>
             <Text style={styles.text}>입력 해주세용</Text>
             <View style={{flex: 0.5}}></View>
@@ -32,11 +64,13 @@ function Set_pw_code(props){
                 style={styles.textInput}
                 placeholder="인증번호를 입력해주세요."
                 secureTextEntry={true}
+                onChangeText={text => setVerifyNum(text)}
             />
+
             <View style={{flex: 1}}></View>
+
             <View style={{flexDirection: 'row', flex: 2}}>
-                <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('Set_pw')}
+                <TouchableOpacity style={styles.button} onPress={()=>{onEnterBtn()}
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>
@@ -44,50 +78,6 @@ function Set_pw_code(props){
         </View>
     )
 }
-function Input_code(props){
-    return (
-        <>
-            <View style={styles.container}>
-                <View style={styles.navBox}>
-                    <TouchableOpacity style={styles.backBtn} onPress={()=>{
-                        props.navigation.navigate('Input_phonenum')}
-                    }>
-                        <Image style={styles.backImg}
-                               source={require('../img/backButton.png')}/>
-                    </TouchableOpacity>
-                </View>
-                <View style={{flex: 2}}></View>
-                <Text style={styles.Title}>인증번호</Text>
-                <Text style={styles.text}>입력 해주세용</Text>
-                <View style={{flex: 1}}></View>
-
-                <TextInput
-                    style={styles.textInput}
-                    placeholder="인증번호를 입력해주세요"
-                    secureTextEntry={true}
-                />
-                <Text style={styles.buttonText2} >인증번호 재전송</Text>
-                <View style={{flex: 2}}></View>
-
-                <View style={{flexDirection: 'row', flex: 2}}>
-                    <TouchableOpacity style={styles.button} onPress={()=>{
-                        props.navigation.navigate('Set_pw')}
-                    }></TouchableOpacity>
-                    <View style={{flex: 2}}></View>
-                </View>
-
-                <View style={{flexDirection: 'row', flex: 2}}>
-                    <TouchableOpacity style={styles.button} onPress={()=>{
-                        props.navigation.navigate('Completion')}
-                    }>
-                        <Text style={styles.buttonText}>입력</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </>
-    )
-}
-
 
 const styles = StyleSheet.create({
     container: {
@@ -168,4 +158,3 @@ const styles = StyleSheet.create({
 });
 
 export {Set_pw_code};
-export {Input_code};

@@ -1,6 +1,8 @@
-import React from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
-    TouchableHighlight, Modal} from 'react-native';
+import React, {useState} from 'react';
+import {
+    View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
+    TouchableHighlight, Modal, Alert, ToastAndroid
+} from 'react-native';
 
 import {
     Colors,
@@ -9,8 +11,29 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {instance} from "../../api/axiosInstance";
 
 function Set_pw_phone(props){
+
+    const [exPassword, setExPassword] = useState(props.route.params.exPassword)
+    const [phoneNumber, setPhoneNum] = useState("")
+
+    const onEnterBtn = () => {
+        if(phoneNumber === ''){
+            Alert.alert('전화번호를 입력해주세요')
+        }
+        else{
+            //휴대폰으로 인증번호 보내기 작업
+            instance.get(`/api/auth/check/sendSMS`, {params: {to:phoneNumber}},
+
+            ).then((res)=>{
+                ToastAndroid.show("됐다", ToastAndroid.SHORT);
+                props.navigation.navigate('Set_pw_code', {phoneNumber:phoneNumber, exPassword: exPassword});
+            })
+                .catch((err)=>{console.log(err)});
+        }
+    }
+
     return(
         <View style={styles.container}>
             <View style={styles.navBox}>
@@ -33,12 +56,11 @@ function Set_pw_phone(props){
                 style={styles.textInput}
                 placeholder="전화번호를 입력해주세요."
                 secureTextEntry={false}
+                onChangeText={text => setPhoneNum(text)}
             />
             <View style={{flex: 1}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
-                <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('Set_pw_code')}
-                }>
+                <TouchableOpacity style={styles.button} onPress={()=>{onEnterBtn()}}>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>
             </View>

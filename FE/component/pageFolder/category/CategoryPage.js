@@ -33,10 +33,13 @@ function CategoryPage(props){
     const [listlist, changeList] = useState([])
     const [rows,setRows] = useState(0);
     const [bucketList, setBucketList] = useState([])
+    const [category, setCategory] = useState(props.route.params.category)
+    const [content, setContent] = useState(props.route.params.data)
 
     useFocusEffect(
         React.useCallback(() => {
             console.log('Screen was focused');
+            console.log("이거 잘 받아졌는 지 확인해보자 :" ,content);
             instance
                 .get(`/api/bucket/load/${id}`)
                 .then(async (response) => {
@@ -56,6 +59,7 @@ function CategoryPage(props){
                     setBucketList(newItems);
                     console.log(Math.ceil(newItems.length / 2));
                     setRows(Math.ceil(newItems.length / 2));
+
                 })
                 .catch((error) => {
                         console.log('버킷 발급 실패');
@@ -85,7 +89,7 @@ function CategoryPage(props){
                 <ScrollView>
                     <View style={{ flexDirection: 'column' }}>
                         {Array.from(Array(rows)).map((_, rowIndex) => (
-                            <View style={{ flexDirection: 'column' }} key={rowIndex}>
+                            <View style={{ flexDirection: 'row' }} key={rowIndex}>
                                 {Array.from(Array(2)).map((_, colIndex) => {
                                     const index = rowIndex * 2 + colIndex;
                                     if (index < bucketList.length) {
@@ -105,8 +109,8 @@ function CategoryPage(props){
                                                         <Text style={{fontSize:17, textAlign: 'center', color: 'black'}}>{content[2]}</Text>
                                                         <Image
                                                             style={{
-                                                                width: 380,
-                                                                height: 260,
+                                                                width: 160,
+                                                                height: 140,
                                                                 borderColor: '#FFECEC',
                                                                 borderWidth: 2,
                                                                 flexDirection: 'row',
@@ -130,7 +134,7 @@ function CategoryPage(props){
 
             <View style={styles.bottomView}>
                 <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
-                    <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
+                    <Footer navigation = {props.navigation} data ={props.route.params.data} category={content} name='Category'></Footer>
                 </View>
             </View>
         </View>

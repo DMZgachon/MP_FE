@@ -49,7 +49,7 @@ function ManagePage(props){
                         instance
                             .get('api/member/load', {})
                             .then(async (response) => {
-                                console.log("Res: ", response);
+                                //console.log("Res: ", response);
                                 console.log('Data : ',response.data.data)
                                 setPhoneNumber(response.data.data.phoneNumber)
                             })
