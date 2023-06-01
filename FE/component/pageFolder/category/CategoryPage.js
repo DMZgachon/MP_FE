@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -33,6 +33,7 @@ function CategoryPage(props){
     const [listlist, changeList] = useState([])
     const [rows,setRows] = useState(0);
     const [bucketList, setBucketList] = useState([])
+    const [bucketData, changeBucketData] = useState()
 
     useFocusEffect(
         React.useCallback(() => {
@@ -43,6 +44,9 @@ function CategoryPage(props){
                     //console.log(response)
                     changeList(response)
                     console.log('자 축소하자',response.request._response);
+                    changeBucketData(response.request._response.data)
+                    console.log('asdfasdf',bucketData)
+
                     const parsedResponse = JSON.parse(response.request._response);
                     const bucketImageList = parsedResponse.data.map(item => item.bucketImage);
                     console.log(bucketImageList);
@@ -70,6 +74,27 @@ function CategoryPage(props){
         }, [])
     );
 
+    const [sort, changeSort] = useState(0)
+
+    const sortingBucket = () => {
+        if(sort % 3 === 0){
+            const sortedArray = bucketData.sort((a, b) => a.title.localeCompare(b.title));
+            changeBucketData(sortedArray)
+            changeSort(sort + 1);
+        } else if(sort % 3 === 1) {
+            const sortedArray = bucketData.sort((a, b) => a.title.localeCompare(b.deadline));
+            changeBucketData(sortedArray)
+            changeSort(sort + 1);
+        }else{
+            const sortedArray = bucketData.sort((a, b) => a.title.localeCompare(b.id));
+            changeBucketData(sortedArray)
+            changeSort(sort + 1);
+        }
+
+        // 클릭 횟수 증가
+    }
+
+
 
     const id = props.route.params.data[2]
     return(
@@ -80,6 +105,17 @@ function CategoryPage(props){
             </View>
 
             <Text style={{fontSize: 20, color: '#FF357E'}}>"{props.route.params.data[1]}"의 버킷</Text>
+
+            <View style={{position: 'absolute', top: 50, left: 330, right: 0, flexDirection: 'row'}}>
+                <TouchableOpacity style={styles.EditButton} onPress={()=>{
+                    sortingBucket();
+
+                }
+                }>
+                    <Text style={{justifyContent: 'flex-start',marginLeft : '9%', fontSize : 30}}>⇆</Text>
+                </TouchableOpacity>
+            </View>
+
 
             <View style ={{ width : '2500%', height : '70%', alignItems : 'center', margin : 3}}>
                 <ScrollView>

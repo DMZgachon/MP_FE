@@ -29,11 +29,12 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [profileImage, setProfileImage] = useState(); // 프로필 사진 상태 변수
+    const [introduction, setIntroduction] = useState(''); //
     const [name, setName] = useState('');
     const [nickname, setNickname] = useState('');
-    const [selfIntroduction, setSelfIntroduction] = useState('');
     const [imageData, setImageData] = useState(null);
     const formData = new FormData(null);
+    const [isClick, changeClick] = useState(0);
 
 
 
@@ -64,8 +65,12 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
 
     useEffect(async ()=>{
         await instance.get('api/member/load').then((res)=>{
+            console.log('get Data : ', res.data.data)
             setProfileImage(res.data.data.profileImage)
             setNickname(res.data.data.nickname)
+            setName(res.data.data.name)
+            setIntroduction(res.data.data.message)
+            console.log('자기 소개 : ', introduction)
         }).catch((e)=>{
             console.log(e)
         })
@@ -76,15 +81,15 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
         }).then((response)=>{
             console.log('닉네임 변경 완료',response.data.data.nickname)
             setNickname(response.data.data.nickname)
+            changeIntroduction();
         })
     }
 
     const changeIntroduction = async () =>{
-        await instance.post(`/api/member/introduction?introduction=` + selfIntroduction).then((response)=>{
+        await instance.post(`/api/member/introduction?introduction=` + introduction).then((response)=>{
             console.log('받은거',response.data.data)
             console.log('자기 소개 변경 완료')
-
-            props.navigation.navigate('ManagePage',{data : 'setting'})
+            props.navigation.navigate('FriendPage',{data : '내정보'})
 
         }).catch((e)=>{
             console.log('자기소개 변경 실패',e)
@@ -103,6 +108,7 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
     }
 
     const ShowPicker = () => {
+        changeClick(1)
         //launchImageLibrary : 사용자 앨범 접근
         if(1) { // 이미지를 아직 불러오지 않았다면
             launchImageLibrary({}, async (res) => {
@@ -117,18 +123,19 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
                     data: blob, // blob data 추가
                 }
                 setImageData(file)
+                setProfileImage(uri);
+                send();
             });
         } else {
-            console.log("Image already loaded"); // 이미 불러온 이미지가 있다면 메시지 출력
+
         }
     }
 
     const send = async () => {
         let imageBlob;
-
-        try {
-            if (1) {
-
+        // 이미지를 선택한 경우 이미지 blob
+        if(isClick == 1){
+            try{
                 const response = await fetch(imageData.uri);
                 const blob = await response.blob();
                 imageBlob = {
@@ -139,17 +146,17 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
                 };
                 formData.append('profileImage', imageData);
                 console.log("ImageData: " ,imageData);
-
                 console.log("BucketImage: " ,formData);
                 register();
-                } else {
-                    console.error('No image data');
-                }
-            } catch (error) {
-                console.error('Error in creating Blob: ', error);
+            }catch (err){
+                console.log('1 blob error : ',err)
             }
-    }
+        }
+        else{
 
+        }
+
+    }
     const register = async () =>{
         const config = {
             headers: {
@@ -158,7 +165,6 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
         await instance.post('/api/member/update', formData,config)
             .then((res) => {
             console.log(res);
-            changeName();
         }).catch((error) => {
             console.log("Error:", error);
         });
@@ -182,7 +188,7 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
                     <View style={{ flex: 0.8}}></View>
                     <View style={styles.storeCon}>
 
-                        <TouchableOpacity onPress={() => send()}>
+                        <TouchableOpacity onPress={() => changeName()}>
                             <Text style={styles.buttonText2}>저장</Text>
                         </TouchableOpacity>
 
@@ -214,7 +220,7 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
 
                                 onPress={() => changeNickName()}
                             >
-                                <Text style={{fontSize : 20}}> 닉네임변경 </Text>
+                                <Text style={styles.Title1}> 닉네임변경 </Text>
                             </TouchableOpacity>
                              <Text style={styles.textInput}>{nickname}</Text>
 
@@ -226,10 +232,11 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
                             <Text style={styles.Title}>자기소개: </Text>
                             <TextInput
                                 style={styles.textInput}
-                                placeholder={selfIntroduction ? selfIntroduction : '현재 자기소개'}
-                                value={selfIntroduction}
-                                onChangeText={text => setSelfIntroduction(text)}
+                                placeholder={introduction ? introduction : '한줄 소개를 입력해 주세요'}
+                                value={introduction}
+                                onChangeText={text => setIntroduction(text)}
                             />
+
                         </View>
 
                     </ScrollView>
@@ -292,6 +299,15 @@ const styles = StyleSheet.create({
         fontSize: 17,
         color: "black"
     },
+
+    Title1:{
+        width: "100%" ,
+        textAlign: "center",
+        fontWeight: 'bold',
+        fontSize: 17,
+        color: "black"
+    },
+
     text1:{
         width: '100%',
         fontSize: 16,

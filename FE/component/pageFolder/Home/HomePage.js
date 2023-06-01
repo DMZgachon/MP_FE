@@ -51,7 +51,7 @@ function HomePage(props){
 
     ])
     const image = { uri: "https://reactjs.org/logo-og.png" };
-
+    const [sort, changeSort] = useState(0)
 
     const getAccess = async () => {
         try {
@@ -140,6 +140,19 @@ function HomePage(props){
         }, []) // 카테고리 목록 상태가 변경될 때마다 이 훅을 다시 실행
     );
 
+    const sortingCategory = () => {
+        // sort 값에 따라 정렬
+        if(sort % 2 === 0){
+            // sort가 짝수일 때, 두 번째 요소(인덱스 1)로 정렬
+            changeCategory(categoryList.sort((a, b) => a[1].localeCompare(b[1])));
+        } else {
+            // sort가 홀수일 때, 세 번째 요소(인덱스 2)로 정렬
+            changeCategory(categoryList.sort((a, b) => a[2] - b[2]));
+        }
+
+        // 클릭 횟수 증가
+        changeSort(sort + 1);
+    }
 
 
     return(
@@ -149,14 +162,22 @@ function HomePage(props){
             </View>
 
 
-            <View style ={{position: 'absolute', top: 50, left: 370, right: 0 }}>
-
+            <View style={{position: 'absolute', top: 50, left: 330, right: 0, flexDirection: 'row'}}>
                 <TouchableOpacity style={styles.EditButton} onPress={()=>{
                     props.navigation.navigate('Edit', {data : category})}
                 }>
-                    <Text style ={{flexDirection :'row', justifyContent : 'flex-start'}}>편집</Text>
+                    <Text style={{justifyContent: 'flex-start',marginLeft : '9%'}}>편집</Text>
+                </TouchableOpacity>
+
+
+                <TouchableOpacity style={styles.EditButton} onPress={()=>{
+                    sortingCategory();
+                }
+                }>
+                    <Text style={{justifyContent: 'flex-start', marginLeft : '9%', fontSize : 30, marginTop: '-35%'}}>⇆</Text>
                 </TouchableOpacity>
             </View>
+
 
 
             <View style ={{ width : '2500%', height : '70%', alignItems : 'center', margin : 3}}>

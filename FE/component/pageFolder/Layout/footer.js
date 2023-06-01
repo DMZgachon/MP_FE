@@ -114,7 +114,7 @@ function Footer(props){
 
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
                     <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                        props.navigation.navigate('FriendPage', {data : 'FriendPage'})}
+                        props.navigation.navigate('FriendPage', {data : '내정보'})}
                     }>
                         <Text style ={{fontSize : 35}}> 👤 </Text>
                     </TouchableOpacity>

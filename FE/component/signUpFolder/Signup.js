@@ -25,10 +25,22 @@ function Signup(props){
     const [showPassword, setShowPassword] = useState(false);
     let forceResetLastButton = null;
 
+    function isValidPassword(password) {
+        const digitRegex = /\d/g; // 숫자 확인
+        const letterRegex = /[a-zA-Z]/g; // 알파벳 확인
+
+        const digitCount = (password.match(digitRegex) || []).length;
+        const letterCount = (password.match(letterRegex) || []).length;
+
+        return digitCount >= 8 && letterCount >= 3;
+    }
+
     const onEnterBtn = () => {
         if (phoneNum == '' || password == ''){
             console.log('empty')
             Alert.alert('전화번호와 비밀번호를 모두 입력하세요!')
+        }else if(!isValidPassword(password)){
+            Alert.alert('비밀번호 숫자8개, 알파벳3개 이상 넣어주세요! ')
         }
         else{
             props.navigation.navigate('Input_name', {phoneNum:phoneNum, password:password})
