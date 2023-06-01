@@ -19,6 +19,7 @@ import {
 import SwipeButton from 'rn-swipe-button';
 import { instance, setAccessTokenHeader } from "../../api/axiosInstance";
 import {useFocusEffect} from "@react-navigation/native";
+import FastImage from "react-native-fast-image";
 
 // 이제 Config.API_URL을 사용하여 API 요청을 수행할 수 있습니다.
 

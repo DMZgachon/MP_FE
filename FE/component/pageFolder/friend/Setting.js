@@ -32,7 +32,7 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
     const [introduction, setIntroduction] = useState(''); //
     const [name, setName] = useState('');
     const [nickname, setNickname] = useState('');
-    const [imageData, setImageData] = useState(null);
+    const [imageData, setImageData] = useState();
     const formData = new FormData(null);
     const [isClick, changeClick] = useState(0);
 
@@ -81,7 +81,6 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
         }).then((response)=>{
             console.log('닉네임 변경 완료',response.data.data.nickname)
             setNickname(response.data.data.nickname)
-            changeIntroduction();
         })
     }
 
@@ -108,9 +107,7 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
     }
 
     const ShowPicker = () => {
-        changeClick(1)
         //launchImageLibrary : 사용자 앨범 접근
-        if(1) { // 이미지를 아직 불러오지 않았다면
             launchImageLibrary({}, async (res) => {
                 const uri = res?.assets?.[0]?.uri;
                 const response = await fetch(uri);
@@ -122,47 +119,45 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
                     uri: uri,
                     data: blob, // blob data 추가
                 }
+                console.log('asfdasdfdsafasdfsdafsdf',file)
                 setImageData(file)
                 setProfileImage(uri);
-                send();
+                send(file);
             });
-        } else {
-
-        }
     }
 
-    const send = async () => {
+    const send = async (file) => {
         let imageBlob;
         // 이미지를 선택한 경우 이미지 blob
-        if(isClick == 1){
+        if(1){ // add null check
             try{
-                const response = await fetch(imageData.uri);
+                const response = await fetch(file.uri);
                 const blob = await response.blob();
                 imageBlob = {
-                    uri: imageData.uri,
-                    type: imageData.type,
-                    name: imageData.fileName,
+                    uri: file.uri,
+                    type: file.type,
+                    name: file.fileName,
                     data: blob
                 };
-                formData.append('profileImage', imageData);
-                console.log("ImageData: " ,imageData);
+                formData.append('profileImage', file);
+                console.log("ImageData: " ,file);
                 console.log("BucketImage: " ,formData);
-                register();
+
+
+                register(formData);
             }catch (err){
                 console.log('1 blob error : ',err)
             }
         }
-        else{
-
-        }
-
     }
-    const register = async () =>{
+
+    const register = async (formData) =>{
+        console.log('asdfasdfasdfasdfasdfasdfasdf',formData)
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data'}
         };
-        await instance.post('/api/member/update', formData,config)
+        instance.post('/api/member/update', formData,config)
             .then((res) => {
             console.log(res);
         }).catch((error) => {

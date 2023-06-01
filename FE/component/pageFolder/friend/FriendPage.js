@@ -109,7 +109,9 @@ function FriendPage(props){
             </View>
 
             <View style={styles.navBox1}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}}
+                                  onPress={()=>{props.navigation.navigate('profile', {data : profileImage})}}>
+
                     <Image
                         style={{width: 90, height: 90}}
                         source={profileImage ? {uri: profileImage} : require('../../img/default_profile.png')}
@@ -118,7 +120,8 @@ function FriendPage(props){
                         <Text style={styles.text1}>이 름:  {name}  ({nickname}) </Text>
                         <Text style={styles.text2}> "{message}"</Text>
                     </View>
-                </View>
+                </TouchableOpacity>
+
                 <TouchableOpacity style={styles.editbtn} onPress={()=>{props.navigation.navigate('Setting', {data : 'Setting'})}}>
 
                     <Text style={styles.buttonText}>프로필 편집</Text>

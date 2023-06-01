@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -33,19 +33,20 @@ function CategoryPage(props){
     const [listlist, changeList] = useState([])
     const [rows,setRows] = useState(0);
     const [bucketList, setBucketList] = useState([])
+    const [category, setCategory] = useState(props.route.params.category)
+    const [content2, setContent] = useState(props.route.params.data)
     const [bucketData, changeBucketData] = useState()
 
     useFocusEffect(
         React.useCallback(() => {
             console.log('Screen was focused');
+            console.log("이거 잘 받아졌는 지 확인해보자 :" ,content2);
             instance
                 .get(`/api/bucket/load/${id}`)
                 .then(async (response) => {
                     //console.log(response)
                     changeList(response)
                     console.log('자 축소하자',response.request._response);
-                    changeBucketData(response.request._response.data)
-                    console.log('asdfasdf',bucketData)
 
                     const parsedResponse = JSON.parse(response.request._response);
                     const bucketImageList = parsedResponse.data.map(item => item.bucketImage);
@@ -56,13 +57,19 @@ function CategoryPage(props){
                     console.log(bucketTitle);
                     changetitle(bucketTitle)
 
+                    const abc = parsedResponse.data.map(item => item.title);
+                    console.log(bucketTitle);
+
+
                     const newItems = response.data.data.map(item => [item.id, item.bucketImage, item.title]);
                     setBucketList(newItems);
+                    console.log('asdfasdfadsfadsddddfdfdfdfdfdfd', newItems)
                     console.log(Math.ceil(newItems.length / 2));
                     setRows(Math.ceil(newItems.length / 2));
+
                 })
                 .catch((error) => {
-                        console.log('버킷 발급 실패');
+                    console.log('버킷 발급 실패');
                 });
 
             getAndReissueTokens(cancel).then(r => console.log('getAndReissueTokens'));
@@ -77,21 +84,15 @@ function CategoryPage(props){
     const [sort, changeSort] = useState(0)
 
     const sortingBucket = () => {
-        if(sort % 3 === 0){
-            const sortedArray = bucketData.sort((a, b) => a.title.localeCompare(b.title));
-            changeBucketData(sortedArray)
-            changeSort(sort + 1);
-        } else if(sort % 3 === 1) {
-            const sortedArray = bucketData.sort((a, b) => a.title.localeCompare(b.deadline));
-            changeBucketData(sortedArray)
-            changeSort(sort + 1);
-        }else{
-            const sortedArray = bucketData.sort((a, b) => a.title.localeCompare(b.id));
-            changeBucketData(sortedArray)
-            changeSort(sort + 1);
-        }
+        if(sort % 2 === 0){
+            bucketList.sort((a, b) => a[2].localeCompare(b[2]));
+            setBucketList(bucketList)
+        } else {
+            setBucketList(bucketList.sort((a, b) => a[0] - b[0]));
 
+        }
         // 클릭 횟수 증가
+        changeSort(sort + 1);
     }
 
 
@@ -109,7 +110,6 @@ function CategoryPage(props){
             <View style={{position: 'absolute', top: 50, left: 330, right: 0, flexDirection: 'row'}}>
                 <TouchableOpacity style={styles.EditButton} onPress={()=>{
                     sortingBucket();
-
                 }
                 }>
                     <Text style={{justifyContent: 'flex-start',marginLeft : '9%', fontSize : 30}}>⇆</Text>
@@ -121,16 +121,16 @@ function CategoryPage(props){
                 <ScrollView>
                     <View style={{ flexDirection: 'column' }}>
                         {Array.from(Array(rows)).map((_, rowIndex) => (
-                            <View style={{ flexDirection: 'column' }} key={rowIndex}>
+                            <View style={{ flexDirection: 'row' }} key={rowIndex}>
                                 {Array.from(Array(2)).map((_, colIndex) => {
                                     const index = rowIndex * 2 + colIndex;
                                     if (index < bucketList.length) {
                                         const content = bucketList[index];
-                                        console.log('bucket_title[index] : ', bucket_title[index], 'id : ', content[0]);
+                                        console.log(content);
                                         return (
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    props.navigation.navigate('BucketDetail', {data : bucket_title[index], id : content[0]});
+                                                    props.navigation.navigate('BucketDetail', {data : bucket_title[index], id : content[0], categoryId : content2[2]});
                                                 }}
                                                 key={index}
                                             >
@@ -141,8 +141,8 @@ function CategoryPage(props){
                                                         <Text style={{fontSize:17, textAlign: 'center', color: 'black'}}>{content[2]}</Text>
                                                         <Image
                                                             style={{
-                                                                width: 380,
-                                                                height: 260,
+                                                                width: 190,
+                                                                height: 160,
                                                                 borderColor: '#FFECEC',
                                                                 borderWidth: 2,
                                                                 flexDirection: 'row',

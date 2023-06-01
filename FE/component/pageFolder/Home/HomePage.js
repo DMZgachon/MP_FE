@@ -224,17 +224,22 @@ function HomePage(props){
                            </View>
                        ))}
                    </View>
+
                </ScrollView>
+
+
+                <View style={{height : '3%', width : '100%', flexDirection : 'row'}}>
+                    <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
+                        props.navigation.navigate('AddCategory', {data : 'AddCategory'})
+                    }
+                    }>
+                        <Text style ={{fontSize : 10}}> 카테고리 추가하기 </Text>
+                    </TouchableOpacity>
+                </View>
+
             </View>
 
-            <View style={{height : '3%', width : '100%', flexDirection : 'row'}}>
-                <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
-                    props.navigation.navigate('AddCategory', {data : 'AddCategory'})
-                }
-                }>
-                    <Text style ={{fontSize : 10}}> 카테고리 추가하기 </Text>
-                </TouchableOpacity>
-            </View>
+
 
 
             <View style={styles.bottomView}>
