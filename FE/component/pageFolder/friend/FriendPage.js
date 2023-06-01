@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -9,7 +9,7 @@ import {
     useColorScheme,
     Image,
     View,
-    Button,
+    Button, ToastAndroid,
 } from 'react-native';
 
 import {
@@ -35,6 +35,7 @@ function FriendPage(props){
     const [name, setName] = useState("");
     const [nickname, setNickname] = useState("");
     const [message,setMessage] = useState("");
+    const [profileImage, setProfileImage] = useState(); // 프로필 사진 상태 변수
 
     useFocusEffect
     (
@@ -59,6 +60,7 @@ function FriendPage(props){
                                 console.log('Data : ',response.data.data)
                                 setName(response.data.data.name);
                                 setNickname(response.data.data.nickname);
+                                setProfileImage(response.data.data.profileImage)
 
                                 if (response.data.data.message == null) {
                                     setMessage("아자 아자 화이팅");
@@ -108,7 +110,10 @@ function FriendPage(props){
 
             <View style={styles.navBox1}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Image style={styles.profileImg} source={require('../../img/profile.png')}/>
+                    <Image
+                        style={styles.profileImg}
+                        source={profileImage ? {uri: profileImage} : require('../../img/default_profile.png')}
+                    />
                     <View style={{flex: 1}}>
                         <Text style={styles.text1}>이 름:  {name}  ({nickname}) </Text>
                         <Text style={styles.text2}> "{message}"</Text>
@@ -124,7 +129,10 @@ function FriendPage(props){
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={styles.settext}>프로 멤버십</Text>
                     <View style={{flex: 1}}></View>
-                    <TouchableOpacity style={styles.setbtn} onPress={()=>{props.navigation.navigate()}}>
+                    <TouchableOpacity style={styles.setbtn} onPress={()=>{
+                        ToastAndroid.show('최고 등급입니다', ToastAndroid.SHORT);
+
+                    }}>
                         <Text style={styles.buttonText}>업그레이드</Text>
                     </TouchableOpacity>
                 </View>
@@ -138,7 +146,9 @@ function FriendPage(props){
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={styles.settext}>현재버전: 1.1.1</Text>
                     <View style={{flex: 1}}></View>
-                    <TouchableOpacity style={styles.setbtn2} onPress={()=>{props.navigation.navigate()}}>
+                    <TouchableOpacity style={styles.setbtn2} onPress={()=>{
+                        ToastAndroid.show('최신버전입니다', ToastAndroid.SHORT);
+                    }}>
                         <Text style={styles.buttonText}>최신 버전</Text>
                     </TouchableOpacity>
                 </View>
@@ -239,7 +249,7 @@ const styles = StyleSheet.create({
         width: 65,
         height: 65,
         resizeMode: "cover",
-        borderRadius: 50
+        borderRadius: 50,
     },
     moreImg:{
         marginLeft: 5,

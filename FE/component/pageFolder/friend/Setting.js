@@ -11,7 +11,7 @@ import {
     KeyboardAvoidingView,
     Keyboard,
     Image,
-    TouchableOpacity, Platform, Modal, ToastAndroid
+    TouchableOpacity, Platform, Modal, ToastAndroid, Alert
 } from 'react-native';
 import {Colors, DebugInstructions, LearnMoreLinks, ReloadInstructions,} from 'react-native/Libraries/NewAppScreen';
 import {Footer} from "../Layout/footer";
@@ -28,43 +28,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로필 편집 페이지임
 
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [profileImage, setProfileImage] = useState(null); // 프로필 사진 상태 변수
+    const [profileImage, setProfileImage] = useState(); // 프로필 사진 상태 변수
+    const [introduction, setIntroduction] = useState(''); //
     const [name, setName] = useState('');
     const [nickname, setNickname] = useState('');
-    const [selfIntroduction, setSelfIntroduction] = useState('');
+    const [imageData, setImageData] = useState(null);
+    const formData = new FormData(null);
+    const [isClick, changeClick] = useState(0);
+
+
+
     // 프로필 사진 업로드 버튼 핸들러
 
-
-    const { name: initialName, nickname: initialNickname, selfIntroduction: initialSelfIntroduction } = props.route.params.data;
     const [keyboardStatus, setKeyboardStatus] = useState(false);
-    useEffect(() => {
-        setName(initialName);
-        setNickname(initialNickname);
-        setSelfIntroduction(initialSelfIntroduction);
 
-        const keyboardDidShowListener = Keyboard.addListener(
-            'keyboardDidShow',
-            () => {
-                setKeyboardStatus(true);
-            }
-        );
-        const keyboardDidHideListener = Keyboard.addListener(
-            'keyboardDidHide',
-            () => {
-                setKeyboardStatus(false);
-            }
-        );
-
-        return () => {
-            keyboardDidShowListener.remove();
-            keyboardDidHideListener.remove();
-        };
-    }, [initialName, initialNickname, initialSelfIntroduction]);
-
-    // 모달 열기 핸들러
-    const handleOpenModal = () => {
-        setIsModalVisible(true);
-    };
 
     // 모달 닫기 핸들러
 
@@ -80,22 +57,40 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
             getAndReissueTokens(cancel).then(r => console.log('getAndReissueTokens'));
             return () => {
                 console.log('Screen was unfocused');
+
                 if (cancel !== undefined) cancel();
             };
         }, [])
     );
 
+    useEffect(async ()=>{
+        await instance.get('api/member/load').then((res)=>{
+            console.log('get Data : ', res.data.data)
+            setProfileImage(res.data.data.profileImage)
+            setNickname(res.data.data.nickname)
+            setName(res.data.data.name)
+            setIntroduction(res.data.data.message)
+            console.log('자기 소개 : ', introduction)
+        }).catch((e)=>{
+            console.log(e)
+        })
+    },[])
+
     const changeNickName = () =>{
         instance.post(`/api/member/nickname`,{
         }).then((response)=>{
-            console.log('닉네임 변경 완료')
+            console.log('닉네임 변경 완료',response.data.data.nickname)
+            setNickname(response.data.data.nickname)
+            changeIntroduction();
         })
     }
 
     const changeIntroduction = async () =>{
-        await instance.post(`/api/member/introduction?introduction=` + selfIntroduction).then((response)=>{
+        await instance.post(`/api/member/introduction?introduction=` + introduction).then((response)=>{
             console.log('받은거',response.data.data)
             console.log('자기 소개 변경 완료')
+            props.navigation.navigate('FriendPage',{data : '내정보'})
+
         }).catch((e)=>{
             console.log('자기소개 변경 실패',e)
         })
@@ -105,64 +100,74 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
         await instance.post(`/api/member/name?name=` + name).then((response)=>{
             console.log('받은거',response.data.data)
             ToastAndroid.show('이름은 왜바꾸니?(성공)', ToastAndroid.SHORT);
+            changeIntroduction();
+
         }).catch((e)=>{
             console.log('자기소개 변경 실패',e)
         })
     }
 
-    const [imageLoaded, setImageLoaded] = useState(false);
-    const [imgData,setImgData] = useState(new FormData());
-
     const ShowPicker = () => {
+        changeClick(1)
         //launchImageLibrary : 사용자 앨범 접근
-        if(!imageLoaded) { // 이미지를 아직 불러오지 않았다면
+        if(1) { // 이미지를 아직 불러오지 않았다면
             launchImageLibrary({}, async (res) => {
                 const uri = res?.assets?.[0]?.uri;
                 const response = await fetch(uri);
                 const blob = await response.blob();
 
-                const formdata = new FormData();
                 const file = {
                     name: res?.assets?.[0]?.fileName,
                     type: blob.type, // blob type 사용
                     uri: uri,
                     data: blob, // blob data 추가
                 }
-                formdata.append('profileImage', file); // 카테고리 이미지 추가
-
-                setImgData(formdata);
-
-                // const access_token = await AsyncStorage.getItem("accessToken");
-                // // POST 요청 보내기
-                // await instance.post('/api/category/add', formdata, {
-                //     headers: {
-                //         'Content-Type': 'multipart/form-data',
-                //         'Authorization': `Bearer ${access_token}`,
-                //     },
-                // }).then((response) => {
-                //     console.log('success');
-                // });
+                setImageData(file)
+                setProfileImage(uri);
+                send();
             });
         } else {
-            console.log("Image already loaded"); // 이미 불러온 이미지가 있다면 메시지 출력
+
         }
     }
 
     const send = async () => {
-        const access_token = await AsyncStorage.getItem("accessToken");
-        // POST 요청 보내기
-        await instance.post('/api/member/update', imgData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${access_token}`,
-            },
-        }).then((response) => {
-            console.log('profiel Image Change success', response.data.data)
-            ToastAndroid.show('프로필 성공이다', ToastAndroid.SHORT);
+        let imageBlob;
+        // 이미지를 선택한 경우 이미지 blob
+        if(isClick == 1){
+            try{
+                const response = await fetch(imageData.uri);
+                const blob = await response.blob();
+                imageBlob = {
+                    uri: imageData.uri,
+                    type: imageData.type,
+                    name: imageData.fileName,
+                    data: blob
+                };
+                formData.append('profileImage', imageData);
+                console.log("ImageData: " ,imageData);
+                console.log("BucketImage: " ,formData);
+                register();
+            }catch (err){
+                console.log('1 blob error : ',err)
+            }
+        }
+        else{
 
-        }).catch((res)=>{
-            ToastAndroid.show('프로필 업로드 실패다', ToastAndroid.SHORT);
-        });
+        }
+
+    }
+    const register = async () =>{
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data'}
+        };
+        await instance.post('/api/member/update', formData,config)
+            .then((res) => {
+                console.log(res);
+            }).catch((error) => {
+                console.log("Error:", error);
+            });
     }
 
 
@@ -182,22 +187,22 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
 
                     <View style={{ flex: 1}}></View>
                     <View style={styles.storeCon}>
-                        <TouchableOpacity onPress={send}>
+
+                        <TouchableOpacity onPress={() => changeName()}>
                             <Text style={styles.buttonText2}>저장</Text>
                         </TouchableOpacity>
+
                     </View>
-                    <View>
-                        <TouchableOpacity onPress={ShowPicker}>
-                            {profileImage ? (
-                                <Image source={{ uri: profileImage }} style={{ width: 100, height: 100, borderRadius: 50 }} />
-                            ) : (
-                                <Image style={styles.profileImg} source={require('FE/component/img/profile.png')} />
-                            )}
+
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <TouchableOpacity onPress={() => ShowPicker()}>
+                            <Image
+                                style={styles.profileImg}
+                                source={profileImage ? {uri: profileImage} : require('../../img/default_profile.png')}
+                            />
                         </TouchableOpacity>
-
-                        {/* 프로필 사진 모달 */}
-
                     </View>
+
                     <ScrollView>
                         <View style={{ flex: 1}}></View>
                         <View style={styles.inputContainer}>
@@ -209,41 +214,31 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
                                 onChangeText={text => setName(text)}
                             />
                         </View>
-                        <View style={styles.inputContainer}>
-                            <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                                changeName();
-                            }
-                            }>
-                                <Text style ={{fontSize : 35}}> 이름 변경 </Text>
-                            </TouchableOpacity>
-                        </View>
 
                         <View style={styles.inputContainer}>
-                            <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                                    changeNickName();
-                                }
-                            }>
-                                <Text style ={{fontSize : 35}}> 닉네임 변경 </Text>
+                            <TouchableOpacity
+
+                                onPress={() => changeNickName()}
+                            >
+                                <Text style={styles.Title1}> 닉네임변경: </Text>
                             </TouchableOpacity>
+                            <Text style={styles.textInput}>{nickname}</Text>
+
                         </View>
+
+
+
                         <View style={styles.inputContainer}>
                             <Text style={styles.Title}>자기소개: </Text>
                             <TextInput
                                 style={styles.textInput}
-                                placeholder={selfIntroduction ? selfIntroduction : '현재 자기소개'}
-                                value={selfIntroduction}
-                                onChangeText={text => setSelfIntroduction(text)}
+                                placeholder={introduction ? introduction : '한줄 소개를 입력해 주세요'}
+                                value={introduction}
+                                onChangeText={text => setIntroduction(text)}
                             />
+
                         </View>
 
-                        <View style={styles.inputContainer}>
-                            <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                                changeIntroduction();
-                            }
-                            }>
-                                <Text style ={{fontSize : 35}}> 자기소개 변경 </Text>
-                            </TouchableOpacity>
-                        </View>
                     </ScrollView>
                     <TouchableOpacity style={styles.editbtn} onPress={()=>{props.navigation.navigate('ManagePage', {data : 'ManagePage'})}}>
                         <Text style={styles.buttonText}>계정 관리하기</Text>
@@ -304,6 +299,15 @@ const styles = StyleSheet.create({
         fontSize: 17,
         color: "black"
     },
+
+    Title1:{
+        width: "100%" ,
+        textAlign: "center",
+        fontWeight: 'bold',
+        fontSize: 17,
+        color: "black",
+    },
+
     text1:{
         width: '100%',
         fontSize: 16,
