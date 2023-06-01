@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -33,11 +33,14 @@ function CategoryPage(props){
     const [listlist, changeList] = useState([])
     const [rows,setRows] = useState(0);
     const [bucketList, setBucketList] = useState([])
+    const [category, setCategory] = useState(props.route.params.category)
+    const [content2, setContent] = useState(props.route.params.data)
     const [bucketData, changeBucketData] = useState()
 
     useFocusEffect(
         React.useCallback(() => {
             console.log('Screen was focused');
+            console.log("이거 잘 받아졌는 지 확인해보자 :" ,content2);
             instance
                 .get(`/api/bucket/load/${id}`)
                 .then(async (response) => {
@@ -60,6 +63,7 @@ function CategoryPage(props){
                     setBucketList(newItems);
                     console.log(Math.ceil(newItems.length / 2));
                     setRows(Math.ceil(newItems.length / 2));
+
                 })
                 .catch((error) => {
                         console.log('버킷 발급 실패');
@@ -121,16 +125,16 @@ function CategoryPage(props){
                 <ScrollView>
                     <View style={{ flexDirection: 'column' }}>
                         {Array.from(Array(rows)).map((_, rowIndex) => (
-                            <View style={{ flexDirection: 'column' }} key={rowIndex}>
+                            <View style={{ flexDirection: 'row' }} key={rowIndex}>
                                 {Array.from(Array(2)).map((_, colIndex) => {
                                     const index = rowIndex * 2 + colIndex;
                                     if (index < bucketList.length) {
                                         const content = bucketList[index];
-                                        console.log('bucket_title[index] : ', bucket_title[index], 'id : ', content[0]);
+                                        console.log(content);
                                         return (
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    props.navigation.navigate('BucketDetail', {data : bucket_title[index], id : content[0]});
+                                                    props.navigation.navigate('BucketDetail', {data : bucket_title[index], id : content[0], categoryId : content2[2]});
                                                 }}
                                                 key={index}
                                             >

@@ -18,7 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 function Footer(props){
     // 그 여기서 자신의 페이지 확인
     // 여기서 페이지 별 스테이트 만들고 메인페이지 인지 아닌지ç
-    const [ifMain, changePage] = useState(false);
+    const [ifCategory, changePage] = useState(false);
 
     //여기가 이제 + 버튼 관리하는 스테이트
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -38,11 +38,12 @@ function Footer(props){
         setIsModalVisible(false);
     };
 
-    const bucektCategory = props.category
     //console.log('footer 의 버킷리스트 받은거', props.category)
     const [accessToken, setAccessToken] = useState('')
     const [refreshToken, setRefreshToken] = useState('')
     const objectToken = new Object()
+    const [category, setCategory] = useState();
+
     useEffect(() =>{
         const getAccess = async () => {
             try {
@@ -53,9 +54,9 @@ function Footer(props){
             }
         }
 
-        if(props.data == 'HomePage'){
+        if(props.name == 'Category'){
             changePage(true)
-        }else {
+            setCategory(props.category)
         }
     },[props])
 
@@ -83,24 +84,23 @@ function Footer(props){
                 </View>
 
                 {
-                    ifMain ?  <View style ={{flex : 1.4, alignItems : 'center'}}>
-                        <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
-                            //console.log('category data : ',props.category)
-                            props.navigation.navigate('Upload', {data : 'Upload', category1: props.category, navigation: props.navigation})
-                        }
-                        }>
-                            <Text style ={{fontSize : 35, width: 80, height: 70, marginTop: -10, textAlign: 'center', textAlignVertical: 'center'}}> ➕ </Text>
-                        </TouchableOpacity>
-                    </View> : <View style ={{flex : 1.5, alignItems : 'center'}}>
-                        <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
-                            props.navigation.navigate('HomePage', {data : 'HomePage'})}
-                        }>
-                            <Image
-                                source={require('./../../img/꿈동이_new.png')}
-                                style={{ width: 80, height: 70, marginTop: -3 }}
-                            />
-                        </TouchableOpacity>
-                    </View>
+                    ifCategory ?
+                        <View style ={{flex : 1.4, alignItems : 'center'}}>
+                            <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
+                                //console.log('category data : ',props.category)
+                                props.navigation.navigate('Upload', {data : 'Upload', category1: category, navigation: props.navigation})
+                            }
+                            }>
+                                <Text style ={{fontSize : 35, width: 80, height: 70, marginTop: -10, textAlign: 'center', textAlignVertical: 'center'}}> ➕ </Text>
+                            </TouchableOpacity>
+                        </View> : <View style ={{flex : 1.5, alignItems : 'center'}}>
+                            <TouchableOpacity style={{alignItems : 'center', width : '100%',}} >
+                                <Image
+                                    source={require('./../../img/꿈동이_new.png')}
+                                    style={{ width: 80, height: 70, marginTop: -3 }}
+                                />
+                            </TouchableOpacity>
+                        </View>
                 }
 
 

@@ -74,39 +74,45 @@ function Edit(props){
                 <Header data = '카테고리 삭제'></Header>
             </View>
 
+            <Text style={{fontSize: 17}}>삭제할 카테고리를 클릭하세요</Text>
+
             <View style ={{ width : '100%', height : '60%', alignItems : 'center', margin : 3}}>
-                    <ScrollView>
-                        {
-                            category.map((content, i ) =>{
-                                return(
-                                    <View style ={{marginTop : '10%', backgroundColor : 'white'}}>
-                                        {
-                                            console.log('id : ', content[2])
-                                        }
+                <ScrollView>
+                    {
+                        category.map((content, i ) =>{
+                            return(
+                                <View style={{ flexDirection: 'column', alignItems: 'center',
+                                    margin: 25, backgroundColor: 'white', borderRadius: 50, borderColor: 'black',
+                                    borderWidth: 1,}}>
+                                    {
+                                        console.log('id : ', content[2])
+                                    }
 
-                                        <TouchableOpacity
+                                    <TouchableOpacity
 
-                                            onPress={() =>
-                                            {showAlert(content[1], content[2])}
-                                            } key={i}>
-                                            <Text style={{fontSize: 17, color: 'black'}}>  {content[1]}</Text>
+                                        onPress={() =>
+                                        {showAlert(content[1], content[2])}
+                                        } key={i}>
+                                        <Text style={{fontSize:17, textAlign: 'center', color: 'black', margin: 5}}>  {content[1]}</Text>
+                                        <Image
+                                            style={{
+                                                width: 300,
+                                                height: 210,
+                                                borderColor: '#FFECEC',
+                                                borderWidth: 2,
+                                                flexDirection: 'row',
+                                                borderBottomLeftRadius: 50,
+                                                borderBottomRightRadius: 50
+                                            }}
+                                            source={{uri : content[0]}}
+                                        />
+                                    </TouchableOpacity>
 
-                                            <Image
-                                                style={{
-                                                    width: 300,
-                                                    height: 200,
-                                                    borderColor: 'blue',
-                                                    marginBottom: 20 // 이미지 간격 조절
-                                                }}
-                                                source={{uri : content[0]}}
-                                            />
-                                        </TouchableOpacity>
-
-                                    </View>
-                                )
-                            })
-                        }
-                    </ScrollView>
+                                </View>
+                            )
+                        })
+                    }
+                </ScrollView>
             </View>
 
 

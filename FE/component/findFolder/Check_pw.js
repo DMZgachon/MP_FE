@@ -1,6 +1,8 @@
-import React from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
-    TouchableHighlight, Modal} from 'react-native';
+import React, {useState} from 'react';
+import {
+    View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
+    TouchableHighlight, Modal, Alert
+} from 'react-native';
 
 import {
     Colors,
@@ -9,8 +11,57 @@ import {
     LearnMoreLinks,
     ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {useFocusEffect} from "@react-navigation/native";
+import {getAccess} from "../../api/reRefresh";
+import {instance} from "../../api/axiosInstance";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Check_pw(props){
+    let cancel;
+
+    const [exPassword, setExPassword] =  useState("");
+
+    useFocusEffect
+    (
+        React.useCallback(() => {
+            console.log('Screen was focused');
+
+            const getAndReissueTokens = async () => {
+                const { accessToken, refreshToken } = await getAccess();
+
+                if (cancel !== undefined) cancel();
+
+                instance
+                    .post('/api/auth/reissue', {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    })
+                    .then(async (response) => {
+
+                        await AsyncStorage.setItem('accessToken', response.data.data.accessToken);
+                        await AsyncStorage.setItem('refreshToken', response.data.data.refreshToken);
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        if (axios.isCancel(error)) {
+                            console.log('Request canceled', error.message);
+                        } else {
+                            // handle the error
+                            console.log(error);
+                        }
+                    });
+            }
+            getAndReissueTokens().then(r => console.log('getAndReissueTokens'));
+
+            return () => {
+                console.log('Screen was unfocused');
+                if (cancel !== undefined) cancel();
+            };
+        }, []) // 카테고리 목록 상태가 변경될 때마다 이 훅을 다시 실행
+    );
+
+
     return(
         <View style={styles.container}>
 
@@ -22,13 +73,19 @@ function Check_pw(props){
                 style={styles.textInput}
                 placeholder="현재 비밀번호를 입력해주세요"
                 secureTextEntry={true}
+                onChangeText={text => setExPassword(text)}
             />
 
             <View style={{flex: 1}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('Set_pw_phone')}
-                }>
+                    if(exPassword === '') {
+                        Alert.alert('현재 비밀번호를 입력해주세요')
+                    }
+                    else{
+                        props.navigation.navigate('Set_pw_phone', {exPassword: exPassword})
+                    }
+                }}>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>
             </View>

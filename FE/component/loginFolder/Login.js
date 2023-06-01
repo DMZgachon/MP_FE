@@ -87,7 +87,7 @@ function Login(props){
             />
             <View style={{flex: 2}}>
                 <TouchableOpacity onPress={()=>{
-                    props.navigation.navigate('Set_pw_phone')}
+                    props.navigation.navigate('Set_pw_phone', {exPassword: ""})}
                 }>
                     <Text style={styles.buttonText2}>비밀번호를 잊어버리셨습니까?</Text>
                 </TouchableOpacity>
@@ -95,44 +95,51 @@ function Login(props){
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
                     // props.navigation.navigate('HomePage', {data : "My BucketList App"})
-                    instance
-                        .post('/api/auth/login', {
-                            password: password,
-                            phoneNumber: phoneNum,
-                        })
-                        .then(async (response) => { // async 키워드를 추가합니다.
-                            console.log('We get resopne in login Page',response.data)
-                            const pass = response.data.status
 
-                            if(pass == 200){
-                                console.log('Response in Login Page', response.data);
-                                console.log('access Token in Login', response.data.data.accessToken);
-                                console.log('refresh Toekn in Login', response.data.data.refreshToken);
+                    if(phoneNum === '' || password === ''){
+                        Alert.alert('전화번호와 비밀번호 모두 입력해주세요')
+                    }
+                    else{
+                        instance
+                            .post('/api/auth/login', {
+                                password: password,
+                                phoneNumber: phoneNum,
+                            })
+                            .then(async (response) => { // async 키워드를 추가합니다.
+                                console.log('We get resopne in login Page',response.data)
+                                const pass = response.data.status
 
-                                setAccessToken(response.data.data.accessToken)
-                                setRefreshToken(response.data.data.refreshToken)
-                                console.log('we change accessToken', accessToken)
-                                console.log('we change refreshToken', refreshToken)
+                                if(pass == 200){
+                                    console.log('Response in Login Page', response.data);
+                                    console.log('access Token in Login', response.data.data.accessToken);
+                                    console.log('refresh Toekn in Login', response.data.data.refreshToken);
+
+                                    setAccessToken(response.data.data.accessToken)
+                                    setRefreshToken(response.data.data.refreshToken)
+                                    console.log('we change accessToken', accessToken)
+                                    console.log('we change refreshToken', refreshToken)
 
 
-                                // accessToken과 refreshToken을 직접 AsyncStorage에 저장합니다.
-                                console.log('we setItme in asy store')
-                                await AsyncStorage.setItem('accessToken', response.data.data.accessToken);
-                                await AsyncStorage.setItem('refreshToken', response.data.data.refreshToken);
+                                    // accessToken과 refreshToken을 직접 AsyncStorage에 저장합니다.
+                                    console.log('we setItme in asy store')
+                                    await AsyncStorage.setItem('accessToken', response.data.data.accessToken);
+                                    await AsyncStorage.setItem('refreshToken', response.data.data.refreshToken);
 
-                                setAccessTokenHeader(response.data.data.accessToken) // axios header 저장
+                                    setAccessTokenHeader(response.data.data.accessToken) // axios header 저장
 
-                                ToastAndroid.show('됐다', ToastAndroid.SHORT);
+                                    ToastAndroid.show('됐다', ToastAndroid.SHORT);
 
-                                props.navigation.navigate('HomePage', { data: 'HomePage' });
-                            }
-                            else {
-                                Alert.alert('회원가입이 되지 않았습니다람쥐')
-                            }
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        });
+                                    props.navigation.navigate('HomePage', { data: 'HomePage' });
+                                }
+                                else {
+                                    Alert.alert('회원가입이 되지 않았습니다람쥐')
+                                }
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                Alert.alert("회원 정보가 존재하지 않습니다")
+                            });
+                    }
                 }
 
                 }>
