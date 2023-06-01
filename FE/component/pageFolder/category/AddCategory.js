@@ -155,7 +155,7 @@ function AddCategory(props){
 
             <View style={styles.bottomView}>
                 <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
-                    <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
+                    <Footer navigation = {props.navigation} data ={props.route.params.data} Page = "Category"></Footer>
                 </View>
             </View>
         </View>

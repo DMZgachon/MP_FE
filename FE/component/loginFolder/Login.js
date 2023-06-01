@@ -18,11 +18,12 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import SwipeButton from 'rn-swipe-button';
 import { instance, setAccessTokenHeader } from "../../api/axiosInstance";
+import {useFocusEffect} from "@react-navigation/native";
 
 // 이제 Config.API_URL을 사용하여 API 요청을 수행할 수 있습니다.
 
 function Login(props){
-    const [phone, setPhone] = useState('01052672383');
+    const [phone, setPhone] = useState(' ');
 
 
     const handleSignup = () => {
@@ -36,6 +37,8 @@ function Login(props){
     const [password, setPassword] = useState('')
     let forceResetLastButton = null;
 
+
+    const [renderCount, setRenderCount] = useState(0);
 
     return(
         <View style={styles.container}>

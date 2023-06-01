@@ -34,6 +34,8 @@ function SearchPage(props){
     const [search, setSearch] = useState("");
     const [searchList, setSearchList] = useState([]);
     const [rows, setRows] = useState(0);
+    const [bucketTitle, changeTitle] = useState();
+    const [nickName, changeNickName] = useState('');
 
     useFocusEffect(
         React.useCallback(() => {
@@ -55,8 +57,13 @@ function SearchPage(props){
             .get(`/api/bucket/searchByTag/${search}`)
             .then((response) => {
                 console.log('자 축소하자',response.request._response);
-                console.log('data 보자 ', response.data.data)
-                const newItems = response.data.data.map(item => [item.bucketImage, item.deadline, item.id, item.title]);
+                console.log('', response.data.data)
+                changeTitle(response.data.data.title)
+                changeNickName(response.data.data.nickname)
+                console.log('이름좀 보자 ', response.data.data.nickname)
+
+
+                const newItems = response.data.data.map(item => [item.bucketImage, item.deadline, item.id, item.title, item.nickname] );
 
                 setSearchList(newItems);
                 console.log(Math.ceil(newItems.length / 2));
@@ -81,7 +88,7 @@ function SearchPage(props){
                     <View style={{ flexDirection: 'row', marginTop: 60}}>
                         <TextInput
                             style={styles.input}
-                            placeholder="#태그를 이용해 검색해보세요"
+                            placeholder="원하는 검색어 검색해보세요"
                             onChangeText={text => setSearch(text)}
                         />
                         <TouchableOpacity style={{
@@ -104,11 +111,14 @@ function SearchPage(props){
                                             const index = rowIndex * 2 + colIndex;
                                             if (index < searchList.length) {
                                                 const content = searchList[index];
-                                                console.log(content);
+                                                console.log('content : ',content);
+                                                console.log('bucket_title[index] : ', content[3], 'id : ', content[2]);
+
                                                 return (
                                                     <TouchableOpacity
                                                         onPress={() => {
-                                                            //props.navigation.navigate('HomePage', { data: 'HomePage' });
+                                                            props.navigation.navigate('BucketDetail', {data : content[3], id : content[2]});
+
                                                         }}
                                                         key={index}
                                                     >
@@ -128,6 +138,8 @@ function SearchPage(props){
                                                                     }}
                                                                     source={{ uri: content[0] }}
                                                                 />
+                                                                <Text style={{fontSize:17, textAlign: 'center', color: 'black'}}>{content[4]} </Text>
+
                                                             </View>
                                                         </View>
                                                     </TouchableOpacity>

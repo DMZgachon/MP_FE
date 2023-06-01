@@ -90,7 +90,7 @@ function CategoryPage(props){
                                     const index = rowIndex * 2 + colIndex;
                                     if (index < bucketList.length) {
                                         const content = bucketList[index];
-                                        console.log(content);
+                                        console.log('bucket_title[index] : ', bucket_title[index], 'id : ', content[0]);
                                         return (
                                             <TouchableOpacity
                                                 onPress={() => {

@@ -9,7 +9,7 @@ import {
     useColorScheme,
     Image,
     View,
-    Button, TextInput, ToastAndroid,
+    Button, TextInput, ToastAndroid, Alert,
 } from 'react-native';
 
 import {
@@ -29,6 +29,27 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 function ManagePage(props){
     let cancel;
     const [phoneNumeber, setPhoneNumber] = useState("");
+
+
+    const showAlert = (content, id) => {
+        Alert.alert(
+            content,
+            'Delete Sure?',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel'
+                },
+                {
+                    text: 'OK', onPress: () => {
+                        memberDelete();
+                    }
+                }
+            ],
+            { cancelable: false }
+        );
+    };
 
     useFocusEffect
     (
@@ -91,9 +112,22 @@ function ManagePage(props){
         }).then((response)=>{
             console.log('받은거',response.data.data)
             ToastAndroid.show('닌 사라져있다... 성공이다', ToastAndroid.SHORT);
+            props.navigation.navigate('Login')
+
+
         }).catch((e)=>{
             console.log('삭제 실패',e)
         })
+    }
+
+    const Lougout = async () => {
+        try {
+            await AsyncStorage.clear()
+            console.log('Logout')
+        } catch(e) {
+            // clear 에러를 처리합니다.
+            console.error(e);
+        }
     }
 
 
@@ -126,12 +160,14 @@ function ManagePage(props){
                         <Image style={styles.moreImg} source={require('FE/component/img/more.png')}/>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.editbtn} onPress={()=>{props.navigation.navigate()}}>
+                <TouchableOpacity style={styles.editbtn} onPress={()=>{
+                    Lougout()
+                    props.navigation.navigate('Login')}}>
                     <Text style={styles.buttonText}>로그아웃</Text>
                 </TouchableOpacity>
                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-start', width: '90%'}}>
                     <TouchableOpacity  onPress={()=>{
-                        memberDelete();
+                        showAlert()
                     }
                     }>
                         <Text style={styles.buttonText2}>계정 삭제하기</Text>

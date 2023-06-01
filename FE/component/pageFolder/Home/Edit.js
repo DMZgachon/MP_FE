@@ -79,15 +79,17 @@ function Edit(props){
                         {
                             category.map((content, i ) =>{
                                 return(
-                                    <View>
+                                    <View style ={{marginTop : '10%', backgroundColor : 'white'}}>
                                         {
                                             console.log('id : ', content[2])
                                         }
 
                                         <TouchableOpacity
+
                                             onPress={() =>
                                             {showAlert(content[1], content[2])}
                                             } key={i}>
+                                            <Text style={{fontSize: 17, color: 'black'}}>  {content[1]}</Text>
 
                                             <Image
                                                 style={{
@@ -98,7 +100,6 @@ function Edit(props){
                                                 }}
                                                 source={{uri : content[0]}}
                                             />
-                                            <Text style={{fontSize: 17, color: 'black'}}>{content[1]}</Text>
                                         </TouchableOpacity>
 
                                     </View>
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#FFF4F4'
     },
     bottomView: {
         position: 'absolute',
