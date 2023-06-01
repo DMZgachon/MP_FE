@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
     SafeAreaView,
     View,
@@ -31,6 +31,7 @@ function ChattingPage(props) {
     let cancel;
     const [text, setText] = useState('');
     const [messages, setMessages] = useState([]);
+    const scrollViewRef = useRef(null);
 
     const renderItem = ({ item }) => (
         <View style={[styles.messageContainer, item.role == "user" ? styles.myMessageContainer : styles.otherMessageContainer]}>
@@ -56,6 +57,9 @@ function ChattingPage(props) {
     const [keyboardStatus, setKeyboardStatus] = useState(false);
 
     useEffect(() => {
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollToEnd({ animated: true });
+        }
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             () => {
@@ -73,7 +77,7 @@ function ChattingPage(props) {
             keyboardDidShowListener.remove();
             keyboardDidHideListener.remove();
         };
-    }, []);
+    }, [messages]);
     const sendMessage = () => {
         const newMessage = { role: "user", content: text }; // isMyMessage는 현재 사용자의 메시지를 구분하기 위해 추가했습니다. 이 값을 적절하게 설정해야 합니다.
         const updatedMessages = [...messages, newMessage];
@@ -109,12 +113,21 @@ function ChattingPage(props) {
                     <Header data={props.route.params.data}></Header>
                 </View>
                 <SafeAreaView style={{...styles.navBox1, marginTop: 70}}>
-                    <FlatList
-                        data={messages}
-                        renderItem={renderItem}
-                        keyExtractor={(_, index) => index.toString()}
-                        style={styles.flatList}
-                    />
+                    <ScrollView
+                        ref={scrollViewRef}
+                        style={styles.scrollView}
+                        contentContainerStyle={styles.scrollViewContent}
+                        onContentSizeChange={() =>
+                            scrollViewRef.current.scrollToEnd({ animated: true })
+                        }
+                    >
+                        <FlatList
+                            data={messages}
+                            renderItem={renderItem}
+                            keyExtractor={(_, index) => index.toString()}
+                            style={styles.flatList}
+                        />
+                    </ScrollView>
                     <View style={styles.inputContainer}>
                         <TextInput
                             style={styles.input}
@@ -208,6 +221,12 @@ const styles = StyleSheet.create({
     },
     otherMessage: {
         backgroundColor: '#b3b3b3',
+    },
+    scrollView: {
+        flex: 1,
+    },
+    scrollViewContent: {
+        flexGrow: 1,
     },
 });
 

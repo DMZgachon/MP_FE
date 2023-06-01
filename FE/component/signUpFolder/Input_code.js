@@ -156,10 +156,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         height: 40,
         width: "65%",
+        fontSize: 16,
         //borderRadius: 10,
-        borderColor: 'black',
-        borderWidth: 1
-    }
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
+    },
 });
 
 export {Input_code}

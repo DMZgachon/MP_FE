@@ -164,10 +164,10 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
         };
         await instance.post('/api/member/update', formData,config)
             .then((res) => {
-            console.log(res);
-        }).catch((error) => {
-            console.log("Error:", error);
-        });
+                console.log(res);
+            }).catch((error) => {
+                console.log("Error:", error);
+            });
     }
 
 
@@ -185,7 +185,7 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
 
                 <View style={styles.navBox1}>
 
-                    <View style={{ flex: 0.8}}></View>
+                    <View style={{ flex: 1}}></View>
                     <View style={styles.storeCon}>
 
                         <TouchableOpacity onPress={() => changeName()}>
@@ -197,7 +197,7 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <TouchableOpacity onPress={() => ShowPicker()}>
                             <Image
-                                style={{width: 90, height: 90}}
+                                style={styles.profileImg}
                                 source={profileImage ? {uri: profileImage} : require('../../img/default_profile.png')}
                             />
                         </TouchableOpacity>
@@ -220,9 +220,9 @@ function Setting(props){//이름 설정 잘못함.. 셋팅이 아니라 프로�
 
                                 onPress={() => changeNickName()}
                             >
-                                <Text style={styles.Title1}> 닉네임변경 </Text>
+                                <Text style={styles.Title1}> 닉네임변경: </Text>
                             </TouchableOpacity>
-                             <Text style={styles.textInput}>{nickname}</Text>
+                            <Text style={styles.textInput}>{nickname}</Text>
 
                         </View>
 
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontWeight: 'bold',
         fontSize: 17,
-        color: "black"
+        color: "black",
     },
 
     text1:{

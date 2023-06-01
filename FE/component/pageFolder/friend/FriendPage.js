@@ -111,7 +111,7 @@ function FriendPage(props){
             <View style={styles.navBox1}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Image
-                        style={{width: 90, height: 90}}
+                        style={styles.profileImg}
                         source={profileImage ? {uri: profileImage} : require('../../img/default_profile.png')}
                     />
                     <View style={{flex: 1}}>
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
         width: 65,
         height: 65,
         resizeMode: "cover",
-        borderRadius: 50
+        borderRadius: 50,
     },
     moreImg:{
         marginLeft: 5,

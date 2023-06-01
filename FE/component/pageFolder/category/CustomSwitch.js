@@ -30,7 +30,8 @@ const CustomSwitch = ({
                     borderWidth: 1,
                     borderColor: selectionColor,
                     flexDirection: 'row',
-                    justifyContent: 'center',
+                    justifyContent: 'flex-start',
+                    margin: 10,
                     padding: 1,
                 }}>
                 <TouchableOpacity
