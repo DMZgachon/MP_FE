@@ -30,6 +30,7 @@ import CustomSwitch from "./CustomSwitch";
 import {Bar} from "react-native-progress";
 import styled from "styled-components";
 import CheckBox from "react-native-check-box";
+import { Calendar } from "react-native-calendars";
 import {Checkbox} from "react-native-paper";
 
 function BucketDetail(props){
@@ -50,6 +51,8 @@ function BucketDetail(props){
     const [imageData, setImageData] = useState(null);
     const [stepCheckStatus, setStepCheckStatus] = useState(step.map(() => false));
     const [checked, setChecked] = React.useState(false);
+    const [modify, setModify] = useState(true);
+    const [calendar, setCalendar] = useState(false);
 
     const CancelToken = axios.CancelToken;
     let cancel;
@@ -76,7 +79,7 @@ function BucketDetail(props){
                 changeImage(responses[0].data.data.bucketImage);
                 console.log('bucketImage: ', Image);
                 console.log('deadline: ', responses[0].data.data.deadline);
-                changeDeadLine(responses[0].data.data.deadline)
+                changeDeadLine(responses[0].data.data.deadline.substring(0, 10))
                 console.log('process: ', responses[0].data.data.process);
                 changeProcess(responses[0].data.data.process)
                 console.log('title: ', responses[0].data.data.title);
@@ -87,20 +90,24 @@ function BucketDetail(props){
                 changeTag(responses[2].data.data)
                 console.log('data:' , data);
                 console.log('id: ', id);
+                setModify(props.route.params.modify);
 
             }).catch((error) => {
                 console.log('bucket 오류');
             });
-
 
             getAndReissueTokens(cancel).then(r => console.log('getAndReissueTokens'), fetchTokenAndSet());
             return () => {
                 console.log('Screen was unfocused');
                 if (cancel !== undefined) cancel();
             };
-        }, [])
+        }, [props])
     );
 
+    useEffect(() => {
+        console.log("modify 혀용 여부:"+props.route.params.modify);
+
+        },[modify]);
     useEffect(() => {
         fetch('https://storage.googleapis.com/mp-be/14c24bd6-a8b9-4539-af3d-1fd1a503bba9')
             .then(response => response.blob())
@@ -229,7 +236,6 @@ function BucketDetail(props){
                     formData.append('bucketImage', imageData);
                     console.log("BucketImage: " ,imageData);
                 } else {
-                    console.error('No image data');
                 }
             } catch (error) {
                 console.error('Error in creating Blob: ', error);
@@ -238,7 +244,7 @@ function BucketDetail(props){
             formData.append('visibility', visibility);
             formData.append('category', category);
             formData.append('title', title1);
-            formData.append('deadline', deadLine);
+            formData.append('deadline', deadLine + " 12:30:00");
             formData.append('id', id);
 
             //formData에 잘 저장되었는 지 확인
@@ -333,6 +339,18 @@ function BucketDetail(props){
             .catch((error) => {console.log("Add :", error)})
     }
 
+    const addTag = (tag) =>{
+        const tagList = tag.map(item => item.content);
+        instance.post(`/api/bucket/tag/${id}`, tagList)
+            .then((res) => {
+                console.log('Add Success: ', tagList);
+            })
+            .catch((error) => {console.log("Add :", error)})
+    }
+
+    const onCalendar = (res) => {
+        setCalendar(!calendar)
+    }
 
     return(
         <View style={styles.container}>
@@ -372,13 +390,41 @@ function BucketDetail(props){
 
 
                             <View style={{flex: 1}}>
-                                <Text style={styles.text1}>기한: </Text>
-                                <TextInput style={styles.text1} onChangeText={handleDeadlineChange} value={deadLine} placeholder={deadLine}></TextInput>
+                                <View style={{flexDirection: "column", width: 100, marginBottom: 5}}>
+                                    <Text style={{...styles.text1, marginLeft: 10}}>기한: </Text>
+                                    {/*<Text style={{...styles.text1, marginLeft: 0}}>{selectedDate}</Text>*/}
+                                    <Text style={styles.text1}>{deadLine}</Text>
+                                </View>
+                                <TouchableOpacity style={{ marginLeft: "20%", marginBottom: 10}} onPress={onCalendar}>
+                                    <Image
+                                        style={
+                                            {width: 35, height: 32}
+                                        }
+                                        source={require('../../img/date.png')}/>
+                                </TouchableOpacity>
+                                {calendar && (
+                                    <Modal
+                                        animationType="slide"
+                                        transparent={false}
+                                        visible={calendar}
+                                        onRequestClose={onCalendar}
+                                    >
+                                        <Calendar
+                                            value={deadLine}x
+                                            onDayPress={(day)=>{
+                                                handleDeadlineChange(day.dateString)
+                                                console.log('찍힌 날짜',day.dateString)
+                                                onCalendar(day.dateString);
+                                                changeDeadLine(day.dateString)
+                                            }}
+                                        />
+                                    </Modal>
+                                )}
                                 <View style={{margin: 10}}>
                                     <Text style={{fontSize: 15,  color: "rgb(61,136,189)"}}>
                                         버킷리스트 공개여부:
                                     </Text>
-                                    <View style={{alignItems: 'flex-start', margin: 10}}>
+                                    <View style={{alignItems: 'flex-start', margin: 5, marginBottom: 0}}>
                                         <CustomSwitch
                                             selectionMode={''}
                                             roundCorner={true}
@@ -390,7 +436,21 @@ function BucketDetail(props){
                                     </View>
                                 </View>
 
-                                <View>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' , marginLeft: 20}}>
+                                    <TouchableOpacity style={{alignContent: 'center', marginRight: 20}} onPress={() => {
+                                        const newTag = {content: ""};
+                                        changeTag([...tag, newTag]);
+                                    }}>
+                                        <Text>과정 추가</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{alignContent: 'center'}} onPress={() => {
+                                        addTag(tag);
+                                    }}>
+                                        <Text>완료</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <ScrollView style={{alignSelf: 'flex-start', marginLeft: 25, marginTop : 10  ,width : '99%', height:"5%"}}>
                                     <View>
                                         { //태그 출력
                                             tag.map((content, i ) =>{
@@ -420,7 +480,8 @@ function BucketDetail(props){
                                             })
                                         }
                                     </View>
-                                </View>
+
+                                </ScrollView>
 
                             </View>
                         </View>
@@ -435,12 +496,12 @@ function BucketDetail(props){
                                     color='#F08484'
                                 />
                             </Bar>
-                            <BarText style ={{width: '15%',}}>
+                            <BarText style ={{width: '15%', marginTop: 18}}>
                                 100%
                             </BarText>
                         </BarView>
 
-                        <ScrollView style={{alignSelf: 'flex-start', marginLeft: 25, marginTop : 10  ,width : '99%'}}>
+                        <ScrollView style={{alignSelf: 'flex-start', marginLeft: 25, marginTop : 20  ,width : '99%', maxHeight: "20%"}}>
                             <View>
                                 {
                                     step.map((content, i ) => {
@@ -483,31 +544,27 @@ function BucketDetail(props){
                                 }
                             </View>
 
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <TouchableOpacity style={{alignContent: 'center', marginRight: 20}} onPress={() => {
-                                    const newStep = { content: " ", success: false };
-                                    changeStep([...step, newStep]);
-                                }}>
-                                    <Text>과정 추가</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{alignContent: 'center'}} onPress={() => {
-                                    addStep(step);
-                                }}>
-                                    <Text>완료</Text>
-                                </TouchableOpacity>
-                            </View>
-
-
-
-
                         </ScrollView>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' , marginLeft: 20}}>
+                            <TouchableOpacity style={{alignContent: 'center', marginRight: 20}} onPress={() => {
+                                const newStep = { content: " ", success: false };
+                                changeStep([...step, newStep]);
+                            }}>
+                                <Text>과정 추가</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{alignContent: 'center'}} onPress={() => {
+                                addStep(step);
+                            }}>
+                                <Text>완료</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 ): (
                     <View style={{flexDirection: "column", margin: "3%"}}>
                         <View style={styles.storeCon}>
-                            <TouchableOpacity onPress={toggleEditing}>
+                            {modify ? <TouchableOpacity onPress={toggleEditing}>
                                 <Text style={styles.buttonText2}>수정</Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> : <Text style={styles.buttonText2}/>}
                         </View>
                         <Text style={{...styles.Title, marginTop: 0}}>" {title1} "</Text>
                         <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 0}}>
@@ -520,18 +577,10 @@ function BucketDetail(props){
                                     <Text style={{fontSize: 15,  color: "rgb(61,136,189)"}}>
                                         버킷리스트 공개여부:
                                     </Text>
-                                    <View style={{alignItems: 'flex-start', margin: 10}}>
-                                        <CustomSwitch
-                                            selectionMode={''}
-                                            roundCorner={true}
-                                            option1={'공개'}
-                                            option2={'비공개'}
-                                            onSelectSwitch={onSelectSwitch}
-                                            selectionColor={"rgb(82,175,241)"}
-                                        />
-                                    </View>
+                                    <Text style={{alignItems: 'flex-start', margin: 10, fontSize: 20, marginLeft: 30}}>{visibility}</Text>
                                 </View>
 
+                                <ScrollView style={{alignSelf: 'flex-start', marginLeft: 25, marginTop : 10  ,width : '99%', height:"10%"}}>
                                 <View>
                                     {
                                         tag.map((content, i ) =>{
@@ -556,6 +605,7 @@ function BucketDetail(props){
                                         })
                                     }
                                 </View>
+                                </ScrollView>
                             </View>
                         </View>
 
@@ -569,12 +619,12 @@ function BucketDetail(props){
                                     color='#F08484'
                                 />
                             </Bar>
-                            <BarText style ={{width: '15%',}}>
+                            <BarText style ={{width: '15%', marginTop: 18}}>
                                 100%
                             </BarText>
                         </BarView>
 
-                        <ScrollView style={{alignSelf: 'flex-start', marginLeft: 25, marginTop : 20 , width : '99%'}}>
+                        <ScrollView style={{alignSelf: 'flex-start', marginLeft: 25, marginTop : 20 , width : '99%', maxHeight: "27.5%"}}>
                             <View>
                                 {
                                     step.map((content, i ) => {
@@ -596,24 +646,20 @@ function BucketDetail(props){
 
                                                         <CheckBox
                                                             isChecked={step[i].success}
-                                                            onClick={() => {
-                                                                // 체크 상태를 뒤집습니다
-                                                                toggleSuccess(i)
-                                                            }}
+                                                            disabled={true}
                                                         />
+
                                                     </View>
                                                 </TouchableOpacity>
                                             </View>
                                         )
                                     })
-
                                 }
                             </View>
                         </ScrollView>
                     </View>
                 )}
-            </View
-            >
+            </View>
 
 
             <View style={styles.bottomView}>
@@ -645,6 +691,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         justifyContent: 'flex-end',
         width: '88%',
+        marginLeft: 20,
     },
     navBox1: {
         justifyContent: 'center',

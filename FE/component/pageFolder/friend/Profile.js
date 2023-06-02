@@ -15,7 +15,7 @@ import { instance, setAccessTokenHeader } from "../../../api/axiosInstance";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-function profile(props){
+function Profile(props){
     return(
         <View style={styles.container}>
 
@@ -40,4 +40,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export {profile}
+export {Profile}

@@ -5,7 +5,7 @@ import React, {useEffect, useState} from 'react';
 
 import {
     SafeAreaView, View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
-    Button, StatusBar, TouchableHighlight, Modal, ToastAndroid, Alert, ImageBackground
+    Button, StatusBar, TouchableHighlight, Modal, ToastAndroid, Alert
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -18,13 +18,11 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import SwipeButton from 'rn-swipe-button';
 import { instance, setAccessTokenHeader } from "../../api/axiosInstance";
-import {useFocusEffect} from "@react-navigation/native";
-import FastImage from "react-native-fast-image";
 
 // 이제 Config.API_URL을 사용하여 API 요청을 수행할 수 있습니다.
 
 function Login(props){
-    const [phone, setPhone] = useState(' ');
+    const [phone, setPhone] = useState('01052672383');
 
 
     const handleSignup = () => {
@@ -39,19 +37,8 @@ function Login(props){
     let forceResetLastButton = null;
 
 
-    const [renderCount, setRenderCount] = useState(0);
-
     return(
-        <FastImage
-            style={styles.container}
-            source={{
-                uri: 'https://media.giphy.com/media/BU0ulFC7v3ETdJBSar/giphy.gif',
-                priority: FastImage.priority.high,
-            }}
-            resizeMode={FastImage.resizeMode.cover}
-        >
-
-
+        <View style={styles.container}>
             <View style={styles.navBox}>
                 <TouchableOpacity style={styles.backBtn} onPress={()=>{
                     props.navigation.navigate('MainPage')}
@@ -96,7 +83,7 @@ function Login(props){
             />
             <View style={{flex: 2}}>
                 <TouchableOpacity onPress={()=>{
-                    props.navigation.navigate('Set_pw_phone', {exPassword: ""})}
+                    props.navigation.navigate('Set_pw_phone')}
                 }>
                     <Text style={styles.buttonText2}>비밀번호를 잊어버리셨습니까?</Text>
                 </TouchableOpacity>
@@ -104,58 +91,51 @@ function Login(props){
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
                     // props.navigation.navigate('HomePage', {data : "My BucketList App"})
+                    instance
+                        .post('/api/auth/login', {
+                            password: password,
+                            phoneNumber: phoneNum,
+                        })
+                        .then(async (response) => { // async 키워드를 추가합니다.
+                            console.log('We get resopne in login Page',response.data)
+                            const pass = response.data.status
 
-                    if(phoneNum === '' || password === ''){
-                        Alert.alert('전화번호와 비밀번호 모두 입력해주세요')
-                    }
-                    else{
-                        instance
-                            .post('/api/auth/login', {
-                                password: password,
-                                phoneNumber: phoneNum,
-                            })
-                            .then(async (response) => { // async 키워드를 추가합니다.
-                                console.log('We get resopne in login Page',response.data)
-                                const pass = response.data.status
+                            if(pass == 200){
+                                console.log('Response in Login Page', response.data);
+                                console.log('access Token in Login', response.data.data.accessToken);
+                                console.log('refresh Toekn in Login', response.data.data.refreshToken);
 
-                                if(pass == 200){
-                                    console.log('Response in Login Page', response.data);
-                                    console.log('access Token in Login', response.data.data.accessToken);
-                                    console.log('refresh Toekn in Login', response.data.data.refreshToken);
-
-                                    setAccessToken(response.data.data.accessToken)
-                                    setRefreshToken(response.data.data.refreshToken)
-                                    console.log('we change accessToken', accessToken)
-                                    console.log('we change refreshToken', refreshToken)
+                                setAccessToken(response.data.data.accessToken)
+                                setRefreshToken(response.data.data.refreshToken)
+                                console.log('we change accessToken', accessToken)
+                                console.log('we change refreshToken', refreshToken)
 
 
-                                    // accessToken과 refreshToken을 직접 AsyncStorage에 저장합니다.
-                                    console.log('we setItme in asy store')
-                                    await AsyncStorage.setItem('accessToken', response.data.data.accessToken);
-                                    await AsyncStorage.setItem('refreshToken', response.data.data.refreshToken);
+                                // accessToken과 refreshToken을 직접 AsyncStorage에 저장합니다.
+                                console.log('we setItme in asy store')
+                                await AsyncStorage.setItem('accessToken', response.data.data.accessToken);
+                                await AsyncStorage.setItem('refreshToken', response.data.data.refreshToken);
 
-                                    setAccessTokenHeader(response.data.data.accessToken) // axios header 저장
+                                setAccessTokenHeader(response.data.data.accessToken) // axios header 저장
 
-                                    ToastAndroid.show('됐다', ToastAndroid.SHORT);
+                                ToastAndroid.show('됐다', ToastAndroid.SHORT);
 
-                                    props.navigation.navigate('HomePage', { data: 'HomePage' });
-                                }
-                                else {
-                                    Alert.alert('회원가입이 되지 않았습니다람쥐')
-                                }
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                                Alert.alert("회원 정보가 존재하지 않습니다")
-                            });
-                    }
+                                props.navigation.navigate('HomePage', { data: 'HomePage' });
+                            }
+                            else {
+                                Alert.alert('회원가입이 되지 않았습니다람쥐')
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
                 }
 
                 }>
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>
             </View>
-        </FastImage>
+        </View>
     )
 }
 
@@ -208,7 +188,7 @@ const styles = StyleSheet.create({
         height: "55%",
         marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#939379"
+        backgroundColor: "#FF037C"
     },
     textBold:{
         width: "55%",
@@ -230,7 +210,7 @@ const styles = StyleSheet.create({
     },
     buttonText2:{
         textAlign: 'center',
-        color: "#939379",
+        color: "#fd007c",
         fontSize: 15,
         textDecorationLine: 'underline',
         marginTop: '5%'

@@ -1,3 +1,4 @@
+
 import React, {Component, useEffect, useState} from 'react';
 import {
     View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, TouchableHighlight,
@@ -114,7 +115,7 @@ function Footer(props){
 
                 <View style ={{flex : 1.5, alignItems : 'center'}}>
                     <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
-                        props.navigation.navigate('FriendPage', {data : '내정보'})}
+                        props.navigation.navigate('FriendPage', {data : 'FriendPage'})}
                     }>
                         <Text style ={{fontSize : 35}}> 👤 </Text>
                     </TouchableOpacity>

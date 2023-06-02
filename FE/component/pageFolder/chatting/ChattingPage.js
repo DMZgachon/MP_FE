@@ -121,12 +121,24 @@ function ChattingPage(props) {
                             scrollViewRef.current.scrollToEnd({ animated: true })
                         }
                     >
-                        <FlatList
-                            data={messages}
-                            renderItem={renderItem}
-                            keyExtractor={(_, index) => index.toString()}
-                            style={styles.flatList}
-                        />
+                        {
+                            messages.map((item, index) => {
+                                return (
+                                    <View key={index} style={[styles.messageContainer, item.role == "user" ? styles.myMessageContainer : styles.otherMessageContainer]}>
+                                        {!(item.role == "user") && <Image source={require('../../img/gpt.png')} style={styles.image} />}
+                                        <View style={[styles.message, item.role == "user" ? styles.myMessage : styles.otherMessage]}>
+                                            <Text>{item.content}</Text>
+                                        </View>
+                                    </View>
+                                )
+                            })
+                        }
+                        {/*<FlatList*/}
+                        {/*    data={messages}*/}
+                        {/*    renderItem={renderItem}*/}
+                        {/*    keyExtractor={(_, index) => index.toString()}*/}
+                        {/*    style={styles.flatList}*/}
+                        {/*/>*/}
                     </ScrollView>
                     <View style={styles.inputContainer}>
                         <TextInput
@@ -224,6 +236,7 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         flex: 1,
+        marginBottom: 60,
     },
     scrollViewContent: {
         flexGrow: 1,

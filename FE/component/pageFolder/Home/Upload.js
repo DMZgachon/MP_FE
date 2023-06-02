@@ -105,8 +105,8 @@ function Upload(props){
     //     let countArr = [...countList]
     //     let counter = countArr.slice(-1)[0]
     //     counter += 1
-    //     countArr.push(counter)   // index 사용 X
-    //     // countArr[counter] = counter   // index 사용 시 윗줄 대신 사용
+    //     countArr.push(counter)	// index 사용 X
+    //     // countArr[counter] = counter	// index 사용 시 윗줄 대신 사용
     //     setCountList(countArr)
     //}
 
@@ -128,8 +128,8 @@ function Upload(props){
         //alert('dd')
         let countArr = [...countList]
 
-        countArr.pop()   // index 사용 X
-        // countArr[counter] = counter   // index 사용 시 윗줄 대신 사용
+        countArr.pop()	// index 사용 X
+        // countArr[counter] = counter	// index 사용 시 윗줄 대신 사용
         setCountList(countArr)
     }
     const onCalendar = () => {
@@ -169,7 +169,6 @@ function Upload(props){
                 };
 
                 formData.append('bucketImage', imageData);
-                console.log('asdfsadf',formData)
                 console.log("BucketImage: " ,imageData);
             } else {
                 console.error('No image data');
@@ -265,6 +264,7 @@ function Upload(props){
                     uri: uri,
                     data: blob, // blob data 추가
                 }
+
                 setImageData(file)
             });
         } else {
@@ -296,6 +296,7 @@ function Upload(props){
                             style={{width: 90, height: 90, marginLeft: 130}}
                             source={imageData ? {uri: imageData.uri} : require('../../img/PlusImg.png')}
                         />
+
                     </TouchableOpacity>
 
                     <View>

@@ -110,7 +110,7 @@ function FriendPage(props){
 
             <View style={styles.navBox1}>
                 <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}}
-                                  onPress={()=>{props.navigation.navigate('profile', {data : profileImage})}}>
+                                  onPress={()=>{props.navigation.navigate('Profile', {data : profileImage})}}>
 
                     <Image
                         style={styles.profileImg}
@@ -196,8 +196,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#ffe9e9',
         width: "97%",
-        height: '22%',
-        marginTop: '3%',
+        height: '25%',
+        marginTop: '2%',
         marginBottom: '3%',
         padding: '5%',
         borderRadius: 10,

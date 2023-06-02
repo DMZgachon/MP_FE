@@ -117,7 +117,7 @@ function SearchPage(props){
                                                 return (
                                                     <TouchableOpacity
                                                         onPress={() => {
-                                                            props.navigation.navigate('BucketDetail', {data : content[3], id : content[2]});
+                                                            props.navigation.navigate('BucketDetail', {data : content[3], id : content[2], modify: false});
 
                                                         }}
                                                         key={index}
