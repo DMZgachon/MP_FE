@@ -54,7 +54,17 @@ function Input_code(props){
                 .catch((err)=>{console.log(err)});
         }
     }
+    const onEnterBtn2 = () => {
+        //휴대폰으로 인증번호 보내기 작업
+        instance.get(`/api/auth/check/sendSMS`, {params: {to:phoneNum}},
 
+        ).then((res)=>{
+            ToastAndroid.show("됐다", ToastAndroid.SHORT);
+            props.navigation.navigate('Input_code', {name:name, phoneNum:phoneNum, password:password});
+            Alert.alert('인증번호를 재전송하였습니다')
+        })
+            .catch((err)=>{console.log(err)});
+    }
     return(
         <View style={styles.container}>
             <View style={styles.navBox}>
@@ -77,7 +87,13 @@ function Input_code(props){
                 secureTextEntry={true}
                 onChangeText={text => setVerifyNum(text)}
             />
-            <Text style={styles.buttonText2} >인증번호 재전송</Text>
+            <TouchableOpacity
+                onPress={onEnterBtn2}
+                >
+                <Text style={styles.buttonText2}>
+                    인증번호 재전송
+                </Text>
+            </TouchableOpacity>
             <View style={{flex: 2}}></View>
 
             <View style={{flexDirection: 'row', flex: 2}}>
