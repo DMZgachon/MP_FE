@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
         height: "55%",
         marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#939379"
+        backgroundColor: "#FF037C"
     },
     textBold:{
         width: "55%",

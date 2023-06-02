@@ -18,7 +18,6 @@ function Set_pw_code(props){
     const [phoneNumber, setPhoneNumber] = useState(props.route.params.phoneNumber)
     const [exPassword, setExPassword] = useState(props.route.params.exPassword)
     const [verifyNum, setVerifyNum] = useState('')
-
     const onEnterBtn = () => {
         if (verifyNum == ''){
             Alert.alert('인증번호를 입력하세요!')
@@ -154,6 +153,13 @@ const styles = StyleSheet.create({
         //borderRadius: 10,
         borderBottomWidth: 1,
         borderBottomColor: 'black',
+    },
+    E_image: {
+        width: 40,
+        height: 50,
+        position: 'absolute',
+        right: 10,
+        top: 15,
     },
 });
 

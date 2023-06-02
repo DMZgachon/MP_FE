@@ -18,7 +18,7 @@ function Set_pw(props){
     const [newPassword2, setNewPassword2] = useState('')
     const [phoneNumber, setPhoneNumber] = useState(props.route.params.phoneNumber)
     const [exPassword, setExPassword] = useState(props.route.params.exPassword)
-
+    const [showPassword, setShowPassword] = useState(false);
     const onEnterBtn = () => {
         if (newPassword == '' || newPassword2 == ''){
             console.log('empty!')
@@ -76,18 +76,33 @@ function Set_pw(props){
             <View style={{flex: 2}}></View>
             <Text style={styles.Title}>비밀번호 재설정</Text>
             <View style={{flex: 1}}></View>
+
             <TextInput
                 style={styles.textInput}
-                secureTextEntry={true}
                 placeholder="새로운 비밀번호 입력"
+                secureTextEntry={!showPassword}
                 onChangeText={text => setNewPassword(text)}
             />
-            <TextInput
-                style={styles.textInput}
-                placeholder="새로운 비밀번호 재입력"
-                secureTextEntry={true}
-                onChangeText={text => setNewPassword2(text)}
-            />
+
+            <View style={{flexDirection: "row"}}>
+                <TextInput
+                    style={styles.textInput}
+                    placeholder="새로운 비밀번호 재입력"
+                    secureTextEntry={!showPassword}
+                    onChangeText={text => setNewPassword2(text)}
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                    <Image
+                        source={
+                            showPassword
+                                ? require('../img/visible.png')
+                                : require('../img/invisible.png')
+                        }
+                        style={styles.E_image}
+                        resizeMode="contain"
+                    />
+                </TouchableOpacity>
+            </View>
             <View style={{flex: 1}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{onEnterBtn()}
@@ -151,6 +166,13 @@ const styles = StyleSheet.create({
         //borderRadius: 10,
         borderBottomWidth: 1,
         borderBottomColor: 'black',
+    },
+    E_image: {
+        width: 40,
+        height: 50,
+        position: 'absolute',
+        right: 10,
+        top: 15,
     },
 });
 

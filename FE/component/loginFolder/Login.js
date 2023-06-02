@@ -34,6 +34,7 @@ function Login(props){
     const [refreshToken, setRefreshToken] = useState('')
     const [phoneNum, setPhoneNum] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false);
     let forceResetLastButton = null;
 
 
@@ -75,15 +76,30 @@ function Login(props){
                 placeholder="전화번호를 입력해주세요."
                 onChangeText={text => setPhoneNum(text)}
             />
-            <TextInput
-                style={styles.textInput}
-                placeholder="비밀번호를 입력해주세요."
-                secureTextEntry={true}
-                onChangeText={text => setPassword(text)}
-            />
+
+            <View style={{flexDirection: "row"}}>
+                <TextInput
+                    style={styles.textInput}
+                    placeholder="비밀번호를 입력해주세요."
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={text => setPassword(text)}
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                    <Image
+                        source={
+                            showPassword
+                                ? require('../img/visible.png')
+                                : require('../img/invisible.png')
+                        }
+                        style={styles.E_image}
+                        resizeMode="contain"
+                    />
+                </TouchableOpacity>
+            </View>
             <View style={{flex: 2}}>
                 <TouchableOpacity onPress={()=>{
-                    props.navigation.navigate('Set_pw_phone')}
+                    props.navigation.navigate('Set_pw_phone', {exPassword: ""})}
                 }>
                     <Text style={styles.buttonText2}>비밀번호를 잊어버리셨습니까?</Text>
                 </TouchableOpacity>
@@ -225,7 +241,14 @@ const styles = StyleSheet.create({
         //borderRadius: 10,
         borderBottomWidth: 1,
         borderBottomColor: 'black',
-    }
+    },
+    E_image: {
+        width: 40,
+        height: 50,
+        position: 'absolute',
+        right: 10,
+        top: 15,
+    },
 });
 
 export {Login};
