@@ -226,7 +226,7 @@ function Upload(props){
                 if(res.status == 200) {
                     console.log("등록 성공");
                     Alert.alert('버킷 등록',
-                        '이쿠죠!!!!!!!',
+                        '꿈동이가 응원할게요',
                         [
                             {
                                 text: 'OK',
