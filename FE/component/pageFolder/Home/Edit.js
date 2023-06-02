@@ -99,6 +99,7 @@ function Edit(props){
                                                 width: 300,
                                                 height: 210,
                                                 borderColor: '#FFECEC',
+                                                borderRadius : 20,
                                                 borderWidth: 2,
                                                 flexDirection: 'row',
                                                 borderBottomLeftRadius: 50,

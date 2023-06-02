@@ -83,7 +83,7 @@ function Login(props){
             />
             <View style={{flex: 2}}>
                 <TouchableOpacity onPress={()=>{
-                    props.navigation.navigate('Set_pw_phone')}
+                    props.navigation.navigate('Set_pw_phone', )}
                 }>
                     <Text style={styles.buttonText2}>비밀번호를 잊어버리셨습니까?</Text>
                 </TouchableOpacity>
@@ -127,7 +127,8 @@ function Login(props){
                             }
                         })
                         .catch((error) => {
-                            console.log(error);
+                            ToastAndroid.show('틀렸대?', ToastAndroid.SHORT);
+
                         });
                 }
 

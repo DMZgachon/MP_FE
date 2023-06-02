@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {
     View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
     TouchableHighlight, Modal, Alert, ToastAndroid
@@ -14,8 +14,7 @@ import {
 import {instance} from "../../api/axiosInstance";
 
 function Set_pw_phone(props){
-
-    const [exPassword, setExPassword] = useState(props.route.params.exPassword)
+    const [exPassword, setExPassword] = useState()
     const [phoneNumber, setPhoneNum] = useState("")
 
     const onEnterBtn = () => {

@@ -11,6 +11,7 @@ import { instance, setAccessTokenHeader } from '../../../api/axiosInstance'
 import {useFocusEffect} from "@react-navigation/native";
 import axios from "axios";
 import {ca} from "date-fns/locale";
+import FastImage from "react-native-fast-image";
 
 function ImageButton(props) {
     return null;
@@ -180,6 +181,7 @@ function HomePage(props){
 
 
 
+
             <View style ={{ width : '2500%', height : '70%', alignItems : 'center', margin : 3}}>
                <ScrollView>
                    <View style={{ flexDirection: 'column' }}>
@@ -200,7 +202,7 @@ function HomePage(props){
                                            >
                                                <View>
                                                    <View style={{ flexDirection: 'column', alignItems: 'center',
-                                                        margin: 25, backgroundColor: 'white', borderRadius: 0, borderColor: 'black',
+                                                        margin: 25, backgroundColor: 'white', borderRadius: 30, borderColor: 'black',
                                                        borderWidth: 1,}}>
                                                        <Text style={{fontSize:17, textAlign: 'center', color: 'black', margin: 5}}>{content[1]}</Text>
                                                        <Image
@@ -210,7 +212,7 @@ function HomePage(props){
                                                                borderColor: '#FFECEC',
                                                                borderWidth: 2,
                                                                flexDirection: 'row',
-                                                               borderRadius: 0,
+                                                               borderRadius: 30,
                                                            }}
                                                            source={{ uri: content[0] }}
                                                        />
