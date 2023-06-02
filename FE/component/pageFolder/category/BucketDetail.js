@@ -109,7 +109,7 @@ function BucketDetail(props){
                 console.log("nnnn: ", blobData);
             })
             .catch(error => console.error(error));
-    }, []);
+    }, [process]);
 
     const toggleEditing = useCallback(() => {
         setIsEditing(!isEditing);
@@ -131,12 +131,47 @@ function BucketDetail(props){
 
     const onChangeStep = (index) => (newText) => {
         changeStep(prevTag => prevTag.map((item, i) => i === index ? {...item, content: newText} : item));
+        console.log('changeStep : ', step)
     }
 
-    const toggleSuccess = index => {
-        const newSteps = [...step]; // 현재 steps 배열을 복사합니다.
-        newSteps[index].success = !newSteps[index].success; // success 값을 뒤집습니다.
-        changeStep(newSteps); // 새로운 steps 배열을 설정합니다.
+
+    const DeleteStep =(content) =>{
+        const newSteps = step.filter((item) => item.content !== content);
+        changeStep(newSteps);
+        console.log('삭제 완료 : ', step)
+
+        const successCount = newSteps.filter(step => step.success).length;
+        const newProcess = Math.floor((successCount / newSteps.length) * 100);
+
+        // process 상태 업데이트
+        changeProcess(newProcess);
+        deleteFunction(step)
+    }
+
+    const deleteFunction = (ct) =>{
+
+        instance.post(`/api/bucket/updateList/${id}`, step)
+            .then((res) => {
+                console.log('Delete Success: ', step);
+            })
+            .catch((error) => {console.log("updateList :", error)})
+    }
+
+
+    const toggleSuccess = (index, content) => {
+        // const newSteps = [...step]; // 현재 steps 배열을 복사합니다.
+        // newSteps[index].success = !newSteps[index].success; // success 값을 뒤집습니다.
+        // changeStep(newSteps); // 새로운 steps 배열을 설정합니다.
+        // console.log('toggleSUcess 입니다 : ',newSteps[index].success)
+        const newSteps = [...step];
+        newSteps[index].success = !newSteps[index].success;
+        changeStep(newSteps);
+
+        // 성공한 체크박스의 비율을 계산
+        const successCount = newSteps.filter(step => step.success).length;
+        const newProcess = Math.floor((successCount / newSteps.length) * 100);
+        // process 상태 업데이트
+        changeProcess(newProcess);
     };
 
     const ShowPicker = () => {
@@ -176,7 +211,6 @@ function BucketDetail(props){
         console.log("tag 확인: ", tag);
         console.log("tag 확인:", tagList);
         console.log("step 확인: ", step)
-
         //1. 버킷 업데이트 부분
         if (blobData) {
             //데이터 세팅
@@ -209,14 +243,6 @@ function BucketDetail(props){
 
             //formData에 잘 저장되었는 지 확인
             console.log('-------------------------------------');
-            //console.log("현재 받은 카테고리들:" , props.category)
-            // console.log("Title: ", title);
-            // console.log("content: ", content);
-            // console.log("tagList: ", hashtagList);
-            // console.log("visibility:", visibility);
-            // // console.log("image: ", blob);
-            // console.log("deadline: ", selectedDate);
-            // console.log("category:" , category);
             console.log(formData)
             console.log('-------------------------------------');
 
@@ -240,34 +266,16 @@ function BucketDetail(props){
                                 console.log('태그 변경 Success: ', res);
                                 if(res.status == 200){
                                     console.log("2. 태그 변경 성공");
-                                    /*Alert.alert('변경',
-                                        '이쿠죠!!!!!!!',
-                                        [
-                                            {
-                                                text: 'OK',
-                                                onPress: () => props.navigation.navigate('HomePage', {data: 'HomePage'})
-                                            }
-                                        ]);*/
-                                    //------------------------------------------------------------------------
-                                    //3. 스텝 업데이트 부분
-                                    instance.post(`/api/bucket/updateList/${id}`, step)
-                                        .then((res) => {
-                                            console.log('스텝 변경 Success: ', res);
-                                            if (res.status == 200){
-                                                console.log("3. 스텝 변경 성공");
-                                                Alert.alert('변경',
-                                                    '이쿠죠!!!!!!!',
-                                                    [
-                                                        {
-                                                            text: 'OK',
-                                                            onPress: () => props.navigation.navigate('HomePage', {data: 'HomePage'})
-                                                        }
-                                                    ]);
-                                            }
-                                        })
                                 }
                             })
                             .catch((error) => {console.log("2. Error:", error)})
+
+                        instance.post(`/api/bucket/updateList/${id}`, step)
+                            .then((res) => {
+                                console.log('스텝 변경 Success: ', res);
+                            })
+                            .catch((error) => {console.log("updateList :", error)})
+
                     }
                 })
                 .catch((error) => {
@@ -310,6 +318,22 @@ function BucketDetail(props){
         );
     };
 
+    const DeleteBucket = () =>{
+        instance.delete(`/api/bucket/delete/${id}`)
+            .then((res) => {
+                console.log('bucket delete Success: ', res);})
+            .catch((error) => {console.log("updateList :", error)})
+    }
+
+    const addStep = (step) =>{
+        instance.post(`/api/bucket/updateList/${id}`, step)
+            .then((res) => {
+                console.log('Add Success: ', step);
+            })
+            .catch((error) => {console.log("Add :", error)})
+    }
+
+
     return(
         <View style={styles.container}>
 
@@ -317,52 +341,200 @@ function BucketDetail(props){
                 <Header data = {props.route.params.data}></Header>
             </View>
 
-            <ScrollView style={{height: "100%", overflow: 'visible'}} nestedScrollEnabled={true} scrollEnabled={true}>
-            { isEditing ? (
-                <View style={{flexDirection: "column", margin: "3%"}}>
-                    <View style={styles.storeCon}>
-                        <TouchableOpacity onPress={() => {
-                            toggleEditing();
-                            onRegister();
-                        }}>
-                            <Text style={styles.buttonText2}>저장</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <TextInput style={{...styles.Title, marginTop: 0}} onChangeText={handleTextChange}
-                               value={title1} placeholder={title1}></TextInput>
-                    <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 0}}>
-                        <TouchableOpacity onPress={ShowPicker}>
-                            <Image
-                                style={{width: 160, height: 160}}
-                                source={imageData ? {uri: imageData.uri} : require('../../img/PlusImg.png')}
-                            />
-                        </TouchableOpacity>
+            <View style={{height: "100%", overflow: 'visible'}} nestedScrollEnabled={true} scrollEnabled={true}>
+                { isEditing ? (
+                    <View style={{flexDirection: "column", margin: "3%"}}>
+                        <View style={styles.storeCon}>
+                            <TouchableOpacity onPress={() => {
+                                toggleEditing();
+                                onRegister();
+                            }}>
+                                <Text style={styles.buttonText2}>저장</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity   onPress={() => {
+                                DeleteBucket();
+                                props.navigation.navigate('HomePage', {data : 'HomePage'})
+
+                            }}>
+                                <Text style={styles.buttonText3}>삭제</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <TextInput style={{...styles.Title, marginTop: 0}} onChangeText={handleTextChange}
+                                   value={title1} placeholder={title1}></TextInput>
+                        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 0}}>
+                            <TouchableOpacity onPress={ShowPicker}>
+                                <Image
+                                    style={{width: 160, height: 160}}
+                                    source={bucketImage ? {uri: bucketImage} : require('../../img/PlusImg.png')}
+                                />
+                            </TouchableOpacity>
 
 
-                        <View style={{flex: 1}}>
-                            <Text style={styles.text1}>기한: </Text>
-                            <TextInput style={styles.text1} onChangeText={handleDeadlineChange} value={deadLine} placeholder={deadLine}></TextInput>
-                            <View style={{margin: 10}}>
-                                <Text style={{fontSize: 15,  color: "rgb(61,136,189)"}}>
-                                    버킷리스트 공개여부:
-                                </Text>
-                                <View style={{alignItems: 'flex-start', margin: 10}}>
-                                    <CustomSwitch
-                                        selectionMode={''}
-                                        roundCorner={true}
-                                        option1={'공개'}
-                                        option2={'비공개'}
-                                        onSelectSwitch={onSelectSwitch}
-                                        selectionColor={"rgb(82,175,241)"}
-                                    />
+                            <View style={{flex: 1}}>
+                                <Text style={styles.text1}>기한: </Text>
+                                <TextInput style={styles.text1} onChangeText={handleDeadlineChange} value={deadLine} placeholder={deadLine}></TextInput>
+                                <View style={{margin: 10}}>
+                                    <Text style={{fontSize: 15,  color: "rgb(61,136,189)"}}>
+                                        버킷리스트 공개여부:
+                                    </Text>
+                                    <View style={{alignItems: 'flex-start', margin: 10}}>
+                                        <CustomSwitch
+                                            selectionMode={''}
+                                            roundCorner={true}
+                                            option1={'공개'}
+                                            option2={'비공개'}
+                                            onSelectSwitch={onSelectSwitch}
+                                            selectionColor={"rgb(82,175,241)"}
+                                        />
+                                    </View>
                                 </View>
+
+                                <View>
+                                    <View>
+                                        { //태그 출력
+                                            tag.map((content, i ) =>{
+                                                const tagContent = tag[i].content;
+                                                return(
+                                                    <View>
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                {
+                                                                    console.log('onPress')
+                                                                }
+                                                            }
+                                                            } key={i}>
+                                                            <View style={{ flexDirection: 'row' }}>
+                                                                <View>
+                                                                    <TextInput
+                                                                        value={tagContent}
+                                                                        onChangeText={changeTagContent(i)}
+                                                                        style={styles.text2}
+                                                                        placeholder={"#"+tagContent}>
+                                                                    </TextInput >
+                                                                </View>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                )
+                                            })
+                                        }
+                                    </View>
+                                </View>
+
+                            </View>
+                        </View>
+
+                        <Text style={{...styles.text2, marginLeft: 17, marginBottom: -20}}>진행률:  {process} %</Text>
+                        <BarView style={{flexDirection: 'row', alignItems: 'center', marginTop: 5}}>
+                            <Bar>
+                                <ProgressBar
+                                    process={process} // process 상태 변수 사용
+                                    width={null}
+                                    height={8}
+                                    color='#F08484'
+                                />
+                            </Bar>
+                            <BarText style ={{width: '15%',}}>
+                                100%
+                            </BarText>
+                        </BarView>
+
+                        <ScrollView style={{alignSelf: 'flex-start', marginLeft: 25, marginTop : 10  ,width : '99%'}}>
+                            <View>
+                                {
+                                    step.map((content, i ) => {
+                                        return (
+                                            <View style ={{marginTop : -15 }}>
+                                                <View>
+                                                    <View key={i} style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'space-between'
+                                                    }}>
+                                                        <TextInput
+                                                            value={step[i].content}
+                                                            onChangeText={onChangeStep(i)}
+                                                            style={{...styles.textInput, width:"60%"}}
+                                                        />
+
+                                                        <TouchableOpacity onPress={()=>{
+                                                            console.log('삭제한다 : ', step[i].content)
+                                                            DeleteStep(step[i].content)
+                                                        }
+                                                        }>
+                                                            <Text>Delete</Text>
+
+                                                        </TouchableOpacity>
+                                                        <CheckBox
+                                                            isChecked={step[i].success}
+                                                            onClick={() => {
+                                                                // 체크 상태를 뒤집습니다
+                                                                toggleSuccess(i,step[i].content)
+                                                            }}
+                                                        />
+                                                    </View>
+                                                </View>
+                                            </View>
+
+                                        )
+                                    })
+
+                                }
                             </View>
 
-                            <View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <TouchableOpacity style={{alignContent: 'center', marginRight: 20}} onPress={() => {
+                                    const newStep = { content: " ", success: false };
+                                    changeStep([...step, newStep]);
+                                }}>
+                                    <Text>과정 추가</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{alignContent: 'center'}} onPress={() => {
+                                    addStep(step);
+                                }}>
+                                    <Text>완료</Text>
+                                </TouchableOpacity>
+                            </View>
+
+
+
+
+                        </ScrollView>
+                    </View>
+                ): (
+                    <View style={{flexDirection: "column", margin: "3%"}}>
+                        <View style={styles.storeCon}>
+                            <TouchableOpacity onPress={toggleEditing}>
+                                <Text style={styles.buttonText2}>수정</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={{...styles.Title, marginTop: 0}}>" {title1} "</Text>
+                        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 0}}>
+                            <Image source={{ uri: bucketImage }} style={{ width: 180, height: 180 }} />
+                            <View style={{flex: 1}}>
+                                <Text style={styles.text1}>기한: </Text>
+                                <Text style={styles.text1}>{deadLine}</Text>
+
+                                <View style={{margin: 10}}>
+                                    <Text style={{fontSize: 15,  color: "rgb(61,136,189)"}}>
+                                        버킷리스트 공개여부:
+                                    </Text>
+                                    <View style={{alignItems: 'flex-start', margin: 10}}>
+                                        <CustomSwitch
+                                            selectionMode={''}
+                                            roundCorner={true}
+                                            option1={'공개'}
+                                            option2={'비공개'}
+                                            onSelectSwitch={onSelectSwitch}
+                                            selectionColor={"rgb(82,175,241)"}
+                                        />
+                                    </View>
+                                </View>
+
                                 <View>
-                                    { //태그 출력
+                                    {
                                         tag.map((content, i ) =>{
-                                            const tagContent = tag[i].content;
                                             return(
                                                 <View>
                                                     <TouchableOpacity
@@ -374,12 +546,7 @@ function BucketDetail(props){
                                                         } key={i}>
                                                         <View style={{ flexDirection: 'row' }}>
                                                             <View>
-                                                                <TextInput
-                                                                    value={tagContent}
-                                                                    onChangeText={changeTagContent(i)}
-                                                                    style={styles.text2}
-                                                                    placeholder={"#"+tagContent}>
-                                                                </TextInput >
+                                                                <Text style={styles.text2}>#{tag[i].content}</Text>
                                                             </View>
 
                                                         </View>
@@ -390,103 +557,29 @@ function BucketDetail(props){
                                     }
                                 </View>
                             </View>
-
-                        </View>
-                    </View>
-
-                    <Text style={{...styles.text2,marginLeft: 17}}>진행률:  {process} %</Text>
-                    <BarView style={{flexDirection: 'row', alignItems: 'center',}}>
-                        <Bar>
-                            <ProgressBar
-                                process={process}
-                                width={null}
-                                height={8}
-                                color='#F08484'
-                            />
-                        </Bar>
-                        <BarText style ={{width: '15%',}}>
-                            100%
-                        </BarText>
-                    </BarView>
-
-                    <View style={{justifyContent: 'flex-start', alignSelf: 'flex-start', marginLeft: 25 }}>
-                        <View>
-                            {
-                                step.map((content, i ) => {
-                                    return (
-                                        <View>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    {
-                                                        console.log('onPress')
-                                                    }
-                                                }
-                                                } key={i}>
-                                                <View key={i} style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'space-between'
-                                                }}>
-                                                    <TextInput
-                                                        value={step[i].content}
-                                                        onChangeText={onChangeStep(i)}
-                                                        style={{...styles.textInput, width:"75%"}}
-                                                    />
-                                                </View>
-                                                <CheckBox
-                                                    isChecked={step[i].success}
-                                                    onClick={() => {
-                                                        // 체크 상태를 뒤집습니다
-                                                        toggleSuccess(i)
-                                                    }}
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
-
-                                    )
-                                })
-
-                            }
                         </View>
 
-                    </View>
+                        <Text style={{...styles.text2, marginLeft: 17, marginBottom: -20}}>진행률:  {process} %</Text>
+                        <BarView style={{flexDirection: 'row', alignItems: 'center', marginTop: 5}}>
+                            <Bar>
+                                <ProgressBar
+                                    process={process}
+                                    width={null}
+                                    height={8}
+                                    color='#F08484'
+                                />
+                            </Bar>
+                            <BarText style ={{width: '15%',}}>
+                                100%
+                            </BarText>
+                        </BarView>
 
-                </View>
-            ): (
-                <View style={{flexDirection: "column", margin: "3%"}}>
-                    <View style={styles.storeCon}>
-                        <TouchableOpacity onPress={toggleEditing}>
-                            <Text style={styles.buttonText2}>수정</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <Text style={{...styles.Title, marginTop: 0}}>" {title1} "</Text>
-                    <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 0}}>
-                        <Image source={{ uri: bucketImage }} style={{ width: 180, height: 180 }} />
-                        <View style={{flex: 1}}>
-                            <Text style={styles.text1}>기한: </Text>
-                            <Text style={styles.text1}>{deadLine}</Text>
-
-                            <View style={{margin: 10}}>
-                                <Text style={{fontSize: 15,  color: "rgb(61,136,189)"}}>
-                                    버킷리스트 공개여부:
-                                </Text>
-                                <View style={{alignItems: 'flex-start', margin: 10}}>
-                                    <CustomSwitch
-                                        selectionMode={''}
-                                        roundCorner={true}
-                                        option1={'공개'}
-                                        option2={'비공개'}
-                                        onSelectSwitch={onSelectSwitch}
-                                        selectionColor={"rgb(82,175,241)"}
-                                    />
-                                </View>
-                            </View>
-
+                        <ScrollView style={{alignSelf: 'flex-start', marginLeft: 25, marginTop : 20 , width : '99%'}}>
                             <View>
                                 {
-                                    tag.map((content, i ) =>{
-                                        return(
-                                            <View>
+                                    step.map((content, i ) => {
+                                        return (
+                                            <View style ={{marginTop : -15 }}>
                                                 <TouchableOpacity
                                                     onPress={() => {
                                                         {
@@ -494,79 +587,33 @@ function BucketDetail(props){
                                                         }
                                                     }
                                                     } key={i}>
-                                                    <View style={{ flexDirection: 'row' }}>
-                                                        <View>
-                                                            <Text style={styles.text2}>#{tag[i].content}</Text>
-                                                        </View>
+                                                    <View key={i} style={{
+                                                        flexDirection: 'row',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'space-between'
+                                                    }}>
+                                                        <Text style={{...styles.textInput, width:"75%"}} >{step[i].content}</Text>
 
+                                                        <CheckBox
+                                                            isChecked={step[i].success}
+                                                            onClick={() => {
+                                                                // 체크 상태를 뒤집습니다
+                                                                toggleSuccess(i)
+                                                            }}
+                                                        />
                                                     </View>
                                                 </TouchableOpacity>
                                             </View>
                                         )
                                     })
+
                                 }
                             </View>
-                        </View>
+                        </ScrollView>
                     </View>
-
-                    <Text style={{...styles.text2,marginLeft: 17}}>진행률:  {process} %</Text>
-                    <BarView style={{flexDirection: 'row', alignItems: 'center',}}>
-                        <Bar>
-                            <ProgressBar
-                                process={process}
-                                width={null}
-                                height={8}
-                                color='#F08484'
-                            />
-                        </Bar>
-                        <BarText style ={{width: '15%',}}>
-                            100%
-                        </BarText>
-                    </BarView>
-
-                    <View style={{justifyContent: 'flex-start', alignSelf: 'flex-start', marginLeft: 25 }}>
-                        <View>
-                            {
-                                step.map((content, i ) => {
-                                    return (
-                                        <View>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    {
-                                                        console.log('onPress')
-                                                    }
-                                                }
-                                                } key={i}>
-                                                <View key={i} style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'space-between'
-                                                }}>
-                                                    <Text>
-                                                        {step[i].content}
-                                                    </Text>
-                                                </View>
-                                                <CheckBox
-                                                    isChecked={step[i].success}
-                                                    onClick={() => {
-                                                        // 체크 상태를 뒤집습니다
-                                                        toggleSuccess(i)
-                                                    }}
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
-
-                                    )
-                                })
-
-                            }
-                        </View>
-
-                    </View>
-
-
-                </View>
-            )}</ScrollView>
+                )}
+            </View
+            >
 
 
             <View style={styles.bottomView}>
@@ -688,6 +735,14 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         marginTop: '5%'
+    },
+    buttonText3:{
+        textAlign: 'right',
+        color: "#d0739c",
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginTop: '5%',
+        marginLeft : '5%'
     },
     progressBar: {
         width: '100%',
