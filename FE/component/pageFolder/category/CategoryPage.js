@@ -36,7 +36,7 @@ function CategoryPage(props){
     const [category, setCategory] = useState(props.route.params.category)
     const [content2, setContent] = useState(props.route.params.data)
     const [bucketData, changeBucketData] = useState()
-
+    const [count,changeCount ] = useState(0)
     useFocusEffect(
         React.useCallback(() => {
             console.log('Screen was focused');
@@ -64,6 +64,7 @@ function CategoryPage(props){
                     const newItems = response.data.data.map(item => [item.id, item.bucketImage, item.title]);
                     setBucketList(newItems);
                     console.log('asdfasdfadsfadsddddfdfdfdfdfdfd', newItems)
+                    changeCount(newItems.length);
                     console.log(Math.ceil(newItems.length / 2));
                     setRows(Math.ceil(newItems.length / 2));
 
@@ -100,7 +101,6 @@ function CategoryPage(props){
     const id = props.route.params.data[2]
     return(
         <View style={styles.container}>
-
             <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
                 <Header data = {props.route.params.data[1]}></Header>
             </View>
@@ -117,58 +117,71 @@ function CategoryPage(props){
             </View>
 
 
-            <View style ={{ width : '2500%', height : '70%', alignItems : 'center', margin : 3}}>
-                <ScrollView>
-                    <View style={{ flexDirection: 'column' }}>
-                        {Array.from(Array(rows)).map((_, rowIndex) => (
-                            <View style={{ flexDirection: 'row' }} key={rowIndex}>
-                                {Array.from(Array(2)).map((_, colIndex) => {
-                                    const index = rowIndex * 2 + colIndex;
-                                    if (index < bucketList.length) {
-                                        const content = bucketList[index];
-                                        console.log(content);
-                                        return (
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    props.navigation.navigate('BucketDetail', {data : bucket_title[index], id : content[0], categoryId : content2[2]});
-                                                }}
-                                                key={index}
-                                            >
-                                                <View>
-                                                    <View style={{ flexDirection: 'column', alignItems: 'center',
-                                                        margin: 10, backgroundColor: 'white', borderRadius: 0, borderColor: 'black',
-                                                        borderWidth: 1,}}>
-                                                        <Text style={{fontSize:17, textAlign: 'center', color: 'black'}}>{content[2]}</Text>
-                                                        <Image
-                                                            style={{
-                                                                width: 190,
-                                                                height: 160,
-                                                                borderColor: '#FFECEC',
-                                                                borderWidth: 2,
-                                                                flexDirection: 'row',
-                                                                borderRadius: 0,
-                                                            }}
-                                                            source={{ uri: content[1] }}
-                                                        />
-                                                    </View>
-                                                </View>
-                                            </TouchableOpacity>
-                                        );
-                                    } else {
-                                        return <View style={{ flex: 0.5 }} key={index} />;
-                                    }
-                                })}
+            {
+                count !== 0?(
+                    <View style ={{ width : '2500%', height : '70%', alignItems : 'center', margin : 3}}>
+                        <ScrollView>
+                            <View style={{ flexDirection: 'column' }}>
+                                {Array.from(Array(rows)).map((_, rowIndex) => (
+                                    <View style={{ flexDirection: 'row' }} key={rowIndex}>
+                                        {Array.from(Array(2)).map((_, colIndex) => {
+                                            const index = rowIndex * 2 + colIndex;
+                                            if (index < bucketList.length) {
+                                                const content = bucketList[index];
+                                                console.log(content);
+                                                return (
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            props.navigation.navigate('BucketDetail', {data : bucket_title[index], id : content[0], categoryId : content2[2]});
+                                                        }}
+                                                        key={index}
+                                                    >
+                                                        <View>
+                                                            <View style={{ flexDirection: 'column', alignItems: 'center',
+                                                                margin: 10, backgroundColor: 'white', borderRadius: 0, borderColor: 'black',
+                                                                borderWidth: 1,}}>
+                                                                <Text style={{fontSize:17, textAlign: 'center', color: 'black'}}>{content[2]}</Text>
+                                                                <Image
+                                                                    style={{
+                                                                        width: 190,
+                                                                        height: 160,
+                                                                        borderColor: '#FFECEC',
+                                                                        borderWidth: 2,
+                                                                        flexDirection: 'row',
+                                                                        borderRadius: 0,
+                                                                    }}
+                                                                    source={{ uri: content[1] }}
+                                                                />
+                                                            </View>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                );
+                                            } else {
+                                                return <View style={{ flex: 0.5 }} key={index} />;
+                                            }
+                                        })}
+                                    </View>
+                                ))}
                             </View>
-                        ))}
+                        </ScrollView>
                     </View>
-                </ScrollView>
-            </View>
+                ) : (
+                   <View>
+                       <Image
+                           source={require('./../../img/꿈동이_new.png')}
+                           style={{ width: 180, height: 170 }}
+                       />
+                       <Text style={styles.textBold}>꿈이 비어있어요!</Text>
+                   </View>
+                )
+            }
 
             <View style={styles.bottomView}>
                 <View style={{flexDirection: 'row', flex: 2, width : '100%', justifyContent : 'center'}}>
                     <Footer navigation = {props.navigation} data ={props.route.params.data}></Footer>
                 </View>
             </View>
+
         </View>
     )
 }
@@ -187,6 +200,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         height: 50,
+    },
+    textBold:{
+        width: "55%",
+        textAlign: "left",
+        fontWeight: 'bold',
+        fontSize: 32,
+        color: "#1a1a19"
     },
 });
 

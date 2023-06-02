@@ -5,7 +5,7 @@ import React, {useEffect, useState} from 'react';
 
 import {
     SafeAreaView, View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Image,
-    Button, StatusBar, TouchableHighlight, Modal, ToastAndroid, Alert
+    Button, StatusBar, TouchableHighlight, Modal, ToastAndroid, Alert, ImageBackground
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -42,7 +42,15 @@ function Login(props){
     const [renderCount, setRenderCount] = useState(0);
 
     return(
-        <View style={styles.container}>
+        <FastImage
+            style={styles.container}
+            source={{
+                uri: 'https://media.giphy.com/media/BU0ulFC7v3ETdJBSar/giphy.gif',
+                priority: FastImage.priority.high,
+            }}
+            resizeMode={FastImage.resizeMode.cover}
+        >
+
 
             <View style={styles.navBox}>
                 <TouchableOpacity style={styles.backBtn} onPress={()=>{
@@ -140,7 +148,7 @@ function Login(props){
                     <Text style={styles.buttonText}>입력</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </FastImage>
     )
 }
 
@@ -193,7 +201,7 @@ const styles = StyleSheet.create({
         height: "55%",
         marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#FF037C"
+        backgroundColor: "#939379"
     },
     textBold:{
         width: "55%",
@@ -215,7 +223,7 @@ const styles = StyleSheet.create({
     },
     buttonText2:{
         textAlign: 'center',
-        color: "#fd007c",
+        color: "#939379",
         fontSize: 15,
         textDecorationLine: 'underline',
         marginTop: '5%'

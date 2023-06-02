@@ -26,7 +26,7 @@ function MainPage(props){
         <FastImage
             style={styles.container}
             source={{
-                uri: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2NlN2MyODlmNGI4N2E5YTQzYTI0OGNmOGJhYjRhNzIzMTA1M2NkMyZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/VDGOdvmp1bpc3PcCry/giphy-downsized-large.gif',
+                uri: 'https://media.giphy.com/media/Z9JtPniLKdNzPjsEn6/giphy.gif',
                 priority: FastImage.priority.high,
             }}
             resizeMode={FastImage.resizeMode.cover}
@@ -43,12 +43,14 @@ function MainPage(props){
                     props.navigation.navigate('Login')}
                 }>
                     <Text style={styles.buttonText}>
-                        꿈 담기</Text>
+                        雷の呼吸第1型壁炎一島！</Text>
                 </TouchableOpacity>
             </View>
         </FastImage>
     )
 }
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
         height: "35%",
         marginLeft: 10,
         justifyContent: 'center',
-        backgroundColor: "#91917f"
+        //backgroundColor: "#939379"
     },
     textBold:{
         width: "55%",
