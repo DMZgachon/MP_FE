@@ -24,14 +24,15 @@ function MainPage(props){
     return(
         <View style={styles.container}>
             <View style={{flex: 2}}></View>
-            <Text style={styles.textBold}>안녕하세요.</Text>
-            <Text style={styles.text}>로그인 해주세요.</Text>
+            <Text style={styles.textBold}>꿈동이</Text>
+            <Text style={styles.text}>여러분의 꿈을 {"\n"}담아주세요.</Text>
             <View style={{flex: 2}}></View>
             <View style={{flexDirection: 'row', flex: 2}}>
                 <TouchableOpacity style={styles.button} onPress={()=>{
-                    props.navigation.navigate('EnterEmail')}
+                    props.navigation.navigate('Login')}
                 }>
-                    <Text style={styles.buttonText}>시작하기</Text>
+                    <Text style={styles.buttonText}>
+                        시작하기</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -71,4 +72,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export {MainPage}
+export {MainPage};
