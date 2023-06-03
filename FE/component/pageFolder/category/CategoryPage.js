@@ -133,10 +133,13 @@ function CategoryPage(props){
                             </View>
                         </ScrollView>
                     ) : (
+                        <View>
                         <Image
                             source={require('./../../img/김이영.png')}
-                            style={{ width: 280, height: 270}}
+                            style={{ marginLeft: 15, width: 200, height: 200, marginTop: 100 }}
                         />
+                            <Text style={styles.text2}> 당신의 꿈을 담아 꿈동이를 채워주세요!</Text>
+                        </View>
                     )
                 }
             </View>
@@ -165,6 +168,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 50,
     },
+    text2:{
+        fontsize: 30,
+        color: "#2b9caf",
+        marginTop: 20,
+        fontWeight: "bold",
+    }
 });
 
 export {CategoryPage}

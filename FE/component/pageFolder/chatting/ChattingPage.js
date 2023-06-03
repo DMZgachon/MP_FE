@@ -110,7 +110,7 @@ function ChattingPage(props) {
             <View style={styles.container}>
 
                 <View style={{position: 'absolute', top: 0, left: 0, right: 0}}>
-                    <Header data={props.route.params.data}></Header>
+                    <Header data={props.route.params.data}></Header>S
                 </View>
                 <SafeAreaView style={{...styles.navBox1, marginTop: 70}}>
                     <ScrollView
@@ -127,7 +127,7 @@ function ChattingPage(props) {
                                     <View key={index} style={[styles.messageContainer, item.role == "user" ? styles.myMessageContainer : styles.otherMessageContainer]}>
                                         {!(item.role == "user") && <Image source={require('../../img/gpt.png')} style={styles.image} />}
                                         <View style={[styles.message, item.role == "user" ? styles.myMessage : styles.otherMessage]}>
-                                            <Text>{item.content}</Text>
+                                            <Text style={{color:'black'}}>{item.content}</Text>
                                         </View>
                                     </View>
                                 )
@@ -229,10 +229,10 @@ const styles = StyleSheet.create({
         flexShrink: 1, // 너비가 부모를 초과할 경우 줄일 수 있음
     },
     myMessage: {
-        backgroundColor: '#84c1ff',
+        backgroundColor: '#a6d1fc',
     },
     otherMessage: {
-        backgroundColor: '#b3b3b3',
+        backgroundColor: '#e3e3e7',
     },
     scrollView: {
         flex: 1,

@@ -297,7 +297,7 @@ function Upload(props){
                     </TouchableOpacity>
                 </View>
 
-                <View style={{flexDirection: "column", margin: "3%"}}>
+                <View style={{flexDirection: "column", margin: "3%", marginBottom: "10%"}}>
                     <TouchableOpacity onPress={ShowPicker}>
                         <Image
                             style={{width: 90, height: 90, marginLeft: 130}}
@@ -364,7 +364,7 @@ function Upload(props){
                     </View>
 
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: "15%" }}>
                         <RadioButton.Group onValueChange={value => setVisibility(value)} value={visibility}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Text>공개</Text>
@@ -447,6 +447,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         overflow: 'visible', // 추가
+        height: "80%"
 
     },
     navBox: {

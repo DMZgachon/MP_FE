@@ -180,7 +180,7 @@ function HomePage(props){
 
 
 
-            <View style ={{ width : '2500%', height : '70%', alignItems : 'center', margin : 3}}>
+            <View style ={{ width : '2500%', height : '80%', alignItems : 'center', margin : 3}}>
                <ScrollView>
                    <View style={{ flexDirection: 'column' }}>
                        {Array.from(Array(rows)).map((_, rowIndex) => (
@@ -229,12 +229,12 @@ function HomePage(props){
                </ScrollView>
 
 
-                <View style={{height : '3%', width : '100%', flexDirection : 'row'}}>
-                    <TouchableOpacity style={{alignItems : 'center', width : '100%',}} onPress={()=>{
+                <View style={{height : '5%', width : '100%', flexDirection : 'row'}}>
+                    <TouchableOpacity style={{alignItems : 'center', width : '100%'}} onPress={()=>{
                         props.navigation.navigate('AddCategory', {data : 'AddCategory'})
                     }
                     }>
-                        <Text style ={{fontSize : 10}}> 카테고리 추가하기 </Text>
+                        <Text style ={{fontSize : 15, color: "#FF037C", }}> 카테고리 추가하기 </Text>
                     </TouchableOpacity>
                 </View>
 

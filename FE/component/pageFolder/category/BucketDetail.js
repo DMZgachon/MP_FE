@@ -195,7 +195,7 @@ function BucketDetail(props){
                     uri: uri,
                     data: blob, // blob data 추가
                 }
-
+                changeImage(file.uri)
                 setImageData(file)
             });
         } else {

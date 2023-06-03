@@ -48,15 +48,15 @@ function Edit(props){
     const showAlert = (content, id) => {
         Alert.alert(
             content,
-            'Delete Sure?',
+            '정말 삭제하시겠습니까?',
             [
                 {
-                    text: 'Cancel',
+                    text: '취소',
                     onPress: () => console.log('Cancel Pressed'),
                     style: 'cancel'
                 },
                 {
-                    text: 'OK', onPress: () => {
+                    text: '네', onPress: () => {
                         console.log('id : ', id)
                         deleteImage(id,content); // Call deleteImage function
                     }

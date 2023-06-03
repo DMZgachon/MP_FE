@@ -34,15 +34,15 @@ function ManagePage(props){
     const showAlert = (content, id) => {
         Alert.alert(
             content,
-            'Delete Sure?',
+            '정말 삭제하시겠습니까?',
             [
                 {
-                    text: 'Cancel',
+                    text: '취소',
                     onPress: () => console.log('Cancel Pressed'),
                     style: 'cancel'
                 },
                 {
-                    text: 'OK', onPress: () => {
+                    text: '삭제', onPress: () => {
                         memberDelete();
                     }
                 }
@@ -111,12 +111,12 @@ function ManagePage(props){
 
         }).then((response)=>{
             console.log('받은거',response.data.data)
-            ToastAndroid.show('닌 사라져있다... 성공이다', ToastAndroid.SHORT);
+            ToastAndroid.show('계정이 삭제되었습니다.', ToastAndroid.SHORT);
             props.navigation.navigate('Login')
 
 
         }).catch((e)=>{
-            console.log('삭제 실패',e)
+            console.log('삭제를 실패',e)
         })
     }
 
