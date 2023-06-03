@@ -359,10 +359,11 @@ function BucketDetail(props){
                 <Header data = {props.route.params.data}></Header>
             </View>
 
-            <View style={{height: "100%", overflow: 'visible'}} nestedScrollEnabled={true} scrollEnabled={true}>
+            <View style={{height: "90%", overflow: 'visible'}} nestedScrollEnabled={true} scrollEnabled={true}>
                 { isEditing ? (
-                    <View style={{flexDirection: "column", margin: "3%"}}>
-                        <View style={styles.storeCon}>
+
+                    <View style={{flexDirection: "column", margin: "3%", marginBottom: "11%"}}>
+                        <View style={{...styles.storeCon, marginLeft: 30}}>
                             <TouchableOpacity onPress={() => {
                                 toggleEditing();
                                 onRegister();
@@ -378,22 +379,23 @@ function BucketDetail(props){
                                 <Text style={styles.buttonText3}>삭제</Text>
                             </TouchableOpacity>
                         </View>
-                        <TextInput style={{...styles.Title, marginTop: 0}} onChangeText={handleTextChange}
+                        <ScrollView style={{height: "80%"}}>
+                        <TextInput style={{...styles.Title, marginLeft:"20%", borderBottomWidth: 1,width: "60%", marginBottom: 10}} onChangeText={handleTextChange}
                                    value={title1} placeholder={title1}></TextInput>
-                        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 0}}>
+                        <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: "10%"}}>
                             <TouchableOpacity onPress={ShowPicker}>
                                 <Image
-                                    style={{width: 160, height: 160}}
+                                    style={{width: 160, height: 160, marginLeft: -10}}
                                     source={bucketImage ? {uri: bucketImage} : require('../../img/PlusImg.png')}
                                 />
                             </TouchableOpacity>
 
 
                             <View style={{flex: 1}}>
-                                <View style={{flexDirection: "column", width: 100, marginBottom: 5}}>
-                                    <Text style={{...styles.text1, marginLeft: 10}}>기한: </Text>
+                                <View style={{flexDirection: "row", width: 100, marginBottom: 5}}>
+                                    <Text style={{...styles.text1, marginLeft: 20}}>기한: </Text>
                                     {/*<Text style={{...styles.text1, marginLeft: 0}}>{selectedDate}</Text>*/}
-                                    <Text style={styles.text1}>{deadLine}</Text>
+                                    <Text style={{...styles.text1, marginLeft: -50, marginTop: 2}}>{deadLine}</Text>
                                 </View>
                                 <TouchableOpacity style={{ marginLeft: "20%", marginBottom: 10}} onPress={onCalendar}>
                                     <Image
@@ -421,10 +423,10 @@ function BucketDetail(props){
                                     </Modal>
                                 )}
                                 <View style={{margin: 10}}>
-                                    <Text style={{fontSize: 15,  color: "rgb(61,136,189)"}}>
+                                    <Text style={{fontSize: 15, marginLeft:17, color: "#51aef0"}}>
                                         버킷리스트 공개여부:
                                     </Text>
-                                    <View style={{alignItems: 'flex-start', margin: 5, marginBottom: 0}}>
+                                    <View style={{alignItems: 'flex-start', margin: 5, marginBottom: 0, marginLeft: 20}}>
                                         <CustomSwitch
                                             selectionMode={''}
                                             roundCorner={true}
@@ -436,52 +438,7 @@ function BucketDetail(props){
                                     </View>
                                 </View>
 
-                                <View style={{ flexDirection: 'row', alignItems: 'center' , marginLeft: 20}}>
-                                    <TouchableOpacity style={{alignContent: 'center', marginRight: 20}} onPress={() => {
-                                        const newTag = {content: ""};
-                                        changeTag([...tag, newTag]);
-                                    }}>
-                                        <Text>과정 추가</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={{alignContent: 'center'}} onPress={() => {
-                                        addTag(tag);
-                                    }}>
-                                        <Text>완료</Text>
-                                    </TouchableOpacity>
-                                </View>
 
-                                <ScrollView style={{alignSelf: 'flex-start', marginLeft: 25, marginTop : 10  ,width : '99%', height:"5%"}}>
-                                    <View>
-                                        { //태그 출력
-                                            tag.map((content, i ) =>{
-                                                const tagContent = tag[i].content;
-                                                return(
-                                                    <View>
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                {
-                                                                    console.log('onPress')
-                                                                }
-                                                            }
-                                                            } key={i}>
-                                                            <View style={{ flexDirection: 'row' }}>
-                                                                <View>
-                                                                    <TextInput
-                                                                        value={tagContent}
-                                                                        onChangeText={changeTagContent(i)}
-                                                                        style={styles.text2}
-                                                                        placeholder={"#"+tagContent}>
-                                                                    </TextInput >
-                                                                </View>
-                                                            </View>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                )
-                                            })
-                                        }
-                                    </View>
-
-                                </ScrollView>
 
                             </View>
                         </View>
@@ -501,7 +458,8 @@ function BucketDetail(props){
                             </BarText>
                         </BarView>
 
-                        <ScrollView style={{alignSelf: 'flex-start', marginLeft: 25, marginTop : 20  ,width : '99%', maxHeight: "20%"}}>
+                        <View style={{alignSelf: 'flex-start', marginLeft: 10, marginTop : 20  ,width : '99%', maxHeight: "100%"}}>
+                           <Text style={styles.text3}>STEP</Text>
                             <View>
                                 {
                                     step.map((content, i ) => {
@@ -524,10 +482,11 @@ function BucketDetail(props){
                                                             DeleteStep(step[i].content)
                                                         }
                                                         }>
-                                                            <Text>Delete</Text>
+                                                            <Text style={{marginLeft:-10}}>지우기</Text>
 
                                                         </TouchableOpacity>
                                                         <CheckBox
+                                                            style={{marginRight:20}}
                                                             isChecked={step[i].success}
                                                             onClick={() => {
                                                                 // 체크 상태를 뒤집습니다
@@ -543,47 +502,29 @@ function BucketDetail(props){
 
                                 }
                             </View>
-
-                        </ScrollView>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' , marginLeft: 20}}>
-                            <TouchableOpacity style={{alignContent: 'center', marginRight: 20}} onPress={() => {
-                                const newStep = { content: " ", success: false };
-                                changeStep([...step, newStep]);
-                            }}>
-                                <Text>과정 추가</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{alignContent: 'center'}} onPress={() => {
-                                addStep(step);
-                            }}>
-                                <Text>완료</Text>
-                            </TouchableOpacity>
+                            <View style={{ flexDirection: 'row', alignItems: 'flex-start', marginLeft: -15}}>
+                                <TouchableOpacity style={{alignContent: 'center', marginRight: 20}} onPress={() => {
+                                    const newStep = { content: " ", success: false };
+                                    changeStep([...step, newStep]);
+                                }}>
+                                    <Text style={styles.edittext}>과정 추가</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{alignContent: 'center'}} onPress={() => {
+                                    addStep(step);
+                                }}>
+                                    <Text style={styles.edittext}>완료</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
-                ): (
-                    <View style={{flexDirection: "column", margin: "3%"}}>
-                        <View style={styles.storeCon}>
-                            {modify ? <TouchableOpacity onPress={toggleEditing}>
-                                <Text style={styles.buttonText2}>수정</Text>
-                            </TouchableOpacity> : <Text style={styles.buttonText2}/>}
-                        </View>
-                        <Text style={{...styles.Title, marginTop: 0}}>" {title1} "</Text>
-                        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 0}}>
-                            <Image source={{ uri: bucketImage }} style={{ width: 180, height: 180 }} />
-                            <View style={{flex: 1}}>
-                                <Text style={styles.text1}>기한: </Text>
-                                <Text style={styles.text1}>{deadLine}</Text>
 
-                                <View style={{margin: 10}}>
-                                    <Text style={{fontSize: 15,  color: "rgb(61,136,189)"}}>
-                                        버킷리스트 공개여부:
-                                    </Text>
-                                    <Text style={{alignItems: 'flex-start', margin: 10, fontSize: 20, marginLeft: 30}}>{visibility}</Text>
-                                </View>
 
-                                <ScrollView style={{alignSelf: 'flex-start', marginLeft: 25, marginTop : 10  ,width : '99%', height:"10%"}}>
-                                <View>
-                                    {
+
+                            <View style={{alignSelf: 'flex-start', marginLeft: 10, marginTop : 35 }}>
+                                <Text style={styles.text3}>HashTag</Text>
+                                <View style={{ flexDirection: 'row', marginTop: 15}}>
+                                    { //태그 출력
                                         tag.map((content, i ) =>{
+                                            const tagContent = tag[i].content;
                                             return(
                                                 <View>
                                                     <TouchableOpacity
@@ -593,23 +534,69 @@ function BucketDetail(props){
                                                             }
                                                         }
                                                         } key={i}>
-                                                        <View style={{ flexDirection: 'row' }}>
+
                                                             <View>
-                                                                <Text style={styles.text2}>#{tag[i].content}</Text>
+                                                                <TextInput
+                                                                    value={tagContent}
+                                                                    onChangeText={changeTagContent(i)}
+                                                                    style={styles.text4}
+                                                                    placeholder={"#"+tagContent}>
+                                                                </TextInput >
                                                             </View>
 
-                                                        </View>
                                                     </TouchableOpacity>
                                                 </View>
                                             )
                                         })
                                     }
+
                                 </View>
-                                </ScrollView>
+                                <View style={{ flexDirection: 'row', marginLeft: -15, marginTop: 5}}>
+                                    <TouchableOpacity style={{alignContent: 'center', marginRight: 20}} onPress={() => {
+                                        const newTag = {content: ""};
+                                        changeTag([...tag, newTag]);
+                                    }}>
+                                        <Text style={styles.edittext2}>태그 추가</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{alignContent: 'center'}} onPress={() => {
+                                        addTag(tag);
+                                    }}>
+                                        <Text style={styles.edittext2}>완료</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </ScrollView>
+                    </View>
+
+                ): (
+                    <View style={{flexDirection: "column", margin: "3%",marginBottom: "11%"}}>
+                        <View style={{...styles.storeCon, marginLeft: 30}}>
+                            {modify ? <TouchableOpacity onPress={toggleEditing}>
+                                <Text style={styles.buttonText2}>수정</Text>
+                            </TouchableOpacity> : <Text style={styles.buttonText2}/>}
+                        </View>
+                        <ScrollView style={{height: "80%"}}>
+                        <Text style={{...styles.Title,marginLeft:"20%",width: "60%", marginBottom: 1}}>" {title1} "</Text>
+                        <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: "10%", marginTop: 10}}>
+                            <Image source={{ uri: bucketImage }} style={{ width: 160, height: 160, marginLeft: -10 }} />
+                            <View style={{flex: 1}}>
+                                <View style={{flexDirection: "row", width: 100, marginBottom: 5}}>
+                                    <Text style={{...styles.text1, marginLeft: 20}}>기한: </Text>
+                                    <Text style={{...styles.text1, marginLeft: -50, marginTop: 2}}>{deadLine}</Text>
+                                </View>
+                                <View style={{margin: 10}}>
+                                    <Text style={{fontSize: 15, marginLeft:17,  color: "rgb(61,136,189)"}}>
+                                        버킷리스트 공개여부:
+                                    </Text>
+                                    <Text style={{alignItems: 'flex-start', margin: 10, fontSize: 17, marginLeft: 20,color: "rgb(61,136,189)", fontWeight:'bold'}}>
+                                        '{visibility}'</Text>
+                                </View>
+
+
                             </View>
                         </View>
 
-                        <Text style={{...styles.text2, marginLeft: 17, marginBottom: -20}}>진행률:  {process} %</Text>
+                            <Text style={{...styles.text2, marginLeft: 17, marginBottom: -20, marginTop: 5}}>진행률:  {process} %</Text>
                         <BarView style={{flexDirection: 'row', alignItems: 'center', marginTop: 5}}>
                             <Bar>
                                 <ProgressBar
@@ -624,7 +611,8 @@ function BucketDetail(props){
                             </BarText>
                         </BarView>
 
-                        <ScrollView style={{alignSelf: 'flex-start', marginLeft: 25, marginTop : 20 , width : '99%', maxHeight: "27.5%"}}>
+                            <View style={{alignSelf: 'flex-start', marginLeft: 10, marginTop : 20  ,width : '99%', maxHeight: "100%"}}>
+                                <Text style={{...styles.text3, marginBottom:5}}>STEP</Text>
                             <View>
                                 {
                                     step.map((content, i ) => {
@@ -640,11 +628,13 @@ function BucketDetail(props){
                                                     <View key={i} style={{
                                                         flexDirection: 'row',
                                                         alignItems: 'center',
-                                                        justifyContent: 'space-between'
+                                                        justifyContent: 'space-between',
+                                                        marginLeft: 10
                                                     }}>
-                                                        <Text style={{...styles.textInput, width:"75%"}} >{step[i].content}</Text>
+                                                        <Text style={{...styles.textInput, width:"70%"}} >{step[i].content}</Text>
 
                                                         <CheckBox
+                                                            style={{marginRight:40, marginTop: 5}}
                                                             isChecked={step[i].success}
                                                             disabled={true}
                                                         />
@@ -655,6 +645,34 @@ function BucketDetail(props){
                                         )
                                     })
                                 }
+                            </View>
+                        </View>
+                            <View style={{alignSelf: 'flex-start', marginLeft: 10, marginTop : 35 }}>
+                                <Text style={styles.text3}>HashTag</Text>
+                                <View style={{ flexDirection: 'row', marginTop: 15}}>
+                                    {
+                                        tag.map((content, i ) =>{
+                                            return(
+                                                <View>
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            {
+                                                                console.log('onPress')
+                                                            }
+                                                        }
+                                                        } key={i}>
+                                                        <View style={{ flexDirection: 'row' }}>
+                                                            <View>
+                                                                <Text style={styles.text4}>#{tag[i].content}</Text>
+                                                            </View>
+
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            )
+                                        })
+                                    }
+                                </View>
                             </View>
                         </ScrollView>
                     </View>
@@ -706,7 +724,8 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontWeight: 'bold',
         fontSize: 25,
-        color: "black"
+        color: "black",
+
     },
     text1:{
         width: '100%',
@@ -718,7 +737,7 @@ const styles = StyleSheet.create({
     text2:{
         width: '100%',
         fontSize: 17,
-        color: '#5296e3',
+        color: '#265430',
         padding: 5,
         marginLeft: 10,
     },
@@ -733,11 +752,18 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: 'black',
     },
-    settext:{
-        width: '50%',
-        fontSize: 16,
+    text3:{
+        width: '100%',
+        fontSize: 20,
         color: "black",
-        marginLeft: 20,
+        fontWeight: 'bold',
+    },
+    text4:{
+        width: '100%',
+        fontSize: 17,
+        color: '#51aef0',
+        padding: 5,
+        marginLeft: 10,
     },
     bottomView: {
         position: 'absolute',
@@ -761,14 +787,19 @@ const styles = StyleSheet.create({
         height: 20,
         resizeMode: "cover",
     },
-    editbtn:{
-        marginBottom: 10,
-        width: 250,
-        borderRadius: 40,
-        height: "8%",
-        marginLeft: 10,
-        justifyContent: 'center',
-        backgroundColor: "#dfeffd"
+    edittext:{
+        width: '100%',
+        fontSize: 15,
+        color: "#fd007c",
+        fontWeight: 'bold',
+        marginLeft: 20,
+    },
+    edittext2:{
+        width: '100%',
+        fontSize: 15,
+        color: "#fd007c",
+        fontWeight: 'bold',
+        marginLeft: 20,
     },
 
     buttonText:{
@@ -781,7 +812,7 @@ const styles = StyleSheet.create({
         color: "#d0739c",
         fontSize: 20,
         fontWeight: 'bold',
-        marginTop: '5%'
+        marginTop: '7%'
     },
     buttonText3:{
         textAlign: 'right',
@@ -793,7 +824,7 @@ const styles = StyleSheet.create({
     },
     progressBar: {
         width: '100%',
-        height: 20,
+        height: 15,
         backgroundColor: '#e0e0e0',
         borderRadius: 10,
         marginTop: 20,

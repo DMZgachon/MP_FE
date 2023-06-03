@@ -59,7 +59,7 @@ function Input_code(props){
         instance.get(`/api/auth/check/sendSMS`, {params: {to:phoneNum}},
 
         ).then((res)=>{
-            ToastAndroid.show("됐다", ToastAndroid.SHORT);
+            ToastAndroid.show("성공", ToastAndroid.SHORT);
             props.navigation.navigate('Input_code', {name:name, phoneNum:phoneNum, password:password});
             Alert.alert('인증번호를 재전송하였습니다')
         })

@@ -134,12 +134,12 @@ function Login(props){
 
                                 setAccessTokenHeader(response.data.data.accessToken) // axios header 저장
 
-                                ToastAndroid.show('됐다', ToastAndroid.SHORT);
+                                ToastAndroid.show('로그인 하였습니다', ToastAndroid.SHORT);
 
                                 props.navigation.navigate('HomePage', { data: 'HomePage' });
                             }
                             else {
-                                Alert.alert('회원가입이 되지 않았습니다람쥐')
+                                Alert.alert('회원가입이 되지 않았습니다')
                             }
                         })
                         .catch((error) => {
