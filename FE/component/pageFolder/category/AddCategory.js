@@ -101,7 +101,7 @@ function AddCategory(props){
                 console.log('success');
 
                 Alert.alert('카테고리 등록',
-                    '이쿠죠!!!!!!!',
+                    '카테고리 등록 성공',
                     [
                         {
                             text: 'OK',
