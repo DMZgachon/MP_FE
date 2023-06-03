@@ -38,7 +38,7 @@ function Upload(props){
         format(new Date(), "yyyy-MM-dd"),
     );
 
-    const [title, setTitle] = useState([""]);
+    const [title, setTitle] = useState("");
     const [imageData, setImageData] = useState(null);
     const [content, setContent] = useState(["default"]);
     const [hashtagList, setHashtagList] = useState(["default"]);
@@ -137,12 +137,17 @@ function Upload(props){
     }
     const onRegister = async () => {
 
+        if (content[0] == "default") {
+            Alert.alert("STEP을 입력해주세요!");
+            return;
+        }
         const splitHashtags = hashtag.trim().split("#");
 
         // 첫 번째 요소는 분리한 결과의 첫 부분이 공백 문자열("")일 가능성이 있으므로 제거
         if (splitHashtags[0] === "") {
             splitHashtags.shift();
         }
+
 
         setHashtagList(splitHashtags);
 
@@ -190,6 +195,8 @@ function Upload(props){
         // content.forEach((item, index) => {
         //     formData.append('posts', item);
         // });
+
+
         formData.append('posts',content);
 
 
